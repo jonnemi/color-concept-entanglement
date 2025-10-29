@@ -1,3 +1,15 @@
+# Local secrets & notebooks
 .env
-data/
 .ipynb_checkpoints/
+
+# Data & models (keep out of Git)
+data/
+segment-anything-2/
+checkpoints/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.bin
+*.tar
+*.zip
