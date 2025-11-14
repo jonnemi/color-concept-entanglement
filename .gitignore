@@ -6,6 +6,8 @@
 data/
 segment-anything-2/
 checkpoints/
+__pycache__/
+making_color_images/__pycache__/
 *.pt
 *.pth
 *.ckpt
