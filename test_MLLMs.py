@@ -142,13 +142,14 @@ def run_vlm_evaluation(
                 df_this = df_this.rename(columns={"predicted_color": "pred_color_this"})
             else:
                 df_this = None
-
+            
+            
             # Merge results
             if mode == "both":
                 result_df = pd.merge(
                     df_most,
                     df_this,
-                    on=["image_path", "object", "image_type"],
+                    on=["image_path", "object", "image_variant", "correct_answer"],
                     how="inner"
                 )
             elif mode == "most":
