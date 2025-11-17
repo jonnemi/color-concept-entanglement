@@ -3,6 +3,7 @@ from PIL import Image
 import pandas as pd
 import matplotlib.pyplot as plt
 import re
+from scipy import stats
 
 def normalize_colors(c):
     """Normalize color entries to lowercase string list."""
@@ -51,7 +52,8 @@ def show_variants_grid(
     question: str = "",    # empty, "this" or "most"
     thumb_w: int = 256,
     row_h: float = 3.0,
-    fontsize: int = 14
+    fontsize: int = 14,
+    color_mode : str = "independent"
 ):
     """
     Display a 2-row grid of FG/BG color variants for a given image.
@@ -80,6 +82,8 @@ def show_variants_grid(
         Row height scaling factor.
     fontsize : int
         Font size for titles and predictions.
+    color_mode : str
+        "independent" or "sequential" - indicates which variant type to display.
     """
 
     # Load variant paths
@@ -88,8 +92,11 @@ def show_variants_grid(
         print(f"No variants found for {image_path}")
         return
 
-    fg_paths = [p for p in paths if "FG_" in p.name]
-    bg_paths = [p for p in paths if "BG_" in p.name]
+    mode_suffix = "ind" if color_mode == "independent" else "seq"
+
+    fg_paths = [p for p in paths if p.name.startswith("FG_") and p.name.endswith(f"{mode_suffix}.png")]
+    bg_paths = [p for p in paths if p.name.startswith("BG_") and p.name.endswith(f"{mode_suffix}.png")]
+
     cols = len(fg_paths)
     rows = 2
 
@@ -147,13 +154,127 @@ def show_variants_grid(
     _draw_row(axes[1], bg_paths, "BG", start_col=1)
     
     if not question == "":
-        question = f"({question})"
+        question = f", question: {question}"
 
     fig.suptitle(
-        f"{Path(image_path).name} - target: {target_color} {question}",
+        f"{Path(image_path).name} - target: {target_color}, color_mode: {color_mode}{question}",
         fontsize=fontsize + 4,
         fontweight="bold"
     )
 
     plt.subplots_adjust(top=0.85, bottom=0.1, hspace=0.4, wspace=0.05)
+    plt.show()
+
+
+def plot_vlm_performance(
+    df,
+    show_accuracy=True,
+    show_probability=True,
+    ci=True, 
+):
+    """
+    Plot model performance (accuracy and/or P(correct)) vs. recoloring fraction with error bars.
+
+    Expects columns:
+      ['image_variant', 'correct_answer', 'pred_color_this', 'pred_color_most',
+       'prob_correct_this', 'prob_correct_most']
+
+    Args:
+        df (pd.DataFrame): model results
+        show_accuracy (bool): include accuracy curves
+        show_probability (bool): include probability curves
+        ci (bool): use 95% confidence interval instead of std deviation
+    """
+
+    def parse_variant(variant):
+        """Extract FG/BG and numeric percentage."""
+        m = re.match(r"(FG|BG)\s*(\d+)%", str(variant))
+        if not m:
+            return None, None
+        kind, pct = m.groups()
+        return kind, int(pct)
+
+    # --- Parse FG/BG and % ---
+    df[["region", "pct"]] = df["image_variant"].apply(lambda v: pd.Series(parse_variant(v)))
+    df = df.dropna(subset=["region", "pct"])
+
+    # --- Compute binary accuracy ---
+    if "pred_color_this" in df.columns:
+        df["acc_this"] = (df["pred_color_this"].str.lower() == df["correct_answer"].str.lower()).astype(float)
+    if "pred_color_most" in df.columns:
+        df["acc_most"] = (df["pred_color_most"].str.lower() == df["correct_answer"].str.lower()).astype(float)
+
+    # --- Group by recoloring level and region ---
+    grouped = df.groupby(["region", "pct"])
+
+    # Helper to compute mean and error
+    def summarize(col):
+        mean = grouped[col].mean()
+        std = grouped[col].std()
+        n = grouped[col].count()
+        if ci:
+            # 95% confidence interval
+            ci_val = stats.t.ppf(0.975, n - 1) * (std / np.sqrt(n))
+            return mean, ci_val
+        else:
+            return mean, std
+
+    # Collect stats
+    data = {}
+    metrics = []
+    if show_accuracy:
+        metrics += ["acc_this", "acc_most"]
+    if show_probability:
+        metrics += ["prob_correct_this", "prob_correct_most"]
+
+    for metric in metrics:
+        if metric not in df.columns:
+            continue
+        mean, err = summarize(metric)
+        data[f"{metric}_mean"] = mean
+        data[f"{metric}_err"] = err
+
+    summary = pd.DataFrame(data).reset_index()
+
+    # --- Plot setup ---
+    fig, ax = plt.subplots(figsize=(9, 6))
+    colors = {
+        "this_FG": "#1f77b4",
+        "this_BG": "#ff7f0e",
+        "most_FG": "#2ca02c",
+        "most_BG": "#d62728",
+    }
+
+    def plot_metric(region, acc_col, prob_col, label_prefix):
+        sub = summary[summary["region"] == region]
+        if sub.empty:
+            return
+        # Accuracy = dashed
+        if show_accuracy:
+            ax.errorbar(
+                sub["pct"], sub[f"{acc_col}_mean"], yerr=sub[f"{acc_col}_err"],
+                fmt="o--", capsize=3, color=colors[f"{label_prefix}_{region}"],
+                label=f"{label_prefix}_{region} (accuracy)", alpha=0.8
+            )
+        # Probability = solid
+        if show_probability:
+            ax.errorbar(
+                sub["pct"], sub[f"{prob_col}_mean"], yerr=sub[f"{prob_col}_err"],
+                fmt="o-", capsize=3, color=colors[f"{label_prefix}_{region}"],
+                label=f"{label_prefix}_{region} (P(correct))", alpha=0.9
+            )
+
+    for region in ["FG", "BG"]:
+        plot_metric(region, "acc_this", "prob_correct_this", "this")
+        plot_metric(region, "acc_most", "prob_correct_most", "most")
+
+    ax.set_xlabel("Colored pixel percentage (%)", fontsize=12)
+    ax.set_ylabel("Accuracy / P(correct)", fontsize=12)
+    ax.set_title("VLM performance vs. recoloring fraction", fontsize=14, fontweight="bold")
+    ax.set_xticks(np.arange(0, 110, 10))
+    ax.set_ylim(0, 1.05)
+    ax.grid(True, linestyle="--", alpha=0.5)
+    ax.legend(title="Question / Region", fontsize=10)
+
+    plt.tight_layout()
     plt.show()

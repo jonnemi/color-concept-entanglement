@@ -11,6 +11,7 @@ from tqdm import tqdm
 import os
 import gc
 from pathlib import Path
+import torch.nn.functional as F
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 
@@ -20,17 +21,22 @@ def clean_instruction_tokens(text):
     return cleaned_text.strip()
 
 
-def mllm_testing(df, processor, model, device, most="True", dummy=False):
-
+def mllm_testing(df, processor, model, device, most="True", dummy=False, return_probs=False):
+    """
+    Run inference for a batch of images and optionally compute P(correct_answer)
+    using the final layer logits.
+    """
     with torch.inference_mode():
         torch.cuda.empty_cache()
         gc.collect()
         generated_texts = []
+        probs_correct = []
+
         for idx, row in df.iterrows():
             instruction_tokens = "[INST] <image>\n"
             end_tokens = "[/INST]"
-
             object_name = row['object']
+
             #question = f"What color is {'a' if most == 'True' else 'this'} {object_name}?"
             if most == "True":
                 object_name_plural = object_name if object_name.endswith("s") else object_name + "s"
@@ -51,46 +57,51 @@ def mllm_testing(df, processor, model, device, most="True", dummy=False):
                 except FileNotFoundError:
                     print(f"Warning: Image not found for {row['object']}")
                     generated_texts.append(None)
+                    probs_correct.append(None)
                     continue  # Skip to the next row in the DataFrame
             
             inputs = processor(images=image, text=prompt, return_tensors='pt')
             inputs = {k: v.to(device) for k, v in inputs.items()}
             # Perform a forward pass with the model
-            outputs = model.generate(**inputs, max_new_tokens=10, num_beams=1, do_sample=False, temperature=1.0, pad_token_id=processor.tokenizer.eos_token_id)  # Adjust max_new_tokens as needed
+            outputs = model.generate(**inputs, max_new_tokens=10, num_beams=1, do_sample=False, pad_token_id=processor.tokenizer.eos_token_id)
             predicted_answer = processor.tokenizer.decode(outputs[0], skip_special_tokens=True)
             predicted_answer = clean_instruction_tokens(predicted_answer)
+            generated_texts.append(predicted_answer.lower().replace("gray", "grey"))
 
-            generated_texts.append(predicted_answer)
-            #print(torch.cuda.memory_summary())
+            if return_probs:
+                with torch.inference_mode():
+                    outputs_logits = model(**inputs)
+                    logits = outputs_logits.logits[:, -1, :]  # final token logits
+                    probs_softmax = F.softmax(logits, dim=-1).squeeze(0).detach().cpu()
 
-            to_delete = ['inputs', 'outputs', 'image_inputs', 'video_inputs', 'generated_ids', 'prepare_inputs', 'image', 'pil_images', 'inputs_embeds']
-            for var_name in to_delete:
-                if var_name in locals():
-                    var = locals()[var_name]
-                    if isinstance(var, dict):
-                        for v in var.values():
-                            if torch.is_tensor(v) and v.is_cuda:
-                                del v
-                    elif torch.is_tensor(var) and var.is_cuda:
-                        del var
-                    del locals()[var_name]
-            if hasattr(model, 'clear_kv_cache'):
-                model.clear_kv_cache()
+                correct = str(row["correct_answer"]).strip().lower()
+                correct_ids = processor.tokenizer(correct).input_ids
+                correct_ids_cap = processor.tokenizer(correct.capitalize()).input_ids
+                token_idx = 1 if "llava" in type(model).__name__.lower() else 0
+
+                try:
+                    prob_correct = max(
+                        probs_softmax[correct_ids[token_idx]].item(),
+                        probs_softmax[correct_ids_cap[token_idx]].item()
+                    )
+                except Exception:
+                    prob_correct = None
+
+                probs_correct.append(prob_correct)
+
+            # cleanup
+            del inputs, outputs
             torch.cuda.empty_cache()
-            torch.cuda.ipc_collect()
             gc.collect()
 
-            #print(torch.cuda.memory_summary())
-        
-        pred_color = [c.lower() for c in generated_texts]
-        pred_color = ["grey" if c == "gray" else c for c in pred_color]
-        df['predicted_color'] = pred_color
+        df['predicted_color'] = generated_texts
+        if return_probs:
+            df['prob_correct'] = probs_correct
 
-        if 'inputs' in locals(): del inputs
-        if 'image' in locals(): del image
         torch.cuda.empty_cache()
         torch.cuda.ipc_collect()
         gc.collect()
+
     return df
 
 
@@ -101,7 +112,8 @@ def run_vlm_evaluation(
     device,
     batch_size=1,
     mode="both",  # "this", "most", or "both"
-    dummy=False
+    dummy=False,
+    return_probs=False
 ):
     """
     Generic evaluation loop for Vision-Language Models.
@@ -118,6 +130,7 @@ def run_vlm_evaluation(
         batch_size: how many rows per iteration
         mode: "this", "most", or "both"
         dummy_image: pass-through flag for special testing
+        return_probs: whether to compute P(correct_answer) from logits
 
     Returns:
         DataFrame with added predicted color columns
@@ -132,14 +145,20 @@ def run_vlm_evaluation(
 
         with torch.inference_mode():
             if mode in ["most", "both"]:
-                df_most = mllm_testing(batch_df, processor, model, device, most="True", dummy=dummy)
-                df_most = df_most.rename(columns={"predicted_color": "pred_color_most"})
+                df_most = mllm_testing(batch_df, processor, model, device, most="True", dummy=dummy, return_probs=return_probs)
+                df_most = df_most.rename(columns={
+                    "predicted_color": "pred_color_most",
+                    "prob_correct": "prob_correct_most" if return_probs else None
+                })
             else:
                 df_most = None
 
             if mode in ["this", "both"]:
-                df_this = mllm_testing(batch_df, processor, model, device, most="False", dummy=dummy)
-                df_this = df_this.rename(columns={"predicted_color": "pred_color_this"})
+                df_this = mllm_testing(batch_df, processor, model, device, most="False", dummy=dummy, return_probs=return_probs)
+                df_this = df_this.rename(columns={
+                    "predicted_color": "pred_color_this",
+                    "prob_correct": "prob_correct_this" if return_probs else None
+                })
             else:
                 df_this = None
             

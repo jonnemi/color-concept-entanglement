@@ -117,102 +117,209 @@ def color_remap(pixel, target_color: str, blend: float = 0.75):
     return r, g, b
 
 
-def recolor_subset(arr_rgb, idx_flat, k, target_color):
-    """Randomly recolor k pixels from idx_flat."""
-    if k <= 0 or len(idx_flat) == 0:
+def recolor_region(
+    arr_rgb,
+    idx_flat,
+    target_total_pct,
+    target_color,
+    H,
+    W,
+    colored_mask,
+    use_patches=False,
+    patch_size=16,
+):
+    """
+    Recoloring function (pixel-wise or patch-wise).
+    """
+    flat = arr_rgb.reshape(-1, 3)
+    total_pixels = len(idx_flat)
+
+    # How many pixels should be colored at this percentage?
+    target_total = int(round(target_total_pct / 100.0 * total_pixels))
+
+    # How many are already colored?
+    already = colored_mask[idx_flat].sum()
+    need = target_total - already
+    if need <= 0:
         return arr_rgb
 
-    chosen = rng.choice(idx_flat, size=min(k, len(idx_flat)), replace=False)
-    flat = arr_rgb.reshape(-1, 3)
+    # Pixel-wise mode
+    if not use_patches:
+        available = idx_flat[~colored_mask[idx_flat]]
+        if len(available) == 0:
+            return arr_rgb
 
-    for i in chosen:
-        r, g, b = flat[i]
-        flat[i] = color_remap((int(r), int(g), int(b)), target_color)
-    return arr_rgb
+        chosen = rng.choice(available, size=min(need, len(available)), replace=False)
 
+        for fi in chosen:
+            r, g, b = flat[fi]
+            flat[fi] = color_remap((int(r), int(g), int(b)), target_color)
 
-def recolor_subset_patches(arr_rgb, idx_flat, pct, target_color, H, W, patch_size=16):
-    """
-    Recolor image in patches rather than per pixel.
-    Selects patches that overlap the mask region.
-    """
-    if len(idx_flat) == 0 or pct <= 0:
+        colored_mask[chosen] = True
         return arr_rgb
 
-    flat = arr_rgb.reshape(-1, 3)
-    rows, cols = idx_flat // W, idx_flat % W
+    # Patch-wise mode
+    rows = idx_flat // W
+    cols = idx_flat % W
 
-    patch_rows, patch_cols = rows // patch_size, cols // patch_size
-    patch_ids_unique = np.unique(np.stack([patch_rows, patch_cols], axis=1), axis=0)
+    patch_rows = rows // patch_size
+    patch_cols = cols // patch_size
+
+    patch_ids_unique = np.unique(
+        np.stack([patch_rows, patch_cols], axis=1), axis=0
+    )
     n_patches = len(patch_ids_unique)
     if n_patches == 0:
         return arr_rgb
 
-    target_pixels = int(round(pct / 100.0 * len(idx_flat)))
-    avg_pixels_per_patch = max(1, len(idx_flat) // n_patches)
-    k_patches = max(1, min(n_patches, target_pixels // avg_pixels_per_patch))
+    order = rng.choice(n_patches, size=n_patches, replace=False)
 
-    chosen_idx = rng.choice(n_patches, size=k_patches, replace=False)
-    chosen_patches = patch_ids_unique[chosen_idx]
+    recolored = 0
 
-    for (pr, pc) in chosen_patches:
+    for pi in order:
+        pr, pc = patch_ids_unique[pi]
         r_start, c_start = pr * patch_size, pc * patch_size
-        r_end, c_end = min(r_start + patch_size, H), min(c_start + patch_size, W)
+        r_end,   c_end   = min(r_start + patch_size, H), min(c_start + patch_size, W)
 
-        in_patch = ((rows >= r_start) & (rows < r_end) & (cols >= c_start) & (cols < c_end))
+        in_patch = (
+            (rows >= r_start) & (rows < r_end) &
+            (cols >= c_start) & (cols < c_end)
+        )
         flat_indices = idx_flat[in_patch]
 
+        # only uncolored pixels
+        flat_indices = flat_indices[~colored_mask[flat_indices]]
+        if len(flat_indices) == 0:
+            continue
+
         for fi in flat_indices:
+            if recolored >= need:
+                return arr_rgb
+
             r, g, b = flat[fi]
             flat[fi] = color_remap((int(r), int(g), int(b)), target_color)
+            colored_mask[fi] = True
+            recolored += 1
+
+        if recolored >= need:
+            return arr_rgb
 
     return arr_rgb
 
 
-def generate_variants(row, target_color, out_dir: Path, use_patches=False, patch_size=16, step_size=10):
+def generate_variants(
+    row,
+    target_color,
+    out_dir: Path,
+    use_patches=False,
+    patch_size=16,
+    step_size=10,
+    mode="independent"
+):
     """
     Generate FG/BG recolored variants for one image + one target color.
-
-    Returns a list of saved variant paths (strings).
     """
+
+    # Check mode parameter
+    valid_modes = {"independent", "sequential"}
+    if isinstance(mode, str):
+        mode = mode.lower().strip()
+    if mode not in valid_modes:
+        raise ValueError(
+            f"Invalid mode '{mode}'. Must be one of: {sorted(valid_modes)}"
+        )
+
     img = Image.open(row["image_path"]).convert("RGB")
     W, H = img.size
+    base = np.array(img, dtype=np.uint8)
 
     m = Image.open(row["cv_mask_path"]).convert("L").resize((W, H), Image.BILINEAR)
     mask = (np.array(m, dtype=np.uint8) > 127)
+
+    gray = np.mean(base, axis=2) / 255.0
+    outline = gray < 0.12
+
+    # Exclude outline pixels from recolorable sets
+    fg_mask_clean = mask & ~outline
+    bg_mask_clean = (~mask) & ~outline
+
+    idx_all = np.arange(H * W)
+    idx_fg = idx_all[fg_mask_clean.flatten()]
+    idx_bg = idx_all[bg_mask_clean.flatten()]
 
     stem = Path(row["image_path"]).stem
     color_dir = out_dir / f"{stem}_{target_color}"
     color_dir.mkdir(parents=True, exist_ok=True)
 
-    base = np.array(img, dtype=np.uint8)
-    idx_all = np.arange(H * W)
-    idx_fg = idx_all[mask.flatten()]
-    idx_bg = idx_all[~mask.flatten()]
-
     fg_paths, bg_paths = [], []
 
-    # Foreground recolor series
+    # Foreground recoloring
+    if mode == "sequential":
+        arr_seq = base.copy()
+        colored_fg = np.zeros(H * W, dtype=bool)
+    else:
+        colored_fg = None  # not used
+
     for pct in range(0, 101, step_size):
-        arr = base.copy()
-        if use_patches:
-            recolor_subset_patches(arr, idx_fg, pct, target_color, H, W, patch_size)
+
+        if mode == "independent":
+            arr = base.copy()
+            colored_fg = np.zeros(H * W, dtype=bool)
         else:
-            k = int(round(pct / 100.0 * len(idx_fg)))
-            recolor_subset(arr, idx_fg, k, target_color)
-        out_path = color_dir / f"FG_{pct:03d}.png"
+            arr = arr_seq  # sequential accumulation
+
+        recolor_region(
+            arr,
+            idx_fg,
+            pct,
+            target_color,
+            H,
+            W,
+            colored_fg,
+            use_patches=use_patches,
+            patch_size=patch_size,
+        )
+
+        if mode == "sequential":
+            arr_seq = arr
+
+        suffix = "ind" if mode == "independent" else "seq"
+        out_path = color_dir / f"FG_{pct:03d}_{suffix}.png"
         Image.fromarray(arr).save(out_path)
         fg_paths.append(out_path)
 
-    # Background recolor series
+    # Background recoloring
+    if mode == "sequential":
+        arr_seq = base.copy()
+        colored_bg = np.zeros(H * W, dtype=bool)
+    else:
+        colored_bg = None
+
     for pct in range(10, 101, step_size):
-        arr = base.copy()
-        if use_patches:
-            recolor_subset_patches(arr, idx_bg, pct, target_color, H, W, patch_size)
+
+        if mode == "independent":
+            arr = base.copy()
+            colored_bg = np.zeros(H * W, dtype=bool)
         else:
-            k = int(round(pct / 100.0 * len(idx_bg)))
-            recolor_subset(arr, idx_bg, k, target_color)
-        out_path = color_dir / f"BG_{pct:03d}.png"
+            arr = arr_seq
+
+        recolor_region(
+            arr,
+            idx_bg,
+            pct,
+            target_color,
+            H,
+            W,
+            colored_bg,
+            use_patches=use_patches,
+            patch_size=patch_size,
+        )
+
+        if mode == "sequential":
+            arr_seq = arr
+
+        
+        out_path = color_dir / f"BG_{pct:03d}_{suffix}.png"
         Image.fromarray(arr).save(out_path)
         bg_paths.append(out_path)
 
