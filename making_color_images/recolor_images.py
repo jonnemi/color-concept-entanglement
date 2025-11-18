@@ -15,6 +15,7 @@ from PIL import Image
 import numpy as np
 import colorsys
 import gc
+import re
 
 SEED = 42
 rng = np.random.default_rng(SEED)
@@ -214,7 +215,8 @@ def generate_variants(
     use_patches=False,
     patch_size=16,
     step_size=10,
-    mode="independent"
+    mode="independent",
+    pct_schedule=None
 ):
     """
     Generate FG/BG recolored variants for one image + one target color.
@@ -253,6 +255,12 @@ def generate_variants(
 
     fg_paths, bg_paths = [], []
 
+    # set schedule
+    if pct_schedule is None:
+        pct_list = list(range(0, 101, step_size))
+    else:
+        pct_list = pct_schedule
+
     # Foreground recoloring
     if mode == "sequential":
         arr_seq = base.copy()
@@ -260,7 +268,7 @@ def generate_variants(
     else:
         colored_fg = None  # not used
 
-    for pct in range(0, 101, step_size):
+    for pct in pct_list:
 
         if mode == "independent":
             arr = base.copy()
@@ -295,7 +303,7 @@ def generate_variants(
     else:
         colored_bg = None
 
-    for pct in range(10, 101, step_size):
+    for pct in pct_list:
 
         if mode == "independent":
             arr = base.copy()

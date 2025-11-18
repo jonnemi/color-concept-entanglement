@@ -3,6 +3,7 @@ from PIL import Image
 import pandas as pd
 import matplotlib.pyplot as plt
 import re
+import numpy as np
 from scipy import stats
 
 def normalize_colors(c):
@@ -44,6 +45,28 @@ def collect_variants_for(image_path: str, target_color: str, out_root: Path) -> 
     return sorted(paths, key=_variant_sort_key)
 
 
+def variant_label(p: Path):
+    """
+    Create readable labels from variant filenames:
+    FG_030_seq.png  -> "FG 30% (seq)"
+    BG_050_ind.png  -> "BG 50% (ind)"
+    base image      -> "white"
+    """
+
+    name = p.name
+    stem = p.stem  # e.g. "FG_030_seq"
+
+    # Patterns: FG_###_mode, BG_###_mode
+    m = re.match(r"(FG|BG)_(\d{3})_(ind|seq)$", stem)
+    if m:
+        region = m.group(1)
+        pct = int(m.group(2))
+        mode = m.group(3)
+        return f"{region} {pct}% ({mode})"
+    # fallback for base image (non-variant)
+    return "white"
+
+
 def show_variants_grid(
     image_path: str,
     target_color: str,
@@ -53,7 +76,8 @@ def show_variants_grid(
     thumb_w: int = 256,
     row_h: float = 3.0,
     fontsize: int = 14,
-    color_mode : str = "independent"
+    color_mode : str = "independent",
+    pct_range: list[int] | None = None
 ):
     """
     Display a 2-row grid of FG/BG color variants for a given image.
@@ -84,6 +108,8 @@ def show_variants_grid(
         Font size for titles and predictions.
     color_mode : str
         "independent" or "sequential" - indicates which variant type to display.
+    pct_range: list
+        Custom percentage ranges to display if provided.
     """
 
     # Load variant paths
@@ -97,7 +123,17 @@ def show_variants_grid(
     fg_paths = [p for p in paths if p.name.startswith("FG_") and p.name.endswith(f"{mode_suffix}.png")]
     bg_paths = [p for p in paths if p.name.startswith("BG_") and p.name.endswith(f"{mode_suffix}.png")]
 
-    cols = len(fg_paths)
+    def parse_pct(p):
+        return int(p.name.split("_")[1])
+
+    if pct_range is not None:
+        fg_paths = [p for p in fg_paths if parse_pct(p) in pct_range]
+        bg_paths = [p for p in bg_paths if parse_pct(p) in pct_range]
+
+    fg_paths = sorted(fg_paths, key=parse_pct)
+    bg_paths = sorted(bg_paths, key=parse_pct)[1:]
+
+    cols = max(len(fg_paths), len(bg_paths))
     rows = 2
 
     # Figure sizing
@@ -118,9 +154,10 @@ def show_variants_grid(
 
         pred_col = "pred_color_this" if question.lower() == "this" else "pred_color_most"
         match = df_predictions[
-            (df_predictions["image_variant"].str.lower() == label.lower())
-            & (df_predictions["correct_answer"].str.lower() == target_color.lower())
+            (df_predictions["image_variant"].str.lower() == label.lower()) &
+            (df_predictions["correct_answer"].str.lower() == target_color.lower())
         ]
+
         if not match.empty and pred_col in match.columns:
             return str(match.iloc[0][pred_col])
         return None
@@ -135,10 +172,9 @@ def show_variants_grid(
                 im = Image.open(p).convert("RGB")
                 ax.imshow(im)
 
-                m = re.search(r"(\d{3})(?=\.png$)", p.name)
-                pct = int(m.group(1)) if m else ""
-                label = f"{title_prefix} {pct}%" if pct != "" else title_prefix
+                label = variant_label(p)
                 pred = get_prediction(label)
+                label = label.split("(")[0]
 
                 ax.set_title(label, fontsize=fontsize, pad=4)
                 if pred:
@@ -170,7 +206,8 @@ def plot_vlm_performance(
     df,
     show_accuracy=True,
     show_probability=True,
-    ci=True, 
+    ci=True,
+    pct_range: list[int] | None = None
 ):
     """
     Plot model performance (accuracy and/or P(correct)) vs. recoloring fraction with error bars.
@@ -184,6 +221,7 @@ def plot_vlm_performance(
         show_accuracy (bool): include accuracy curves
         show_probability (bool): include probability curves
         ci (bool): use 95% confidence interval instead of std deviation
+        pct_range (list[int]): provide % levels to plot
     """
 
     def parse_variant(variant):
@@ -194,17 +232,17 @@ def plot_vlm_performance(
         kind, pct = m.groups()
         return kind, int(pct)
 
-    # --- Parse FG/BG and % ---
     df[["region", "pct"]] = df["image_variant"].apply(lambda v: pd.Series(parse_variant(v)))
     df = df.dropna(subset=["region", "pct"])
 
-    # --- Compute binary accuracy ---
+    if pct_range is not None:
+        pct_set = set(pct_range)
+        df = df[df["pct"].isin(pct_set)]
+    
     if "pred_color_this" in df.columns:
         df["acc_this"] = (df["pred_color_this"].str.lower() == df["correct_answer"].str.lower()).astype(float)
     if "pred_color_most" in df.columns:
         df["acc_most"] = (df["pred_color_most"].str.lower() == df["correct_answer"].str.lower()).astype(float)
-
-    # --- Group by recoloring level and region ---
     grouped = df.groupby(["region", "pct"])
 
     # Helper to compute mean and error
@@ -236,7 +274,7 @@ def plot_vlm_performance(
 
     summary = pd.DataFrame(data).reset_index()
 
-    # --- Plot setup ---
+    # Plot setup
     fig, ax = plt.subplots(figsize=(9, 6))
     colors = {
         "this_FG": "#1f77b4",
@@ -251,16 +289,20 @@ def plot_vlm_performance(
             return
         # Accuracy = dashed
         if show_accuracy:
+            yerr = sub[f"{acc_col}_err"] if ci else None
             ax.errorbar(
-                sub["pct"], sub[f"{acc_col}_mean"], yerr=sub[f"{acc_col}_err"],
-                fmt="o--", capsize=3, color=colors[f"{label_prefix}_{region}"],
+                sub["pct"], sub[f"{acc_col}_mean"], yerr=yerr,
+                fmt="o--", capsize=3 if ci else 0,
+                color=colors[f"{label_prefix}_{region}"],
                 label=f"{label_prefix}_{region} (accuracy)", alpha=0.8
             )
         # Probability = solid
         if show_probability:
+            yerr = sub[f"{prob_col}_err"] if ci else None
             ax.errorbar(
-                sub["pct"], sub[f"{prob_col}_mean"], yerr=sub[f"{prob_col}_err"],
-                fmt="o-", capsize=3, color=colors[f"{label_prefix}_{region}"],
+                sub["pct"], sub[f"{prob_col}_mean"], yerr=yerr,
+                fmt="o-", capsize=3 if ci else 0,
+                color=colors[f"{label_prefix}_{region}"],
                 label=f"{label_prefix}_{region} (P(correct))", alpha=0.9
             )
 
@@ -271,10 +313,18 @@ def plot_vlm_performance(
     ax.set_xlabel("Colored pixel percentage (%)", fontsize=12)
     ax.set_ylabel("Accuracy / P(correct)", fontsize=12)
     ax.set_title("VLM performance vs. recoloring fraction", fontsize=14, fontweight="bold")
-    ax.set_xticks(np.arange(0, 110, 10))
+    if pct_range is not None:
+        ax.set_xticks(sorted(set(pct_range)))
     ax.set_ylim(0, 1.05)
     ax.grid(True, linestyle="--", alpha=0.5)
-    ax.legend(title="Question / Region", fontsize=10)
+    ax.legend(
+        title="Question / Region",
+        fontsize=10,
+        loc="center left",
+        bbox_to_anchor=(1.02, 0.8),
+        borderaxespad=0,
+    )
+
 
     plt.tight_layout()
     plt.show()
