@@ -206,7 +206,8 @@ def plot_vlm_performance(
     df,
     show_accuracy=True,
     show_probability=True,
-    ci=True,
+    ci=False,
+    color_mode = "all",
     pct_range: list[int] | None = None
 ):
     """
@@ -221,23 +222,33 @@ def plot_vlm_performance(
         show_accuracy (bool): include accuracy curves
         show_probability (bool): include probability curves
         ci (bool): use 95% confidence interval instead of std deviation
+        color_mode (str):  "independent", "sequential" or "all" - indicates which variant type to display.
         pct_range (list[int]): provide % levels to plot
     """
 
     def parse_variant(variant):
-        """Extract FG/BG and numeric percentage."""
-        m = re.match(r"(FG|BG)\s*(\d+)%", str(variant))
+        """Returns (Kind, Pct, Mode). Mode is None if not present."""
+        # Now we capture the mode in Group 3
+        m = re.match(r"(FG|BG)\s*(\d+)%(?:\s*\((seq|ind)\))?", str(variant))
+        
         if not m:
-            return None, None
-        kind, pct = m.groups()
-        return kind, int(pct)
+            return None, None, None
+        
+        kind = m.group(1)
+        pct = int(m.group(2))
+        mode = m.group(3) # Will be 'seq', 'ind', or None
+    
+        return kind, pct, mode
 
-    df[["region", "pct"]] = df["image_variant"].apply(lambda v: pd.Series(parse_variant(v)))
+    df[["region", "pct", "mode"]] = df["image_variant"].apply(lambda v: pd.Series(parse_variant(v)))
     df = df.dropna(subset=["region", "pct"])
 
     if pct_range is not None:
         pct_set = set(pct_range)
         df = df[df["pct"].isin(pct_set)]
+
+    if color_mode not in ["all", "both"]:
+        df = df[df["mode"] == color_mode]
     
     if "pred_color_this" in df.columns:
         df["acc_this"] = (df["pred_color_this"].str.lower() == df["correct_answer"].str.lower()).astype(float)
@@ -312,7 +323,7 @@ def plot_vlm_performance(
 
     ax.set_xlabel("Colored pixel percentage (%)", fontsize=12)
     ax.set_ylabel("Accuracy / P(correct)", fontsize=12)
-    ax.set_title("VLM performance vs. recoloring fraction", fontsize=14, fontweight="bold")
+    ax.set_title(f"VLM performance vs. recoloring fraction ({color_mode})", fontsize=14, fontweight="bold")
     if pct_range is not None:
         ax.set_xticks(sorted(set(pct_range)))
     ax.set_ylim(0, 1.05)
