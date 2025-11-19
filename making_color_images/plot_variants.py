@@ -305,7 +305,7 @@ def plot_vlm_performance(
                 sub["pct"], sub[f"{acc_col}_mean"], yerr=yerr,
                 fmt="o--", capsize=3 if ci else 0,
                 color=colors[f"{label_prefix}_{region}"],
-                label=f"{label_prefix}_{region} (accuracy)", alpha=0.8
+                label=f"{label_prefix}_{region} ", alpha=0.8 #(accuracy)
             )
         # Probability = solid
         if show_probability:
@@ -314,7 +314,7 @@ def plot_vlm_performance(
                 sub["pct"], sub[f"{prob_col}_mean"], yerr=yerr,
                 fmt="o-", capsize=3 if ci else 0,
                 color=colors[f"{label_prefix}_{region}"],
-                label=f"{label_prefix}_{region} (P(correct))", alpha=0.9
+                label=f"{label_prefix}_{region}", alpha=0.9 # (P(correct))
             )
 
     for region in ["FG", "BG"]:
@@ -322,7 +322,13 @@ def plot_vlm_performance(
         plot_metric(region, "acc_most", "prob_correct_most", "most")
 
     ax.set_xlabel("Colored pixel percentage (%)", fontsize=12)
-    ax.set_ylabel("Accuracy / P(correct)", fontsize=12)
+    if not show_accuracy:
+        label = "P(correct)"
+    elif not show_probability:
+        label = "Accuracy"
+    else:
+        label = "Accuracy / P(correct)"
+    ax.set_ylabel(label, fontsize=12)
     ax.set_title(f"VLM performance vs. recoloring fraction ({color_mode})", fontsize=14, fontweight="bold")
     if pct_range is not None:
         ax.set_xticks(sorted(set(pct_range)))
