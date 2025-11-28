@@ -48,19 +48,21 @@ def mllm_testing(df, processor, model, device, most="True", dummy=False, return_
             prompt = f"{instruction_tokens} Answer with one word. {question} {end_tokens}"
 
             if dummy:
-                dummy_image = Image.new("RGB", (256, 256), color="white")
-                image = None
+                #dummy_image = Image.new("RGB", (256, 256), color="white")
+                #image = None
+                inputs = processor(text=prompt, return_tensors='pt')
             else:
                 try:
                     image = Image.open(row['image_path']).convert("RGB")
                     image = image.resize((256, 256), Image.LANCZOS)
+                    inputs = processor(images=image, text=prompt, return_tensors='pt')
                 except FileNotFoundError:
                     print(f"Warning: Image not found for {row['object']}")
                     generated_texts.append(None)
                     probs_correct.append(None)
                     continue  # Skip to the next row in the DataFrame
             
-            inputs = processor(images=image, text=prompt, return_tensors='pt')
+            
             inputs = {k: v.to(device) for k, v in inputs.items()}
             # Perform a forward pass with the model
             outputs = model.generate(**inputs, max_new_tokens=10, num_beams=1, do_sample=False, pad_token_id=processor.tokenizer.eos_token_id)

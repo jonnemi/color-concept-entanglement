@@ -16,9 +16,8 @@ import numpy as np
 import colorsys
 import gc
 import re
-
-SEED = 42
-rng = np.random.default_rng(SEED)
+from tqdm import tqdm
+import cv2
 
 
 def color_remap(pixel, target_color: str, blend: float = 0.75):
@@ -126,25 +125,28 @@ def recolor_region(
     H,
     W,
     colored_mask,
+    rng,
     use_patches=False,
     patch_size=16,
 ):
     """
-    Recoloring function (pixel-wise or patch-wise).
+    Recoloring with:
+      - proportional patch contribution
+      - random but reproducible patch order (seeded)
+      - independent & sequential modes preserved
     """
-    flat = arr_rgb.reshape(-1, 3)
-    total_pixels = len(idx_flat)
 
-    # How many pixels should be colored at this percentage?
+    flat = arr_rgb.reshape(-1, 3)
+
+    total_pixels = len(idx_flat)
     target_total = int(round(target_total_pct / 100.0 * total_pixels))
 
-    # How many are already colored?
     already = colored_mask[idx_flat].sum()
     need = target_total - already
     if need <= 0:
         return arr_rgb
 
-    # Pixel-wise mode
+    # PIXEL-WISE 
     if not use_patches:
         available = idx_flat[~colored_mask[idx_flat]]
         if len(available) == 0:
@@ -155,55 +157,58 @@ def recolor_region(
         for fi in chosen:
             r, g, b = flat[fi]
             flat[fi] = color_remap((int(r), int(g), int(b)), target_color)
-
         colored_mask[chosen] = True
         return arr_rgb
 
-    # Patch-wise mode
+    # PATCH-WISE
+
     rows = idx_flat // W
     cols = idx_flat % W
-
     patch_rows = rows // patch_size
     patch_cols = cols // patch_size
 
-    patch_ids_unique = np.unique(
-        np.stack([patch_rows, patch_cols], axis=1), axis=0
-    )
-    n_patches = len(patch_ids_unique)
-    if n_patches == 0:
-        return arr_rgb
+    patch_ids = np.stack([patch_rows, patch_cols], axis=1)
+    patch_ids_unique, inverse = np.unique(patch_ids, axis=0, return_inverse=True)
 
-    order = rng.choice(n_patches, size=n_patches, replace=False)
+    # FG pixel count per patch
+    patch_fg_counts = np.bincount(inverse)
+
+    # Random but reproducible order
+    order = np.arange(len(patch_ids_unique))
+    rng.shuffle(order)
 
     recolored = 0
 
-    for pi in order:
-        pr, pc = patch_ids_unique[pi]
-        r_start, c_start = pr * patch_size, pc * patch_size
-        r_end,   c_end   = min(r_start + patch_size, H), min(c_start + patch_size, W)
+    for patch_index in order:
 
-        in_patch = (
-            (rows >= r_start) & (rows < r_end) &
-            (cols >= c_start) & (cols < c_end)
-        )
-        flat_indices = idx_flat[in_patch]
+        pr, pc = patch_ids_unique[patch_index]
+        patch_fg = patch_fg_counts[patch_index]
 
-        # only uncolored pixels
-        flat_indices = flat_indices[~colored_mask[flat_indices]]
-        if len(flat_indices) == 0:
+        # If adding this patch exceeds target:
+        # still recolor full patch
+        # but this must be the final patch
+        if recolored >= need:
+            break
+
+        # Collect FG pixels in this patch
+        in_patch = (inverse == patch_index)
+        patch_pixels = idx_flat[in_patch]
+
+        # Exclude already colored pixels
+        patch_pixels = patch_pixels[~colored_mask[patch_pixels]]
+        if len(patch_pixels) == 0:
             continue
 
-        for fi in flat_indices:
-            if recolored >= need:
-                return arr_rgb
-
+        # Recolor ALL FG pixels in this patch (never partial)
+        for fi in patch_pixels:
             r, g, b = flat[fi]
             flat[fi] = color_remap((int(r), int(g), int(b)), target_color)
             colored_mask[fi] = True
             recolored += 1
 
+        # stop after finishing this full patch
         if recolored >= need:
-            return arr_rgb
+            break
 
     return arr_rgb
 
@@ -212,11 +217,12 @@ def generate_variants(
     row,
     target_color,
     out_dir: Path,
+    rng,
     use_patches=False,
     patch_size=16,
     step_size=10,
     mode="independent",
-    pct_schedule=None
+    pct_schedule=None,
 ):
     """
     Generate FG/BG recolored variants for one image + one target color.
@@ -286,6 +292,7 @@ def generate_variants(
             colored_fg,
             use_patches=use_patches,
             patch_size=patch_size,
+            rng=rng
         )
 
         if mode == "sequential":
@@ -295,6 +302,12 @@ def generate_variants(
         out_path = color_dir / f"FG_{pct:03d}_{suffix}.png"
         Image.fromarray(arr).save(out_path)
         fg_paths.append(out_path)
+
+        # SANITY CHECK
+        actual_colored = colored_fg[idx_fg].sum()
+        actual_pct = 100 * actual_colored / len(idx_fg)
+        print(f"[FG] target={pct:3d}% → actual={actual_pct:6.2f}%   ({actual_colored}/{len(idx_fg)})")
+
 
     # Background recoloring
     if mode == "sequential":
@@ -321,6 +334,7 @@ def generate_variants(
             colored_bg,
             use_patches=use_patches,
             patch_size=patch_size,
+            rng=rng
         )
 
         if mode == "sequential":
@@ -331,5 +345,121 @@ def generate_variants(
         Image.fromarray(arr).save(out_path)
         bg_paths.append(out_path)
 
+        # SANITY CHECK
+        actual_colored = colored_bg[idx_bg].sum()
+        actual_pct = 100 * actual_colored / len(idx_bg)
+        print(f"[BG] target={pct:3d}% → actual={actual_pct:6.2f}%   ({actual_colored}/{len(idx_bg)})")
+
+
     gc.collect()
     return [str(p) for p in (fg_paths + bg_paths)]
+
+
+def pad_to_square_pil(img: Image.Image, fill=(255, 255, 255)):
+    """Pad a PIL image to a square canvas (centered), no distortion."""
+    w, h = img.size
+    s = max(w, h)
+    canvas = Image.new("RGB", (s, s), fill)
+    offset = ((s - w) // 2, (s - h) // 2)
+    canvas.paste(img, offset)
+    return canvas
+
+
+def pad_to_square_mask(mask_np: np.ndarray):
+    """Pad a binary mask (numpy array) to a square, centered."""
+    h, w = mask_np.shape
+    s = max(h, w)
+    canvas = np.zeros((s, s), dtype=np.uint8)
+    off_y = (s - h) // 2
+    off_x = (s - w) // 2
+    canvas[off_y:off_y+h, off_x:off_x+w] = mask_np
+    return canvas
+
+
+
+def resize_image_and_mask(
+    image_path: str,
+    mask_path: str,
+    target_size: int = 512,
+):
+    """
+    Resize an image + mask to a square, without distortion.
+    Pad image/mask to square
+    Resize image (LANCZOS) and mask (NEAREST)
+    Returns numpy arrays.
+    """
+    img = Image.open(image_path).convert("RGB")
+
+    mask = Image.open(mask_path).convert("L")
+    mask_np = (np.array(mask) > 0).astype(np.uint8)
+
+    img_sq = pad_to_square_pil(img)
+    mask_sq = pad_to_square_mask(mask_np)
+    img_resized = img_sq.resize((target_size, target_size), Image.LANCZOS)
+
+    mask_resized = Image.fromarray(mask_sq * 255).resize(
+        (target_size, target_size),
+        Image.NEAREST
+    )
+    mask_resized_np = (np.array(mask_resized) > 0)
+
+    return np.array(img_resized), mask_resized_np
+
+
+
+def resize_all_images_and_masks(
+    df,
+    img_out_folder: Path,
+    mask_out_folder: Path,
+    target_size: int = 512,
+    mask_column: str = "cv_mask_path",
+    img_column: str = "image_path",
+):
+    """
+    Resize all images + masks in a dataframe.
+    Saves resized outputs and updates df with new paths.
+    """
+
+    img_out_folder.mkdir(parents=True, exist_ok=True)
+    mask_out_folder.mkdir(parents=True, exist_ok=True)
+
+    missing = []
+    processed = 0
+
+    for idx, row in tqdm(df.iterrows(), total=len(df), desc="Resizing all"):
+        img_path = row[img_column]
+        mask_path = row[mask_column]
+
+        # Check paths
+        if not (Path(img_path).exists() and Path(mask_path).exists()):
+            missing.append((img_path, mask_path))
+            continue
+
+        # Resize
+        img_resized_np, mask_resized_np = resize_image_and_mask(
+            img_path,
+            mask_path,
+            target_size=target_size,
+        )
+
+        # Output file paths
+        stem = Path(img_path).stem
+
+        img_out = img_out_folder / f"{stem}_resized.png"
+        mask_out = mask_out_folder / f"{stem}_mask_resized.png"
+
+        Image.fromarray(img_resized_np).save(str(img_out))
+        cv2.imwrite(str(mask_out), (mask_resized_np.astype(np.uint8) * 255))
+
+        df.at[idx, img_column] = str(img_out)
+        df.at[idx, mask_column] = str(mask_out)
+
+        processed += 1
+
+    print(f"Resized {processed} images.")
+    if missing:
+        print("WARNING: skipped because paths missing:")
+        for bad in missing:
+            print(" -", bad)
+
+    return df

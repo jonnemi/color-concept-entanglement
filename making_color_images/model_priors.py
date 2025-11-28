@@ -77,7 +77,6 @@ class ModelColorPriors:
             print(f"Saved model priors to {out_path}")
 
         display_cols = ["object", "correct_answer", "model_prior_dummy", "model_prior"]
-        print(ground_truth_df[display_cols].head(20))
         return ground_truth_df
 
 
