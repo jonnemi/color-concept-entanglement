@@ -142,7 +142,7 @@ def run_vlm_evaluation(
 
     results = []
 
-    for i in tqdm(range(0, len(df), batch_size), desc=f"Running VLM ({mode})"):
+    for i in tqdm(range(0, len(df), batch_size), desc=f"Running VLM ({mode})", position=1, leave=False):
         batch_df = df.iloc[i : i + batch_size].copy()
 
         with torch.inference_mode():

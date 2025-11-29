@@ -115,26 +115,27 @@ class ModelColorPriors:
         return ground_truth_df
 
   
-    def replace_correct_answers(self, df, ground_truth_df, colors_to_exclude=None):
+    def replace_correct_answers(self, df, ground_truth_df, colors_to_exclude=None, prior_col="model_prior"):
         """
         Replace df['correct_answer'] with the model's prior, filtering excluded colors.
         """
+
         if colors_to_exclude is None:
             colors_to_exclude = ["silver", "gold", "white", "clear"]
 
         print(f"Excluding colors: {colors_to_exclude}")
         ground_truth_df = ground_truth_df[
-            ~ground_truth_df["model_prior"].isin(colors_to_exclude)
+            ~ground_truth_df[prior_col].isin(colors_to_exclude)
         ]
 
         # Merge priors into df
         df = df.merge(
-            ground_truth_df[["object", "model_prior"]],
+            ground_truth_df[["object", prior_col]],
             on="object",
             how="inner",
         )
-        df["correct_answer"] = df["model_prior"]
-        df = df.drop(columns=["model_prior"])
+        df["correct_answer"] = df[prior_col]
+        df = df.drop(columns=[prior_col])
 
         print(f"Updated dataset now has {df.shape[0]} rows.")
         return df

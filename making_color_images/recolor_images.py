@@ -306,7 +306,7 @@ def generate_variants(
         # SANITY CHECK
         actual_colored = colored_fg[idx_fg].sum()
         actual_pct = 100 * actual_colored / len(idx_fg)
-        print(f"[FG] target={pct:3d}% → actual={actual_pct:6.2f}%   ({actual_colored}/{len(idx_fg)})")
+        #print(f"[FG] target={pct:3d}% → actual={actual_pct:6.2f}%   ({actual_colored}/{len(idx_fg)})")
 
 
     # Background recoloring
@@ -348,7 +348,7 @@ def generate_variants(
         # SANITY CHECK
         actual_colored = colored_bg[idx_bg].sum()
         actual_pct = 100 * actual_colored / len(idx_bg)
-        print(f"[BG] target={pct:3d}% → actual={actual_pct:6.2f}%   ({actual_colored}/{len(idx_bg)})")
+        #print(f"[BG] target={pct:3d}% → actual={actual_pct:6.2f}%   ({actual_colored}/{len(idx_bg)})")
 
 
     gc.collect()
