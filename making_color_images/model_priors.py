@@ -28,7 +28,7 @@ class ModelColorPriors:
         self.model = model
         self.data_folder = data_folder
         self.device = device
-
+        self.model_name = model.name_or_path.split("/")[-1]
 
     def get_model_color_priors(self, df, most="True", save=True):
         """
@@ -70,9 +70,10 @@ class ModelColorPriors:
             gc.collect()
 
         ground_truth_df = pd.concat(results, ignore_index=True)
-
+        
+        name = f"color_priors_{self.model_name}.csv"
         if save:
-            out_path = self.data_folder / "model_color_priors.csv"
+            out_path = self.data_folder / name
             ground_truth_df.to_csv(out_path, index=False)
             print(f"Saved model priors to {out_path}")
 
@@ -141,11 +142,11 @@ class ModelColorPriors:
         return df
 
 
-    def load_model_priors(self, filename="model_color_priors.csv"):
+    def load_model_priors(self):
         """
         Load model priors CSV and return a DataFrame.
         """
-        path = self.data_folder / filename
+        path = self.data_folder / f"color_priors_{self.model_name}.csv"
         df = pd.read_csv(path)
         print(f"Loaded {len(df)} rows from {path}")
         return df

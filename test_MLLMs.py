@@ -9,11 +9,17 @@ import re
 import argparse
 from tqdm import tqdm
 import os
+import io
 import gc
+import base64
 from pathlib import Path
 import torch.nn.functional as F
+from openai import OpenAI
+from dotenv import load_dotenv
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+load_dotenv()
+client = OpenAI()
 
 
 def clean_instruction_tokens(text):
@@ -188,6 +194,68 @@ def run_vlm_evaluation(
 
     df_results = pd.concat(results, ignore_index=True)
     return df_results
+
+
+def encode_image(image_path):
+    with open(image_path, "rb") as f:
+        return base64.b64encode(f.read()).decode("utf-8")
+
+
+def mllm_testing_gpt(df, model_name="gpt-4o", most="False", dummy=False):
+    """
+    Run evaluation through the OpenAI GPT API.
+    Returns df with column 'predicted_color'.
+    """
+
+    generated_texts = []
+
+    for idx, row in df.iterrows():
+        if most == "True":
+            obj = row["object"]
+            obj_plural = obj if obj.endswith("s") else obj + "s"
+            question = f"What color are most {obj_plural}?"
+        else:
+            question = f"What color is this {row['object']}?"
+
+        prompt = f"Answer with one word. {question}"
+
+        # Load immage
+        if dummy:
+            # White dummy image
+            img = Image.new("RGB", (256, 256), color="white")
+            buf = io.BytesIO()
+            img.save(buf, format="PNG")
+            img_str = base64.b64encode(buf.getvalue()).decode("utf-8")
+        else:
+            try:
+                img_str = encode_image(row["image_path"])
+            except FileNotFoundError:
+                print(f"Warning: missing image: {row['image_path']}")
+                generated_texts.append(None)
+                continue
+
+        # GPT REQUEST
+        completion = client.chat.completions.create(
+            model=model_name,
+            messages=[
+                {"role": "user",
+                 "content": [
+                     {"type": "text", "text": prompt},
+                     {"type": "image_url",
+                      "image_url": {"url": f"data:image/png;base64,{img_str}"}}
+                 ]}
+            ],
+            max_tokens=10,
+            temperature=0.0
+        )
+
+        answer = completion.choices[0].message.content.strip().lower()
+        answer = answer.replace("gray", "grey")  
+        generated_texts.append(answer)
+
+    df["predicted_color"] = generated_texts
+    return df
+
 
 
 def main():
