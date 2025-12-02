@@ -207,141 +207,150 @@ def plot_vlm_performance(
     show_accuracy=True,
     show_probability=True,
     ci=False,
-    color_mode = "all",
+    color_mode="all",
     pct_range: list[int] | None = None
 ):
-    """
-    Plot model performance (accuracy and/or P(correct)) vs. recoloring fraction with error bars.
 
-    Expects columns:
-      ['image_variant', 'correct_answer', 'pred_color_this', 'pred_color_most',
-       'prob_correct_this', 'prob_correct_most']
+    # Detect available columns
+    has_this = "pred_color_this" in df.columns
+    has_most = "pred_color_most" in df.columns
 
-    Args:
-        df (pd.DataFrame): model results
-        show_accuracy (bool): include accuracy curves
-        show_probability (bool): include probability curves
-        ci (bool): use 95% confidence interval instead of std deviation
-        color_mode (str):  "independent", "sequential" or "all" - indicates which variant type to display.
-        pct_range (list[int]): provide % levels to plot
-    """
+    if not has_this and not has_most:
+        raise ValueError("DataFrame has neither 'this' nor 'most' prediction columns.")
 
+    # Parse variant strings
     def parse_variant(variant):
-        """Returns (Kind, Pct, Mode). Mode is None if not present."""
-        # Now we capture the mode in Group 3
         m = re.match(r"(FG|BG)\s*(\d+)%(?:\s*\((seq|ind)\))?", str(variant))
-        
         if not m:
             return None, None, None
-        
-        kind = m.group(1)
-        pct = int(m.group(2))
-        mode = m.group(3) # Will be 'seq', 'ind', or None
-    
-        return kind, pct, mode
+        return m.group(1), int(m.group(2)), m.group(3)
 
-    df[["region", "pct", "mode"]] = df["image_variant"].apply(lambda v: pd.Series(parse_variant(v)))
+    df[["region", "pct", "mode"]] = df["image_variant"].apply(
+        lambda v: pd.Series(parse_variant(v))
+    )
     df = df.dropna(subset=["region", "pct"])
 
+    # Filter by percentage range
     if pct_range is not None:
-        pct_set = set(pct_range)
-        df = df[df["pct"].isin(pct_set)]
+        df = df[df["pct"].isin(set(pct_range))]
 
+    # Filter by mode (seq/ind/all)
     if color_mode not in ["all", "both"]:
         df = df[df["mode"] == color_mode]
-    
-    if "pred_color_this" in df.columns:
-        df["acc_this"] = (df["pred_color_this"].str.lower() == df["correct_answer"].str.lower()).astype(float)
-    if "pred_color_most" in df.columns:
-        df["acc_most"] = (df["pred_color_most"].str.lower() == df["correct_answer"].str.lower()).astype(float)
+
+    # Accuracy columns
+    if has_this:
+        df["acc_this"] = (
+            df["pred_color_this"].str.lower()
+            == df["correct_answer"].str.lower()
+        ).astype(float)
+
+    if has_most:
+        df["acc_most"] = (
+            df["pred_color_most"].str.lower()
+            == df["correct_answer"].str.lower()
+        ).astype(float)
+
     grouped = df.groupby(["region", "pct"])
 
-    # Helper to compute mean and error
     def summarize(col):
         mean = grouped[col].mean()
         std = grouped[col].std()
         n = grouped[col].count()
         if ci:
-            # 95% confidence interval
             ci_val = stats.t.ppf(0.975, n - 1) * (std / np.sqrt(n))
             return mean, ci_val
         else:
             return mean, std
 
-    # Collect stats
+    # Collect metrics
     data = {}
     metrics = []
     if show_accuracy:
-        metrics += ["acc_this", "acc_most"]
+        if has_this: metrics.append("acc_this")
+        if has_most: metrics.append("acc_most")
     if show_probability:
-        metrics += ["prob_correct_this", "prob_correct_most"]
+        if has_this and "prob_correct_this" in df.columns:
+            metrics.append("prob_correct_this")
+        if has_most and "prob_correct_most" in df.columns:
+            metrics.append("prob_correct_most")
 
     for metric in metrics:
-        if metric not in df.columns:
-            continue
         mean, err = summarize(metric)
         data[f"{metric}_mean"] = mean
         data[f"{metric}_err"] = err
 
     summary = pd.DataFrame(data).reset_index()
 
-    # Plot setup
+    
     fig, ax = plt.subplots(figsize=(9, 6))
-    colors = {
-        "this_FG": "#1f77b4",
-        "this_BG": "#ff7f0e",
-        "most_FG": "#2ca02c",
-        "most_BG": "#d62728",
-    }
+
+    colors = {}
+    if has_this:
+        colors["this_FG"] = "#1f77b4"
+        colors["this_BG"] = "#ff7f0e"
+    if has_most:
+        colors["most_FG"] = "#2ca02c"
+        colors["most_BG"] = "#d62728"
 
     def plot_metric(region, acc_col, prob_col, label_prefix):
+        if region not in ["FG", "BG"]:
+            return
+        if f"{acc_col}_mean" not in summary.columns and f"{prob_col}_mean" not in summary.columns:
+            return
+
         sub = summary[summary["region"] == region]
         if sub.empty:
             return
-        # Accuracy = dashed
-        if show_accuracy:
-            yerr = sub[f"{acc_col}_err"] if ci else None
+
+        c = colors.get(f"{label_prefix}_{region}", "black")
+
+        # Accuracy (dashed)
+        if show_accuracy and f"{acc_col}_mean" in sub.columns:
             ax.errorbar(
-                sub["pct"], sub[f"{acc_col}_mean"], yerr=yerr,
-                fmt="o--", capsize=3 if ci else 0,
-                color=colors[f"{label_prefix}_{region}"],
-                label=f"{label_prefix}_{region} ", alpha=0.8 #(accuracy)
-            )
-        # Probability = solid
-        if show_probability:
-            yerr = sub[f"{prob_col}_err"] if ci else None
-            ax.errorbar(
-                sub["pct"], sub[f"{prob_col}_mean"], yerr=yerr,
-                fmt="o-", capsize=3 if ci else 0,
-                color=colors[f"{label_prefix}_{region}"],
-                label=f"{label_prefix}_{region}", alpha=0.9 # (P(correct))
+                sub["pct"], sub[f"{acc_col}_mean"],
+                yerr=sub.get(f"{acc_col}_err", None),
+                fmt="o--", color=c, capsize=3 if ci else 0,
+                label=f"{label_prefix}_{region} (acc)"
             )
 
-    for region in ["FG", "BG"]:
-        plot_metric(region, "acc_this", "prob_correct_this", "this")
-        plot_metric(region, "acc_most", "prob_correct_most", "most")
+        # Probability (solid)
+        if show_probability and f"{prob_col}_mean" in sub.columns:
+            ax.errorbar(
+                sub["pct"], sub[f"{prob_col}_mean"],
+                yerr=sub.get(f"{prob_col}_err", None),
+                fmt="o-", color=c, capsize=3 if ci else 0,
+                label=f"{label_prefix}_{region} (P)"
+            )
 
+  
+    if has_this:
+        for region in ["FG", "BG"]:
+            plot_metric(region, "acc_this", "prob_correct_this", "this")
+
+    if has_most:
+        for region in ["FG", "BG"]:
+            plot_metric(region, "acc_most", "prob_correct_most", "most")
+
+    # Titles, labels, legend
     ax.set_xlabel("Colored pixel percentage (%)", fontsize=12)
-    if not show_accuracy:
-        label = "P(correct)"
-    elif not show_probability:
-        label = "Accuracy"
+
+    if show_accuracy and show_probability:
+        ylabel = "Accuracy / P(correct)"
+    elif show_accuracy:
+        ylabel = "Accuracy"
     else:
-        label = "Accuracy / P(correct)"
-    ax.set_ylabel(label, fontsize=12)
-    ax.set_title(f"VLM performance vs. recoloring fraction ({color_mode})", fontsize=14, fontweight="bold")
+        ylabel = "P(correct)"
+
+    ax.set_ylabel(ylabel, fontsize=12)
+    ax.set_title(f"VLM performance vs. recoloring fraction ({color_mode})", fontsize=14)
+
     if pct_range is not None:
         ax.set_xticks(sorted(set(pct_range)))
+
     ax.set_ylim(0, 1.05)
     ax.grid(True, linestyle="--", alpha=0.5)
-    ax.legend(
-        title="Question / Region",
-        fontsize=10,
-        loc="center left",
-        bbox_to_anchor=(1.02, 0.8),
-        borderaxespad=0,
-    )
-
+    ax.legend(loc="center left", bbox_to_anchor=(1.02, 0.5))
 
     plt.tight_layout()
     plt.show()
