@@ -14,7 +14,8 @@ import base64
 from pathlib import Path
 from openai import OpenAI
 from PIL import Image
-from test_MLLMs import mllm_testing
+from test_MLLMs import prompt_mllm
+from collections import Counter
 
 
 class BaseColorPriors:
@@ -35,42 +36,85 @@ class BaseColorPriors:
     def query_model_image(self, df, question, image_path):
         """Return a color string (image + question)."""
         raise NotImplementedError
+    
 
+    def create_prior_prompt(self, object_name, most=True):
+        """
+        Build a prompt that asks for up to 3 likely colors,
+        ordered from most to least likely, comma-separated.
+        Uses correct LLaVA instruction-token style.
+        """
 
-    #  Shared logic for computing priors
-    def make_question(self, object_name, most=True):
-        if most:
+        instruction_tokens = "[INST] <image>\n"
+        end_tokens = "[/INST]"
+
+        # Build question
+        if most == "True":
             plural = object_name if object_name.endswith("s") else object_name + "s"
-            return f"Answer with one word. What color are most {plural}?"
+            question = (
+                f"List up to three possible colors for most {plural}, "
+                f"from most likely to least likely."
+            )
         else:
-            return f"Answer with one word. What color is this {object_name}?"
+            question = (
+                f"List up to three possible colors for this {object_name}, "
+                f"from most likely to least likely."
+            )
+
+        # Style constraint
+        format_rule = (
+            "Respond ONLY with english color words separated by commas. "
+            "Do not use sentences."
+        )
+
+        # Final prompt
+        prompt = (
+            f"{instruction_tokens}"
+            f"{question} {format_rule}"
+            f" {end_tokens}"
+        )
+
+        return prompt
         
 
-    def get_model_color_priors(self, df, most=True, save=True, batch_size = 1):
+    def get_model_color_priors(self, df, most=True, save=True):
         """
         Shared implementation:
         Calls subclass methods for priors with and without image.
         """
         results = []
+        batch_size = 1  # larger batch sizes not implemented yet
+
+        def _parse_colors(s):
+            """Convert 'red, green, blue' → ['red','green','blue']"""
+            parts = [p.strip() for p in s.split(",") if p.strip()]
+            
+            return parts
+
 
         for i, row in tqdm(df.iterrows(), total=len(df), desc=f"Color priors ({self.model_name})"):
-            batch_df = df.iloc[i:i+ batch_size].copy()
+            batch_df = df.iloc[i : i + batch_size].reset_index(drop=True)
             object_name = row["object"]
-            image_path = row["image_path"]
-            question = self.make_question(object_name, most=most)
+            prompt = self.create_prior_prompt(object_name, most=str(most))
 
-            prior_dummy = self.query_model_dummy(batch_df, question)
-            prior_image = self.query_model_image(batch_df, question)
+            dummy_priors = self.query_model_dummy(batch_df, prompt)
+            img_priors  = self.query_model_image(batch_df, prompt)
 
-            df_merged = pd.concat([prior_dummy, prior_image[["model_prior_image"]]], axis=1)
+            out_batch = {
+                "object": row["object"],
+                "correct_answer": row["correct_answer"],
+                "dummy_priors": _parse_colors(dummy_priors[0]),
+                "image_priors": _parse_colors(img_priors[0]),
+            }
 
-            results.append(df_merged)
-            del df_merged
+            results.append(out_batch)
+            del out_batch
+            del batch_df
             torch.cuda.empty_cache()
             torch.cuda.ipc_collect()
             gc.collect()
 
-        ground_truth_df = pd.concat(results, ignore_index=True)       
+        ground_truth_df = pd.DataFrame(results)       
 
         if save:
             out_path = self.data_folder / f"color_priors_{self.model_name}.csv"
@@ -79,7 +123,55 @@ class BaseColorPriors:
 
         return ground_truth_df
 
-    
+    def pick_primary_color(self, df, column="dummy_priors"):
+        """
+        Select the best (primary) color for each row:
+        • keep only allowed colors
+        • remove excluded colors
+        • if nothing remains return NaN (None)
+        • otherwise return first remaining color
+        """
+
+        EXCLUDE = {"white", "silver", "gold", "clear"}
+
+        ALLOWED = {
+            "red", "brown", "pink", "orange", "yellow", "gold",
+            "green", "blue", "purple", "black", "grey", "silver", "white"
+        }
+
+        primary_colors = []
+
+        for obj, priors in zip(df["object"], df[column]):
+            # Ensure list
+            if not isinstance(priors, list):
+                print(f"[WARN] priors for {obj} not a list: {priors}")
+                primary_colors.append(None)
+                continue
+
+            # Normalize input
+            priors = [str(c).lower().strip() for c in priors]
+
+            # Keep only valid allowed colors
+            filtered = [c for c in priors if c in ALLOWED and c not in EXCLUDE]
+
+            if len(filtered) == 0:
+                # nothing valid left
+                print(f"[NULL] {obj}: all priors invalid ({priors}) writing NaN")
+                primary_colors.append(None)  # → becomes NaN in DataFrame
+                continue
+
+            # If something remains, pick the first valid one
+            chosen = filtered[0]
+
+            # Print when a correction occurred
+            if chosen != priors[0]:
+                print(f"[INFO] {obj}: replaced '{priors[0]}' with '{chosen}'")
+
+            primary_colors.append(chosen)
+
+        return primary_colors
+
+
     # Shared analysis
     def analyze_differences(self, df):
         """
@@ -87,67 +179,25 @@ class BaseColorPriors:
         """
         df = df.copy()
 
-        df["diff_dummy_vs_image"] = (
-            df["model_prior_dummy"].str.lower() != df["model_prior_image"].str.lower()
-        )
-
-        print(df["diff_dummy_vs_image"].sum(), " mismatches when querying color priors with vs without image.")
-
-        # Normalize correct_answer into list
-        df["correct_answer"] = df["correct_answer"].apply(
-            lambda x: ast.literal_eval(x) if isinstance(x, str) else x
-        )
-
         # Check if model_prior color in GT
-        df["prior_dummy_in_gt"] = df.apply(
-            lambda r: r["model_prior_dummy"].lower()
+        df["prior_in_gt"] = df.apply(
+            lambda r: r["prior"].lower()
             in [c.lower() for c in r["correct_answer"]],
             axis=1,
         )
+        print(f"{df['prior_in_gt'].sum()} rows where the chosen model color prior is NOT in ground truth from Visual Counterfact.")
 
-        df["prior_image_in_gt"] = df.apply(
-            lambda r: r["model_prior_image"].lower()
-            in [c.lower() for c in r["correct_answer"]],
-            axis=1,
-        )
-
-        print(f"{df['prior_dummy_in_gt'].sum()} rows where model color prior WITHOUT image NOT in ground truth.")
-        print(f"{df['prior_image_in_gt'].sum()} rows where model color prior WITH image NOT in ground truth.")
-
-        model_priors = df["model_prior_dummy"].unique()
+        model_priors = df["prior"].unique()
         print(f"Model color priors: {model_priors}")
-
-        return df
-
-    def replace_correct_answers(self, df, ground_truth_df, colors_to_exclude=None, prior_col="model_prior_dummy"):
-        """
-        Replace df['correct_answer'] with the model's prior, filtering excluded colors.
-        """
-
-        if colors_to_exclude is None:
-            colors_to_exclude = ["silver", "gold", "white", "clear"]
-
-        print(f"Excluding colors: {colors_to_exclude}")
-        ground_truth_df = ground_truth_df[
-            ~ground_truth_df[prior_col].isin(colors_to_exclude)
-        ]
-
-        # Merge priors into df
-        df = df.merge(
-            ground_truth_df[["object", prior_col]],
-            on="object",
-            how="inner",
-        )
-        df["correct_answer"] = df[prior_col]
-        df = df.drop(columns=[prior_col])
-
-        print(f"Updated dataset now has {df.shape[0]} rows.")
-        return df  
 
 
     def load_model_priors(self):
         path = self.data_folder / f"color_priors_{self.model_name}.csv"
-        return pd.read_csv(path)
+        df = pd.read_csv(path)
+        df["correct_answer"] = df["correct_answer"].apply(ast.literal_eval)
+        df["dummy_priors"] = df["dummy_priors"].apply(ast.literal_eval)
+        df["image_priors"] = df["image_priors"].apply(ast.literal_eval)
+        return df
 
 
 class TorchColorPriors(BaseColorPriors):
@@ -160,169 +210,27 @@ class TorchColorPriors(BaseColorPriors):
         self.model = model
         self.device = device
 
-    def query_model_dummy(self, df, question):
-        result = mllm_testing(
+    def query_model_dummy(self, df, prompt):
+        result = prompt_mllm(
             df,
             self.processor,
             self.model,
             self.device,
-            most=question,
+            prompt=prompt,
             dummy=True
         )
-        result = result.rename(columns={"predicted_color": "model_prior_dummy"})
-        return result
+        return result["predicted_color"].tolist()
 
-    def query_model_image(self, df, question):
-        result = mllm_testing(
+    def query_model_image(self, df, prompt):
+        result = prompt_mllm(
             df,
             self.processor,
             self.model,
             self.device,
-            most=question,
+            prompt=prompt,
             dummy=False
         )
-        result = result.rename(columns={"predicted_color": "model_prior_image"})
-        return result
-
-
-class ModelColorPriors:
-    def __init__(self, processor, model, device, data_folder):
-        """
-        Initialize the ModelColorPriors utility.
-
-        Args:
-            processor: The VLM processor (e.g., LlavaNextProcessor)
-            model: The VLM model (e.g., LlavaNextForConditionalGeneration)
-            data_folder: Path object where results will be saved
-            device: The device the model runs on ("cuda" or "cpu")
-        """
-        self.processor = processor
-        self.model = model
-        self.data_folder = data_folder
-        self.device = device
-        self.model_name = model.name_or_path.split("/")[-1]
-
-    def get_model_color_priors(self, df, most="True", save=True):
-        """
-        Compare color priors using dummy (white) vs real images.
-
-        Args:
-            df: DataFrame with at least 'object', 'image_path', 'correct_answer'
-            most: 'True' for plural question ("most apples"), 'False' for singular
-            save: whether to save results to CSV
-
-        Returns:
-            ground_truth_df: DataFrame with model_prior and model_prior_dummy
-        """
-        batch_size = 1
-        results = []
-
-        for i in tqdm(range(0, len(df), batch_size), desc="Running model color priors"):
-            batch_df = df.iloc[i:i + batch_size].copy()
-
-            with torch.inference_mode():
-                # Dummy white image
-                df_dummy = mllm_testing(
-                    batch_df, self.processor, self.model, self.device, most=most, dummy=True
-                )
-                df_dummy = df_dummy.rename(columns={"predicted_color": "model_prior_dummy"})
-
-                # Real grayscale image
-                df_real = mllm_testing(
-                    batch_df, self.processor, self.model, self.device, most=most, dummy=False
-                )
-                df_real = df_real.rename(columns={"predicted_color": "model_prior"})
-
-                df_merged = pd.concat([df_dummy, df_real[["model_prior"]]], axis=1)
-
-            results.append(df_merged)
-            del df_merged
-            torch.cuda.empty_cache()
-            torch.cuda.ipc_collect()
-            gc.collect()
-
-        ground_truth_df = pd.concat(results, ignore_index=True)
-        
-        name = f"color_priors_{self.model_name}.csv"
-        if save:
-            out_path = self.data_folder / name
-            ground_truth_df.to_csv(out_path, index=False)
-            print(f"Saved model priors to {out_path}")
-
-        display_cols = ["object", "correct_answer", "model_prior_dummy", "model_prior"]
-        return ground_truth_df
-
-
-    def analyze_differences(self, ground_truth_df):
-        """
-        Add diagnostic columns for dummy vs real priors and correctness checks.
-        """
-        ground_truth_df = ground_truth_df.copy()
-
-        # Dummy vs real difference
-        ground_truth_df["diff_dummy_vs_real"] = (
-            ground_truth_df["model_prior_dummy"].str.lower()
-            != ground_truth_df["model_prior"].str.lower()
-        )
-        n_diff = ground_truth_df["diff_dummy_vs_real"].sum()
-        print(f"{n_diff} rows differ between dummy and real priors.")
-
-        # Normalize correct_answer into list
-        ground_truth_df["correct_answer"] = ground_truth_df["correct_answer"].apply(
-            lambda x: ast.literal_eval(x) if isinstance(x, str) else x
-        )
-
-        # Check if model_prior color in GT
-        ground_truth_df["color_in_gt"] = ground_truth_df.apply(
-            lambda r: r["model_prior"].lower()
-            in [c.lower() for c in r["correct_answer"]],
-            axis=1,
-        )
-
-        n_not_in_gt = (~ground_truth_df["color_in_gt"]).sum()
-        print(f"{n_not_in_gt} rows where model color prior NOT in ground truth.")
-
-        model_priors = ground_truth_df["model_prior"].unique()
-        print(f"Model color priors: {model_priors}")
-
-        return ground_truth_df
-
-  
-    def replace_correct_answers(self, df, ground_truth_df, colors_to_exclude=None, prior_col="model_prior"):
-        """
-        Replace df['correct_answer'] with the model's prior, filtering excluded colors.
-        """
-
-        if colors_to_exclude is None:
-            colors_to_exclude = ["silver", "gold", "white", "clear"]
-
-        print(f"Excluding colors: {colors_to_exclude}")
-        ground_truth_df = ground_truth_df[
-            ~ground_truth_df[prior_col].isin(colors_to_exclude)
-        ]
-
-        # Merge priors into df
-        df = df.merge(
-            ground_truth_df[["object", prior_col]],
-            on="object",
-            how="inner",
-        )
-        df["correct_answer"] = df[prior_col]
-        df = df.drop(columns=[prior_col])
-
-        print(f"Updated dataset now has {df.shape[0]} rows.")
-        return df
-
-
-    def load_model_priors(self):
-        """
-        Load model priors CSV and return a DataFrame.
-        """
-        path = self.data_folder / f"color_priors_{self.model_name}.csv"
-        df = pd.read_csv(path)
-        print(f"Loaded {len(df)} rows from {path}")
-        return df
-    
+        return result["predicted_color"].tolist()
 
 
 """

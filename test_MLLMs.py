@@ -27,7 +27,23 @@ def clean_instruction_tokens(text):
     return cleaned_text.strip()
 
 
-def mllm_testing(df, processor, model, device, most="True", dummy=False, return_probs=False):
+def create_eval_prompt(object_name, most="False"):
+    instruction_tokens = "[INST] <image>\n"
+    end_tokens = "[/INST]"
+    #question = f"What color is {'a' if most == 'True' else 'this'} {object_name}?"
+    if most == "True":
+        object_name_plural = object_name if object_name.endswith("s") else object_name + "s"
+        question = f"What color are most {object_name_plural}?"
+
+    else:
+        question = f"What color is this {object_name}?"
+
+    prompt = f"{instruction_tokens} Answer with one word. {question} {end_tokens}"
+
+    return prompt
+
+
+def prompt_mllm(df, processor, model, device, prompt, dummy=False, return_probs=False):
     """
     Run inference for a batch of images and optionally compute P(correct_answer)
     using the final layer logits.
@@ -39,20 +55,6 @@ def mllm_testing(df, processor, model, device, most="True", dummy=False, return_
         probs_correct = []
 
         for idx, row in df.iterrows():
-            instruction_tokens = "[INST] <image>\n"
-            end_tokens = "[/INST]"
-            object_name = row['object']
-
-            #question = f"What color is {'a' if most == 'True' else 'this'} {object_name}?"
-            if most == "True":
-                object_name_plural = object_name if object_name.endswith("s") else object_name + "s"
-                question = f"What color are most {object_name_plural}?"
-
-            else:
-                question = f"What color is this {object_name}?"
-
-            prompt = f"{instruction_tokens} Answer with one word. {question} {end_tokens}"
-
             if dummy:
                 #dummy_image = Image.new("RGB", (256, 256), color="white")
                 #image = None
@@ -60,7 +62,7 @@ def mllm_testing(df, processor, model, device, most="True", dummy=False, return_
             else:
                 try:
                     image = Image.open(row['image_path']).convert("RGB")
-                    image = image.resize((256, 256), Image.LANCZOS)
+                    #image = image.resize((256, 256), Image.LANCZOS)
                     inputs = processor(images=image, text=prompt, return_tensors='pt')
                 except FileNotFoundError:
                     print(f"Warning: Image not found for {row['object']}")
@@ -153,7 +155,8 @@ def run_vlm_evaluation(
 
         with torch.inference_mode():
             if mode in ["most", "both"]:
-                df_most = mllm_testing(batch_df, processor, model, device, most="True", dummy=dummy, return_probs=return_probs)
+                prompt = create_eval_prompt(batch_df["object"], most="True")
+                df_most = prompt_mllm(batch_df, processor, model, device, prompt=prompt, dummy=dummy, return_probs=return_probs)
                 df_most = df_most.rename(columns={
                     "predicted_color": "pred_color_most",
                     "prob_correct": "prob_correct_most" if return_probs else None
@@ -162,7 +165,8 @@ def run_vlm_evaluation(
                 df_most = None
 
             if mode in ["this", "both"]:
-                df_this = mllm_testing(batch_df, processor, model, device, most="False", dummy=dummy, return_probs=return_probs)
+                prompt = create_eval_prompt(batch_df["object"], most="False")
+                df_this = prompt_mllm(batch_df, processor, model, device, prompt=prompt, dummy=dummy, return_probs=return_probs)
                 df_this = df_this.rename(columns={
                     "predicted_color": "pred_color_this",
                     "prob_correct": "prob_correct_this" if return_probs else None
