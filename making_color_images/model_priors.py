@@ -12,10 +12,12 @@ import pandas as pd
 from tqdm import tqdm
 import base64
 from pathlib import Path
+import os
 from openai import OpenAI
 from PIL import Image
 from test_MLLMs import prompt_mllm
 from collections import Counter
+import string
 
 
 class BaseColorPriors:
@@ -126,10 +128,11 @@ class BaseColorPriors:
     def pick_primary_color(self, df, column="dummy_priors"):
         """
         Select the best (primary) color for each row:
-        • keep only allowed colors
-        • remove excluded colors
-        • if nothing remains return NaN (None)
-        • otherwise return first remaining color
+            • drop excluded colors
+            • drop colors not in allowed vocabulary
+            • if none remain, return None
+            • map silver to grey, gold to yellow
+            • return a flag for rows where a change happened
         """
 
         EXCLUDE = {"white", "silver", "gold", "clear"}
@@ -139,37 +142,62 @@ class BaseColorPriors:
             "green", "blue", "purple", "black", "grey", "silver", "white"
         }
 
+        # Final mapping AFTER selection
+        COLOR_MAP = {
+            "silver": "grey",
+            "gold": "yellow"
+        }
+
         primary_colors = []
+        changed_flags = []
 
         for obj, priors in zip(df["object"], df[column]):
+
+            changed = False  # track modifications
+
             # Ensure list
             if not isinstance(priors, list):
                 print(f"[WARN] priors for {obj} not a list: {priors}")
                 primary_colors.append(None)
+                changed_flags.append(True)
                 continue
 
-            # Normalize input
+            # Normalize
             priors = [str(c).lower().strip() for c in priors]
+            original_first = priors[0] if priors else None
 
-            # Keep only valid allowed colors
-            filtered = [c for c in priors if c in ALLOWED and c not in EXCLUDE]
+            # Filter invalid colors
+            filtered = [
+                c for c in priors
+                if c in ALLOWED and c not in EXCLUDE
+            ]
 
             if len(filtered) == 0:
-                # nothing valid left
-                print(f"[NULL] {obj}: all priors invalid ({priors}) writing NaN")
-                primary_colors.append(None)  # → becomes NaN in DataFrame
+                # if no valid colors remain write None
+                print(f"[NULL] {obj}: all priors invalid {priors} to NaN")
+                primary_colors.append(None)
+                changed_flags.append(True)
                 continue
 
-            # If something remains, pick the first valid one
+            # First valid color
             chosen = filtered[0]
 
-            # Print when a correction occurred
-            if chosen != priors[0]:
-                print(f"[INFO] {obj}: replaced '{priors[0]}' with '{chosen}'")
+            # Check if this differs from original first
+            if chosen != original_first:
+                changed = True
+                print(f"[INFO] {obj}: replaced '{original_first}' with '{chosen}'")
 
-            primary_colors.append(chosen)
+            # Apply final color mapping (silver->grey, gold->yellow)
+            mapped = COLOR_MAP.get(chosen, chosen)
+            if mapped != chosen:
+                print(f"[MAP] {obj}: mapped '{chosen}' to '{mapped}'")
+                changed = True
 
-        return primary_colors
+            primary_colors.append(mapped)
+            changed_flags.append(changed)
+
+        return primary_colors, changed_flags
+
 
 
     # Shared analysis
@@ -233,178 +261,134 @@ class TorchColorPriors(BaseColorPriors):
         return result["predicted_color"].tolist()
 
 
-"""
-Color-prior extraction using GPT-Vision models (no processor, no torch model).
-"""
-client = OpenAI()
-
 def encode_image_base64(path):
     with open(path, "rb") as f:
         return base64.b64encode(f.read()).decode("utf-8")
 
 
-class GPTColorPriors:
-    def __init__(self, model_name: str, data_folder: Path):
-        """
-        Args:
-            model_name  (str): e.g., "gpt-4o", "gpt-4.1", "gpt-4o-mini"
-            data_folder (Path): where priors are saved
-        """
-        self.model_name = model_name
-        self.data_folder = data_folder
+class GPTColorPriors(BaseColorPriors):
+    """
+    Color-prior extraction using GPT-Vision models (no processor, no torch model).
+    Mirrors the behavior of TorchColorPriors.
+    """
 
+    def __init__(self, model_name, data_folder):
+        super().__init__(model_name, data_folder)
+        API_KEY = os.environ["OPENAI_API_KEY"]
+        self.client = OpenAI(api_key=API_KEY)
 
-    # Core query helpers
-    def ask_gpt(self, question: str, image_b64: str | None = None):
+   
+    def ask_gpt_raw(self, prompt: str, image_path: str | None = None):
         """
-        Send a text-only or image+text message to GPT-Vision.
-        Always returns a LOWERCASE single-word predicted color.
+        Uses the *same API format* that worked in your other GPT evaluation.
+        Returns raw text output.
         """
-        if image_b64 is None:
-            # TEXT-ONLY PRIOR
+
+        if image_path is None:
+            # text only
             messages = [
-                {"role": "user", "content": question}
+                {"role": "system", "content": "You are a strict JSON generator for image analysis tasks."},
+                {"role": "user", "content": prompt}
             ]
+
+
+
+            response = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=messages,
+                temperature=0,
+                top_p=0,
+                max_tokens=20,
+            )
+            return response.choices[0].message.content.strip()
+
         else:
-            # IMAGE + QUESTION
+        # image + text
+            with open(image_path, "rb") as image_file:
+                image_data = base64.b64encode(image_file.read()).decode("utf-8")
+           
             messages = [
+                {"role": "system", "content": "You are a strict JSON generator for image analysis tasks."},
                 {
                     "role": "user",
                     "content": [
-                        {
-                            "type": "input_image",
-                            "image_url": {
-                                "url": f"data:image/png;base64,{image_b64}"
-                            }
-                        },
-                        {"type": "text", "text": question}
+                        {"type": "text", "text": prompt},
+                        {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{image_data}"}}
                     ]
                 }
             ]
 
-        response = client.responses.create(
-            model=self.model_name,
-            input=messages
-        )
+            response = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=messages,
+                temperature=0,
+                top_p=0,
+                max_tokens=20,
+            )
+            return response.choices[0].message.content.strip()
 
-        out = response.output_text.strip().lower()
-        out = out.split()[0]         # take the first word
-        out = out.replace("gray", "grey")
-        return out
+    
+    # Parse answer list from GPT
+    def parse_prior_list(self, text: str):
+        if text is None:
+            return []
 
-    # -------------------------------------------------------------
-    # MAIN: Get model color priors
-    # -------------------------------------------------------------
-    def get_model_color_priors(self, df, most="True", save=True):
-        """
-        Compute two priors:
-           → model_prior_dummy : text-only
-           → model_prior_real  : grayscale + prompt
+        # Normalize punctuation spacing
+        text = text.lower().replace("gray", "grey").strip()
 
-        Args:
-            df: DataFrame with column "object" and "image_path"
-            most: "True" → use plural ("most apples")
-            save: save a CSV file
+        # Split on commas
+        items = text.split(",")
 
-        Returns: DataFrame with priors added
-        """
-        results = []
-        for idx, row in tqdm(df.iterrows(), total=len(df), desc="GPT Color Priors"):
+        cleaned = []
+        for item in items:
+            token = item.strip()
 
-            object_name = row["object"]
-            if most == "True":
-                plural = object_name if object_name.endswith("s") else object_name + "s"
-                question = f"Answer with one word. What color are most {plural}?"
-            else:
-                question = f"Answer with one word. What color is this {object_name}?"
+            # Remove trailing punctuation: ".", ",", "!", "?", ";", ":"
+            token = token.strip(string.punctuation)
 
-            # ---- Dummy (true prior: NO IMAGE) ----
-            prior_dummy = self.ask_gpt(question, image_b64=None)
+            if token:
+                cleaned.append(token)
 
-            # ---- Real: grayscale image ----
-            img = Image.open(row["image_path"]).convert("L")
-            img = img.resize((256, 256))
-            tmp_path = "/tmp/_gray.png"
-            img.save(tmp_path)
-            img_b64 = encode_image_base64(tmp_path)
+        return cleaned
 
-            prior_real = self.ask_gpt(question, image_b64=img_b64)
 
-            out_row = {
-                "object": row["object"],
+    # Query color prior without image (text only)
+    def query_model_dummy(self, prompt: str):
+        raw = self.ask_gpt_raw(prompt, image_path=None)
+        return self.parse_prior_list(raw)
+    
+
+    # Query color prior with image
+    def query_model_image(self, prompt: str, image_path: str):
+        raw = self.ask_gpt_raw(prompt, image_path=image_path)
+        return self.parse_prior_list(raw)
+
+  
+    # Main color prior extraction function
+    def get_model_color_priors(self, df, most=True, save=True):
+        rows = []
+
+        for _, row in tqdm(df.iterrows(), total=len(df), desc=f"GPT Priors ({self.model_name})"):
+            obj = row["object"]
+            img = row["image_path"]
+
+            prompt = self.create_prior_prompt(obj, most=str(most))
+
+            pri_dummy = self.query_model_dummy(prompt)
+            pri_image = self.query_model_image(prompt, img)
+
+            rows.append({
+                "object": obj,
                 "correct_answer": row["correct_answer"],
-                "model_prior_dummy": prior_dummy,
-                "model_prior": prior_real
-            }
-            results.append(out_row)
+                "dummy_priors": pri_dummy,
+                "image_priors": pri_image,
+            })
 
-            gc.collect()
+        priors_df = pd.DataFrame(rows)
 
-        priors_df = pd.DataFrame(results)
-
-        # Save
         if save:
             out_path = self.data_folder / f"color_priors_{self.model_name}.csv"
             priors_df.to_csv(out_path, index=False)
             print(f"Saved GPT color priors → {out_path}")
 
         return priors_df
-
-    # -------------------------------------------------------------
-    def analyze_differences(self, priors_df):
-        """
-        Same logic as your old analyzer.
-        """
-        df = priors_df.copy()
-
-        df["diff_dummy_vs_real"] = (
-            df["model_prior_dummy"].str.lower()
-            != df["model_prior"].str.lower()
-        )
-
-        print(f"{df['diff_dummy_vs_real'].sum()} rows differ between dummy and real priors.")
-
-        # convert correct_answer to list
-        df["correct_answer"] = df["correct_answer"].apply(
-            lambda x: x if isinstance(x, list) else ast.literal_eval(x)
-        )
-
-        df["color_in_gt"] = df.apply(
-            lambda r: r["model_prior"] in [c.lower() for c in r["correct_answer"]],
-            axis=1,
-        )
-
-        print(f"{(~df['color_in_gt']).sum()} priors NOT in GT.")
-
-        print("Unique priors:", df["model_prior"].unique())
-
-        return df
-
-    
-    def replace_correct_answers(self, df, priors_df, exclude=None, prior_col="model_prior"):
-        """
-        Replace df['correct_answer'] with model priors.
-        """
-        if exclude is None:
-            exclude = ["white", "gold", "silver", "clear"]
-
-        use_df = priors_df[~priors_df[prior_col].isin(exclude)]
-
-        df = df.merge(
-            use_df[["object", prior_col]],
-            on="object",
-            how="inner"
-        )
-        df["correct_answer"] = df[prior_col]
-        df = df.drop(columns=[prior_col])
-
-        print("Updated DF size:", df.shape[0])
-        return df
-
-    
-    def load_model_priors(self):
-        path = self.data_folder / f"color_priors_{self.model_name}.csv"
-        df = pd.read_csv(path)
-        print(f"Loaded {len(df)} priors from {path}")
-        return df
-
