@@ -40,36 +40,64 @@ class BaseColorPriors:
         raise NotImplementedError
     
 
-    def create_prior_prompt(self, object_name, most=True):
+    def create_prior_prompt(self, object_name, most=True, use_image=False):
         """
-        Build a prompt that asks for up to 3 likely colors,
-        ordered from most to least likely, comma-separated.
-        Uses correct LLaVA instruction-token style.
+        Create a prompt asking for up to 3 likely colors.
+
+        If use_image=False  → ask about object category (pure priors)
+        If use_image=True   → force GPT to use visual clues in THIS SPECIFIC image
+
+        Returns a LLaVA-style prompt with [INST] <image> ... [/INST]
+        if use_image=True, otherwise no <image> token.
         """
 
-        instruction_tokens = "[INST] <image>\n"
+        # ----------------------------------------------------
+        # 1. Optional <image> token wrapper (for open-weight VLMs)
+        # ----------------------------------------------------
+        if use_image:
+            instruction_tokens = "[INST] <image>\n"
+        else:
+            instruction_tokens = "[INST]\n"
+
         end_tokens = "[/INST]"
 
-        # Build question
-        if most == "True":
-            plural = object_name if object_name.endswith("s") else object_name + "s"
-            question = (
-                f"List up to three possible colors for most {plural}, "
-                f"from most likely to least likely."
-            )
+        # ----------------------------------------------------
+        # 2. Build the *task* part of the question
+        # ----------------------------------------------------
+        if not use_image:
+            # --- PRIOR MODE (no image used) ---
+            if most == "True":
+                plural = object_name if object_name.endswith("s") else object_name + "s"
+                question = (
+                    f"List up to three possible colors for most {plural}, "
+                    f"from most likely to least likely."
+                )
+            else:
+                question = (
+                    f"List up to three possible colors for this {object_name}, "
+                    f"from most likely to least likely."
+                )
+
         else:
+            # --- IMAGE-CONDITIONED MODE ---
+            # Forces GPT to *LOOK* at the grayscale outline
             question = (
-                f"List up to three possible colors for this {object_name}, "
-                f"from most likely to least likely."
+                "Based ONLY on the visual appearance, structure, and clues in THIS grayscale image, "
+                "list up to three plausible real-world colors this specific object might have. "
+                "Do NOT rely on world knowledge unless the silhouette clearly indicates an object type."
             )
 
-        # Style constraint
+        # ----------------------------------------------------
+        # 3. Formatting rule
+        # ----------------------------------------------------
         format_rule = (
-            "Respond ONLY with english color words separated by commas. "
-            "Do not use sentences."
+            "Respond ONLY with English color words separated by commas. "
+            "Do not use explanations or sentences."
         )
 
-        # Final prompt
+        # ----------------------------------------------------
+        # 4. Assemble prompt
+        # ----------------------------------------------------
         prompt = (
             f"{instruction_tokens}"
             f"{question} {format_rule}"
@@ -77,6 +105,7 @@ class BaseColorPriors:
         )
 
         return prompt
+
         
 
     def get_model_color_priors(self, df, most=True, save=True):
@@ -279,10 +308,6 @@ class GPTColorPriors(BaseColorPriors):
 
    
     def ask_gpt_raw(self, prompt: str, image_path: str | None = None):
-        """
-        Uses the *same API format* that worked in your other GPT evaluation.
-        Returns raw text output.
-        """
 
         if image_path is None:
             # text only
@@ -372,16 +397,17 @@ class GPTColorPriors(BaseColorPriors):
             obj = row["object"]
             img = row["image_path"]
 
-            prompt = self.create_prior_prompt(obj, most=str(most))
+            prompt_dummy = self.create_prior_prompt(obj, most=str(most))
+            prompt_image = self.create_prior_prompt(obj, most=str(most), use_image=True)
 
-            pri_dummy = self.query_model_dummy(prompt)
-            pri_image = self.query_model_image(prompt, img)
+            prior_dummy = self.query_model_dummy(prompt_dummy)
+            prior_image = self.query_model_image(prompt_image, img)
 
             rows.append({
                 "object": obj,
                 "correct_answer": row["correct_answer"],
-                "dummy_priors": pri_dummy,
-                "image_priors": pri_image,
+                "dummy_priors": prior_dummy,
+                "image_priors": prior_image,
             })
 
         priors_df = pd.DataFrame(rows)
@@ -389,6 +415,6 @@ class GPTColorPriors(BaseColorPriors):
         if save:
             out_path = self.data_folder / f"color_priors_{self.model_name}.csv"
             priors_df.to_csv(out_path, index=False)
-            print(f"Saved GPT color priors → {out_path}")
+            print(f"Saved GPT color priors to {out_path}")
 
         return priors_df
