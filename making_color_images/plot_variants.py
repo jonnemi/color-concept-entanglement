@@ -76,7 +76,7 @@ def show_variants_grid(
     thumb_w: int = 256,
     row_h: float = 3.0,
     fontsize: int = 14,
-    color_mode : str = "independent",
+    color_mode : str | None = None,
     pct_range: list[int] | None = None
 ):
     """
@@ -118,7 +118,12 @@ def show_variants_grid(
         print(f"No variants found for {image_path}")
         return
 
-    mode_suffix = "ind" if color_mode == "independent" else "seq"
+    if color_mode is None:
+        mode_suffix = ""
+    elif color_mode == "independent":
+        mode_suffix = "ind"
+    elif color_mode == "sequential":
+        mode_suffix = "seq"
 
     fg_paths = [p for p in paths if p.name.startswith("FG_") and p.name.endswith(f"{mode_suffix}.png")]
     bg_paths = [p for p in paths if p.name.startswith("BG_") and p.name.endswith(f"{mode_suffix}.png")]
@@ -207,7 +212,8 @@ def plot_vlm_performance(
     show_accuracy=True,
     show_probability=True,
     ci=False,
-    color_mode="all",
+    color_mode="seq",
+    counterfact=False,
     pct_range: list[int] | None = None
 ):
 
@@ -240,16 +246,41 @@ def plot_vlm_performance(
 
     # Accuracy columns
     if has_this:
-        df["acc_this"] = (
-            df["pred_color_this"].str.lower()
-            == df["correct_answer"].str.lower()
+        df["acc_this"] = np.nan
+
+        target_col = "incorrect_answer" if counterfact else "correct_answer" 
+
+        # FG: must match target color
+        fg_mask = df["region"] == "FG"
+        df.loc[fg_mask, "acc_this"] = (
+            df.loc[fg_mask, "pred_color_this"].str.lower()
+            == df.loc[fg_mask, target_col].str.lower()
         ).astype(float)
 
-    if has_most:
-        df["acc_most"] = (
-            df["pred_color_most"].str.lower()
-            == df["correct_answer"].str.lower()
+        # BG: must be white
+        bg_mask = df["region"] == "BG"
+        df.loc[bg_mask, "acc_this"] = (
+            df.loc[bg_mask, "pred_color_this"].str.lower() == "white"
         ).astype(float)
+
+
+    if has_most:
+        df["acc_most"] = np.nan
+
+        # FG: must match target color
+        fg_mask = df["region"] == "FG"
+        df.loc[fg_mask, "acc_most"] = (
+            df.loc[fg_mask, "pred_color_most"].str.lower()
+            == df.loc[fg_mask, "correct_answer"].str.lower()
+        ).astype(float)
+
+        # BG: must be white
+        bg_mask = df["region"] == "BG"
+        df.loc[bg_mask, "acc_most"] = (
+            df.loc[bg_mask, "pred_color_most"].str.lower()
+            == df.loc[bg_mask, "correct_answer"].str.lower()
+        ).astype(float)
+
 
     grouped = df.groupby(["region", "pct"])
 

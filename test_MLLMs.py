@@ -14,12 +14,14 @@ import gc
 import base64
 from pathlib import Path
 import torch.nn.functional as F
-from openai import OpenAI
+from openai import AsyncOpenAI, OpenAI
 from dotenv import load_dotenv
+import asyncio
 
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
 load_dotenv()
 client = OpenAI()
+client_async = AsyncOpenAI()
 
 
 def clean_instruction_tokens(text):
@@ -115,15 +117,168 @@ def prompt_mllm(df, processor, model, device, prompt, dummy=False, return_probs=
     return df
 
 
+def encode_image_to_b64(path):
+    """Return base64 string for a local image file."""
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode("utf-8")
+    
+
+
+def prompt_gpt(df, prompt, model_name="gpt-4o", dummy=False, return_probs=False):
+    """
+    GPT equivalent of prompt_mllm().
+    Matches output format:
+        df['predicted_color']
+        df['prob_correct'] (always None, placeholder)
+    """
+
+    preds = []
+    probs = []
+
+    for _, row in df.iterrows():
+
+        # Build input image
+        if dummy:
+            img = Image.new("RGB", (256, 256), "white")
+            buf = io.BytesIO()
+            img.save(buf, format="PNG")
+            img_b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+        else:
+            try:
+                img_b64 = encode_image_to_b64(row["image_path"])
+            except FileNotFoundError:
+                preds.append(None)
+                probs.append(None)
+                continue
+
+        # GPT query
+        try:
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=[{
+                    "role": "user",
+                    "content": [
+                        {"type": "text", "text": prompt},
+                        {"type": "image_url",
+                         "image_url": {"url": f"data:image/png;base64,{img_b64}"}}
+                    ]
+                }],
+                max_tokens=10,
+                temperature=0.0,
+                top_p=0,
+            )
+            ans = response.choices[0].message.content.strip().lower()
+            ans = ans.replace("gray", "grey").split()[0]
+        except Exception as e:
+            print("GPT error:", e)
+            ans = None
+
+        preds.append(ans)
+        probs.append(None)   # placeholder to match MLLM interface
+
+    df["predicted_color"] = preds
+    if return_probs:
+        df["prob_correct"] = probs
+
+    return df
+
+
+
+async def prompt_gpt_async(df, prompt, model_name="gpt-4o", dummy=False):
+    """
+    Async GPT equivalent of prompt_gpt().
+    Returns df with a new column: predicted_color.
+    All requests are sent concurrently.
+    """
+
+    async def query_single(row):
+        # Build / encode image
+        if dummy:
+            img = Image.new("RGB", (256, 256), "white")
+            buf = io.BytesIO()
+            img.save(buf, format="PNG")
+            img_b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+        else:
+            try:
+                img_b64 = encode_image_to_b64(row["image_path"])
+            except FileNotFoundError:
+                return None
+
+        try:
+            response = await client_async.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": prompt},
+                            {
+                                "type": "image_url",
+                                "image_url": {"url": f"data:image/png;base64,{img_b64}"},
+                            },
+                        ],
+                    }
+                ],
+                max_tokens=10,
+                temperature=0.0,
+                top_p=0,
+            )
+
+            ans = response.choices[0].message.content.strip().lower()
+            return ans.split()[0].replace("gray", "grey")
+
+        except Exception as e:
+            print("GPT error:", e)
+            return None
+
+    # Build tasks (no batching)
+    tasks = [query_single(row) for _, row in df.iterrows()]
+
+    # Run in parallel
+    preds = await asyncio.gather(*tasks)
+
+    df = df.copy()
+    df["predicted_color"] = preds
+    return df
+
+
+def run_async(coro):
+    """
+    Safe asyncio runner: 
+    - uses asyncio.run() when no loop is running
+    - uses await via nest_asyncio when in Jupyter
+    """
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = None
+
+    if loop and loop.is_running():
+        # Running inside Jupyter
+        import nest_asyncio
+        nest_asyncio.apply()
+        return loop.run_until_complete(coro)
+    else:
+        # Normal Python script
+        return asyncio.run(coro)
+    
+
+def prompt_gpt_sync(df, prompt, model_name="gpt-4o", dummy=False):
+    return run_async(prompt_gpt_async(df, prompt, model_name=model_name, dummy=dummy))
+
+
+
+
 def run_vlm_evaluation(
     df,
-    processor,
-    model,
-    device,
+    processor=None,
+    model=None,
+    device=None,
     batch_size=1,
     mode="both",  # "this", "most", or "both"
     dummy=False,
-    return_probs=False
+    return_probs=False,
+    use_gpt=False,
 ):
     """
     Generic evaluation loop for Vision-Language Models.
@@ -150,13 +305,26 @@ def run_vlm_evaluation(
 
     results = []
 
-    for i in tqdm(range(0, len(df), batch_size), desc=f"Running VLM ({mode})", position=1, leave=False):
+    # Choose GPT or open-weight MLLM caller
+    if use_gpt:
+        gpt_model_name = "gpt-4o"
+        caller = lambda batch, prompt: prompt_gpt_sync(
+            batch, prompt, model_name=gpt_model_name, dummy=dummy
+        )
+
+    else:
+        caller = lambda batch, prompt: prompt_mllm(
+            batch, processor, model, device,
+            prompt=prompt, dummy=dummy, return_probs=return_probs
+        )
+
+    for i in tqdm(range(0, len(df), batch_size), desc=f"Running VLM ({'GPT' if use_gpt else 'Torch'})", position=1, leave=False):
         batch_df = df.iloc[i : i + batch_size].copy()
 
         with torch.inference_mode():
             if mode in ["most", "both"]:
                 prompt = create_eval_prompt(batch_df["object"], most="True")
-                df_most = prompt_mllm(batch_df, processor, model, device, prompt=prompt, dummy=dummy, return_probs=return_probs)
+                df_most = caller(batch_df, prompt=prompt)
                 df_most = df_most.rename(columns={
                     "predicted_color": "pred_color_most",
                     "prob_correct": "prob_correct_most" if return_probs else None
@@ -166,7 +334,7 @@ def run_vlm_evaluation(
 
             if mode in ["this", "both"]:
                 prompt = create_eval_prompt(batch_df["object"], most="False")
-                df_this = prompt_mllm(batch_df, processor, model, device, prompt=prompt, dummy=dummy, return_probs=return_probs)
+                df_this = caller(batch_df, prompt=prompt)
                 df_this = df_this.rename(columns={
                     "predicted_color": "pred_color_this",
                     "prob_correct": "prob_correct_this" if return_probs else None
@@ -198,68 +366,6 @@ def run_vlm_evaluation(
 
     df_results = pd.concat(results, ignore_index=True)
     return df_results
-
-
-def encode_image(image_path):
-    with open(image_path, "rb") as f:
-        return base64.b64encode(f.read()).decode("utf-8")
-
-
-def mllm_testing_gpt(df, model_name="gpt-4o", most="False", dummy=False):
-    """
-    Run evaluation through the OpenAI GPT API.
-    Returns df with column 'predicted_color'.
-    """
-
-    generated_texts = []
-
-    for idx, row in df.iterrows():
-        if most == "True":
-            obj = row["object"]
-            obj_plural = obj if obj.endswith("s") else obj + "s"
-            question = f"What color are most {obj_plural}?"
-        else:
-            question = f"What color is this {row['object']}?"
-
-        prompt = f"Answer with one word. {question}"
-
-        # Load immage
-        if dummy:
-            # White dummy image
-            img = Image.new("RGB", (256, 256), color="white")
-            buf = io.BytesIO()
-            img.save(buf, format="PNG")
-            img_str = base64.b64encode(buf.getvalue()).decode("utf-8")
-        else:
-            try:
-                img_str = encode_image(row["image_path"])
-            except FileNotFoundError:
-                print(f"Warning: missing image: {row['image_path']}")
-                generated_texts.append(None)
-                continue
-
-        # GPT REQUEST
-        completion = client.chat.completions.create(
-            model=model_name,
-            messages=[
-                {"role": "user",
-                 "content": [
-                     {"type": "text", "text": prompt},
-                     {"type": "image_url",
-                      "image_url": {"url": f"data:image/png;base64,{img_str}"}}
-                 ]}
-            ],
-            max_tokens=10,
-            temperature=0.0
-        )
-
-        answer = completion.choices[0].message.content.strip().lower()
-        answer = answer.replace("gray", "grey")  
-        generated_texts.append(answer)
-
-    df["predicted_color"] = generated_texts
-    return df
-
 
 
 def main():

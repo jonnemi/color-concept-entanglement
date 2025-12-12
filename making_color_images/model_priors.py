@@ -44,8 +44,8 @@ class BaseColorPriors:
         """
         Create a prompt asking for up to 3 likely colors.
 
-        If use_image=False  → ask about object category (pure priors)
-        If use_image=True   → force GPT to use visual clues in THIS SPECIFIC image
+        If use_image=False: ask about object category (pure priors)
+        If use_image=True: force GPT to use visual clues in THIS SPECIFIC image
 
         Returns a LLaVA-style prompt with [INST] <image> ... [/INST]
         if use_image=True, otherwise no <image> token.
@@ -117,7 +117,7 @@ class BaseColorPriors:
         batch_size = 1  # larger batch sizes not implemented yet
 
         def _parse_colors(s):
-            """Convert 'red, green, blue' → ['red','green','blue']"""
+            """Convert 'red, green, blue' to ['red','green','blue']"""
             parts = [p.strip() for p in s.split(",") if p.strip()]
             
             return parts
