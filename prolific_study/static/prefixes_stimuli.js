@@ -1,10 +1,10 @@
 const STIMULI = {
   exp1: [
     {
-      image: "img/vc/apple_30.png",
-      object: "apple",
+      image: "img/dataset/color_images/gpt-4o/dummy_priors/alligator_3_549188bb_resized_green/FG_030_seq.png",
+      object: "alligator",
       percent_colored: 30,
-      correct_color: "red"
+      correct_color: "green"
     }
   ],
 

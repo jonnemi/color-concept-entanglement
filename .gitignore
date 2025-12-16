@@ -17,6 +17,7 @@ making_color_images/__pycache__/
 *.zip
 
 # Styling images for prolific
-prolific-study/static/img/
-prolific-study/static/data/
+prolific_study/static/img/
+prolific_study/static/dataset/
+prolific_study/data/
 
