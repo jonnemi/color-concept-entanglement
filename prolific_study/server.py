@@ -7,7 +7,7 @@ import hashlib
 from sample_experiment import sample_experiment_1
 
 
-app = Flask(__name__, static_folder="static", static_url_path="/static")
+app = Flask(__name__, static_folder="static", static_url_path="")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 

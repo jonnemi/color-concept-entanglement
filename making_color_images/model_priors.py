@@ -154,7 +154,7 @@ class BaseColorPriors:
 
         return ground_truth_df
 
-    def pick_primary_color(self, df, column="dummy_priors"):
+    def pick_primary_color(self, df, column="dummy_priors", allow_black=False):
         """
         Select the best (primary) color for each row:
             • drop excluded colors
@@ -165,6 +165,8 @@ class BaseColorPriors:
         """
 
         EXCLUDE = {"white", "silver", "gold", "clear"}
+        if not allow_black:
+            EXCLUDE.add("black")
 
         ALLOWED = {
             "red", "brown", "pink", "orange", "yellow", "gold",

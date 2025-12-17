@@ -1,11 +1,10 @@
-import argparse
 import re
 from pathlib import Path
 import pandas as pd
 
 
 # Variant label helper
-def variant_label(p: Path):
+def variant_label(p: Path) -> str:
     """
     Create readable labels from variant filenames:
     FG_030_seq.png  -> "FG 30% (seq)"
@@ -21,26 +20,49 @@ def variant_label(p: Path):
 
 
 # Folder-name parser
+# Example:
+# acoustic_guitar_1_ab533cc0_resized_purple
 FOLDER_RE = re.compile(
     r"^(?P<object>.+?)_(?P<instance>\d+)_(?P<hash>[a-f0-9]+)_resized_(?P<color>[a-z]+)$"
 )
 
-def parse_folder_name(name: str):
+def parse_folder_name(name: str) -> dict:
+    """
+    Parse dataset folder name and extract object + target_color.
+    """
     m = FOLDER_RE.match(name)
     if not m:
         raise ValueError(f"Unrecognized folder name: {name}")
 
     return {
         "object": m.group("object"),
-        "correct_color": m.group("color"),
+        "target_color": m.group("color"),
     }
 
 
 # Table builder
 VARIANT_RE = re.compile(r"(FG|BG)_(\d{3})_(ind|seq)\.png")
 
-def build_stimulus_table(dataset_root: Path) -> pd.DataFrame:
+def build_stimulus_table(
+    dataset_root: Path,
+    stimulus_type: str
+) -> pd.DataFrame:
+    """
+    Build a stimulus table from a dataset directory.
+
+    Args:
+        dataset_root: Path to directory containing object/shape folders
+        stimulus_type: "correct_prior", "counterfact", or "shape"
+
+    Returns:
+        pd.DataFrame with one row per stimulus image
+    """
+
+    if stimulus_type not in {"correct_prior", "counterfact", "shape"}:
+        raise ValueError("stimulus_type must be 'correct_prior', 'counterfact', or 'shape'")
     rows = []
+
+    dataset_root = Path(dataset_root)
 
     for obj_dir in sorted(dataset_root.iterdir()):
         if not obj_dir.is_dir():
@@ -53,45 +75,30 @@ def build_stimulus_table(dataset_root: Path) -> pd.DataFrame:
 
             if m:
                 region, pct, mode = m.groups()
-                rows.append({
-                    **meta,
-                    "variant_region": region,
-                    "percent_colored": int(pct),
-                    "mode": mode,
-                    "variant_label": variant_label(img),
-                    "image_path": str(img.relative_to(dataset_root)),
-                })
+                percent_colored = int(pct)
+                variant_region = region
             else:
                 # base / white image
-                rows.append({
-                    **meta,
-                    "variant_region": "white",
-                    "percent_colored": 0,
-                    "mode": "base",
-                    "variant_label": "white",
-                    "image_path": str(img.relative_to(dataset_root)),
-                })
+                percent_colored = 0
+                variant_region = "white"
+                mode = "base"
+
+            rows.append({
+                "object": meta["object"].replace("_", " "),
+                "stimulus_type": stimulus_type,
+
+                # color used for manipulation
+                "target_color": meta["target_color"],
+
+                # manipulation metadata
+                "variant_region": variant_region,
+                "percent_colored": percent_colored,
+                "mode": mode,
+                "variant_label": variant_label(img),
+
+                # path for jsPsych
+                "image_path": str(img.relative_to(dataset_root)),
+            })
+
 
     return pd.DataFrame(rows)
-
-
-# CLI
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset-root", type=Path, required=True)
-    parser.add_argument("--out", type=Path, required=True)
-    args = parser.parse_args()
-
-    df = build_stimulus_table(args.dataset_root)
-
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(args.out.with_suffix(".csv"), index=False)
-    df.to_parquet(args.out.with_suffix(".parquet"))
-
-    print(f"Wrote {len(df)} stimuli")
-    print(args.out.with_suffix(".csv"))
-    print(args.out.with_suffix(".parquet"))
-
-
-if __name__ == "__main__":
-    main()

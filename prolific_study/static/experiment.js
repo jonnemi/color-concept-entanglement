@@ -11,7 +11,12 @@ var jsPsych = initJsPsych({
 // Capture Prolific info
 // ==========================
 
-const subject_id = jsPsych.data.getURLVariable("PROLIFIC_PID");
+let subject_id = jsPsych.data.getURLVariable("PROLIFIC_PID");
+
+if (!subject_id) {
+  subject_id = "DEBUG_LOCAL_USER";
+}
+
 const study_id   = jsPsych.data.getURLVariable("STUDY_ID");
 const session_id = jsPsych.data.getURLVariable("SESSION_ID");
 const experiment_type = jsPsych.data.getURLVariable("exp");
@@ -37,10 +42,17 @@ jsPsych.data.addProperties({ js_rng_seed: js_seed });
 const DEBUG = false;
 const MAX_DISTRACTOR_RATE = 0.10;
 
-if (!["1", "2", "3", "4"].includes(experiment_type)) {
+let exp = experiment_type;
+
+if (!exp && DEBUG) {
+  exp = "1"; // default to Experiment 1 locally
+}
+
+if (!["1", "2", "3", "4"].includes(exp)) {
   alert("Invalid experiment configuration.");
   throw new Error("Invalid experiment type");
 }
+
 
 /**************************************************************************
  * FETCH STIMULI FROM SERVER
