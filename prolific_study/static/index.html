@@ -2,115 +2,103 @@
 <html>
 
 <head>
-    <title>Experiment: Rate these scenarios</title>
-    <script src="prefixes_stimuli.js"></script>
+    <title>Experiment: Color Judgments</title>
+
+    <!-- Silence Firefox favicon error -->
+    <link rel="icon" href="data:,">
+
+    <!-- jsPsych core -->
     <script src="https://unpkg.com/jspsych@7.3.3"></script>
+    <link href="https://unpkg.com/jspsych@7.3.3/css/jspsych.css" rel="stylesheet" type="text/css" />
+
+    <!-- jsPsych plugins -->
     <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.3"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.2"></script>
     <script src="https://unpkg.com/@jspsych/plugin-html-slider-response@1.1.2"></script>
-    <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@1.1.2"></script>
     <script src="https://unpkg.com/@jspsych/plugin-survey-likert@1.1.2"></script>
     <script src="https://unpkg.com/@jspsych/plugin-survey-text@1.1.2"></script>
     <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.2"></script>
-    <link href="https://unpkg.com/jspsych@7.3.3/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@jspsych/plugin-call-function@1.1.2"></script>
+
+
+    <!-- Local scripts -->
     <script src="jquery.min.js"></script>
     <script src="helpers.js"></script>
     <script src="experiment.js"></script>
-    <link href="custom.css" rel="stylesheet" type="text/css">
-    <!-- <style>
-      input[type="radio"] {height: 20px; width: 20px; vertical-align: middle;}
-    </style> -->
 
+    <!-- Styles -->
+    <link href="custom.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-    <div class="jspsych-content" align=left style="padding:80px 0;width:800px;font-size: 20px;text-align: left;">
-        <div align="center">
-            <img src='img/Brown_Logo.png' height=100px style='margin-right: 200px;'></img><img src='img/lunarlogo.svg'
-                height=100px></img>
+
+    <div class="jspsych-content" style="padding:80px 0;width:800px;font-size:20px;text-align:left;">
+
+        <div style="text-align:center;">
+            <img src="img/Brown_Logo.png" height="100" style="margin-right:200px;">
+            <img src="img/lunarlogo.svg" height="100">
         </div>
-        <p class="jspsych-display-element" style="text-align:center">
-            <br><b>LANGUAGE UNDERSTANDING AND REPRESENTATION LABORATORY<br>
-                Department of Computer Science<br>Brown University</b><br>
+
+        <p style="text-align:center;">
+            <br><b>
+                LANGUAGE UNDERSTANDING AND REPRESENTATION LABORATORY<br>
+                Department of Computer Science<br>
+                Brown University
+            </b><br>
         </p>
-        <p class="jspsych-display-element" align=left>
-            Dear Participants,
-        </p>
-        <p class="jspsych-display-element" align=left>
-            Thank you for your interest! In this study, you will be asked to answer simple questions about 
-            how easy it is to visualize certain scenarios.
+
+        <p>Dear Participants,</p>
+
+        <p>
+            Thank you for your interest! In this study, you will be asked to answer
+            simple questions about the colors you see in images.
             The study is expected to take about 10 minutes.
         </p>
-        <p class="jspsych-display-element" align=left>
-            You are being asked to participate in a project being conducted by a research team at Brown University,
-            under the direction of Dr. Ellie Pavlick. We are interested in how people are able to reason quickly and
-            in a commonsense way about the different scenarios that they encounter in the world around them. A
-            better
-            understanding of commonsense reasoning has implications for building more intelligent machines that can
-            reason
-            in a more human-like way, lowering risk in different physical situations. During this study, you will be
-            presented with simple questions in text format.
-        </p>
-        <p class="jspsych-display-element" align=left>
-            The study will last around 10 minutes. Your participation in this study is completely voluntary. You may
-            refuse
-            to participate, or you may choose to withdraw from participation at any time, without penalty or loss of
-            benefit
-            to which you are otherwise entitled. There has been no harm to people involved in this study and there are
-            no risks
-            associated with participation.
-        </p>
-        <p class="jspsych-display-element" align=left>
-            All information collected from the study will be associated with a Prolific Subject ID. Only researchers
-            associated with this project will
-            have access to the data. In order to make a research transparent to the scientific and broader community our
-            study
-            design and unidentifiable data might be made publicly available on Open Science Framework, a network of
-            research
-            materials and collaboration software, but your data will not be in anyway identifiable.
-        </p>
-        <p class="jspsych-display-element" align=left>
-            We will also provide you with a demographic questionnaire. The form does not include any personal
-            identifying
-            information. Your contribution to this questionnaire is voluntary;
-            if you choose to provide the requested information, your responses will be confidential. You will be
-            reimbursed
-            at a rate of $12/hr for your participation.
-        </p>
-        <p class="jspsych-display-element" style="display: inline;" align=left>
-            Your participation in our study would be greatly appreciated. If you have any questions about the project
-            please
-            feel free to contact us at the Language Understanding and Representation Laboratory at the Department of
-            Computer Science,
-            115 Waterman Street, Providence, RI 02906, or via email at <a
-                href="mailto:lunar.lab.nlp@gmail.com">lunar.lab.nlp@gmail.com</a>.
-            You may also contact the faculty member supervising this work: Ellie Pavlick, Associate Professor of
-            Computer Science (email:
-            <a stype="display: inline-flex" href="mailto:ellie_pavlick@brown.edu">ellie_pavlick@brown.edu</a>)
+
+        <p>
+            You are being asked to participate in a project conducted at Brown University
+            under the direction of Dr. Ellie Pavlick.
         </p>
 
-        <p class="jspsych-display-element" align=left>
-            <b>Consent Statement</b>
-            <br>
-            If you agree to participate, please click the consent button below. Thank you very much for your time and
-            consideration.
+        <p>
+            Your participation is voluntary. You may withdraw at any time without penalty.
+            There are no known risks associated with participation.
         </p>
-        <p class="jspsych-display-element" align=left>
-            By selecting the &ldquo;consent&rdquo; button below, I acknowledge that I am 18 or older, have read this
-            consent form,
-            and I agree to take part in the Conceptual Representation in Humans and Neural Networks project conducted by the
-            research lab of Dr. Ellie Pavlick.
+
+        <p>
+            All responses are associated only with a Prolific Subject ID and are confidential.
+            Unidentifiable data may be shared publicly for research transparency.
         </p>
-        <div align="right">
-            <button class="jspsych-btn" type='button' onclick="run_experiment()">CONSENT</button>
+
+        <p>
+            You will be reimbursed at a rate of $12/hr for your participation.
+        </p>
+
+        <p>
+            If you have questions, contact:
+            <a href="mailto:lunar.lab.nlp@gmail.com">lunar.lab.nlp@gmail.com</a>
+        </p>
+
+        <p><b>Consent Statement</b></p>
+
+        <p>
+            By clicking “CONSENT” below, you confirm that you are at least 18 years old
+            and agree to participate in this study.
+        </p>
+
+        <div style="text-align:right;">
+            <button class="jspsych-btn" type="button" onclick="run_experiment()">CONSENT</button>
         </div>
+
         <br>
-        <p class="jspsych-display-element" align=left>
-            If you do NOT agree to participate in this study, please click the decline button below.
-        </p>
-        <div align="right"><button class="jspsych-btn" type="button" onClick="window.close()">DECLINE</button></div>
+
+        <p>If you do NOT agree, click DECLINE.</p>
+
+        <div style="text-align:right;">
+            <button class="jspsych-btn" type="button" onclick="window.close()">DECLINE</button>
+        </div>
 
     </div>
-</body>
 
+</body>
 </html>

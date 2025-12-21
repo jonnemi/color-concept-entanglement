@@ -22,17 +22,29 @@ def variant_label(p: Path) -> str:
 # Folder-name parser
 # Example:
 # acoustic_guitar_1_ab533cc0_resized_purple
-FOLDER_RE = re.compile(
+OBJECT_FOLDER_RE = re.compile(
     r"^(?P<object>.+?)_(?P<instance>\d+)_(?P<hash>[a-f0-9]+)_resized_(?P<color>[a-z]+)$"
 )
 
-def parse_folder_name(name: str) -> dict:
+SHAPE_FOLDER_RE = re.compile(
+    r"^(?P<object>[a-z]+)_v\d+_(?P<color>[a-z]+)$"
+)
+
+def parse_folder_name(name: str, stimulus_type: str) -> dict:
     """
-    Parse dataset folder name and extract object + target_color.
+    Parse dataset folder name for objects or shapes.
     """
-    m = FOLDER_RE.match(name)
+    if stimulus_type == "shape":
+        m = SHAPE_FOLDER_RE.match(name)
+    elif stimulus_type in {"correct_prior", "counterfact"}:
+        m = OBJECT_FOLDER_RE.match(name)
+    else:
+        raise ValueError("stimulus_type must be 'object' or 'shape'")
+
     if not m:
-        raise ValueError(f"Unrecognized folder name: {name}")
+        raise ValueError(
+            f"Unrecognized {stimulus_type} folder name: {name}"
+        )
 
     return {
         "object": m.group("object"),
@@ -40,12 +52,14 @@ def parse_folder_name(name: str) -> dict:
     }
 
 
+
 # Table builder
 VARIANT_RE = re.compile(r"(FG|BG)_(\d{3})_(ind|seq)\.png")
 
 def build_stimulus_table(
     dataset_root: Path,
-    stimulus_type: str
+    stimulus_type: str,
+    data_root: Path,
 ) -> pd.DataFrame:
     """
     Build a stimulus table from a dataset directory.
@@ -68,7 +82,7 @@ def build_stimulus_table(
         if not obj_dir.is_dir():
             continue
 
-        meta = parse_folder_name(obj_dir.name)
+        meta = parse_folder_name(obj_dir.name, stimulus_type)
 
         for img in sorted(obj_dir.glob("*.png")):
             m = VARIANT_RE.match(img.name)
@@ -97,7 +111,7 @@ def build_stimulus_table(
                 "variant_label": variant_label(img),
 
                 # path for jsPsych
-                "image_path": str(img.relative_to(dataset_root)),
+                "image_path": str(img.relative_to(data_root)),
             })
 
 

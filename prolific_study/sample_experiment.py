@@ -1,4 +1,3 @@
-import argparse
 import random
 import json
 from pathlib import Path
@@ -6,111 +5,112 @@ import pandas as pd
 
 
 # CONFIG
+
 SANITY_POSITIONS = [5, 25, 45, 65, 85]  # 1-based indexing
 TOTAL_QUESTIONS = 106
 
-# Percent bins
 PCTS_13 = [0, 5, 10, 20, 30, 40, 50, 55, 60, 70, 80, 90, 100]
 PCTS_12_NO_ZERO = [5, 10, 20, 30, 40, 50, 55, 60, 70, 80, 90, 100]
 PCTS_5_BG = [20, 40, 60, 80, 100]
 
 
-# HELPERS
-def _sample_unique(df, rng, n):
+# Helpers
+def _sample_unique(df, rng, n, used=None):
+    """
+    Sample n rows from df, optionally enforcing uniqueness on df["object"].
+    """
+    if used is not None:
+        df = df[~df["object"].isin(used)]
+
     if len(df) < n:
         raise RuntimeError("Not enough candidates to sample from.")
-    return df.sample(n=n, random_state=rng.randint(0, 10**9)).to_dict("records")
+
+    sampled = df.sample(n=n, random_state=rng.randint(0, 10**9))
+    rows = sampled.to_dict("records")
+
+    if used is not None:
+        for r in rows:
+            used.add(r["object"])
+
+    return rows
 
 
-# OBJECT SAMPLERS
-def sample_counterfactual_objects(df, rng):
+
+# Object samplers
+def sample_counterfactual_objects(df_cf, rng):
     rows = []
     used_objects = set()
+    df_cf = df_cf.copy()
+    df_cf["percent_colored"] = df_cf["percent_colored"].astype(int)
 
     for pct in PCTS_12_NO_ZERO:
-        candidates = df[
-            (df["percent_colored"] == pct) &
-            (df["condition"] == "counterfact") &
-            (~df["object"].isin(used_objects))
-        ]
-        chosen = _sample_unique(candidates, rng, 1)[0]
-        used_objects.add(chosen["object"])
-        rows.append(chosen)
+        candidates = df_cf[df_cf["percent_colored"] == pct]
+        rows += _sample_unique(candidates, rng, 1, used_objects)
 
+    assert len(rows) == 12
     return rows
 
 
-def sample_background_objects(df, rng):
+def sample_background_objects(df_bg, rng):
     rows = []
     used_objects = set()
+    df_bg = df_bg.copy()
+    df_bg["percent_colored"] = df_bg["percent_colored"].astype(int)
 
     for pct in PCTS_5_BG:
-        candidates = df[
-            (df["percent_colored"] == pct) &
-            (df["condition"] == "background") &
-            (~df["object"].isin(used_objects))
-        ]
-        chosen = _sample_unique(candidates, rng, 1)[0]
-        used_objects.add(chosen["object"])
-        rows.append(chosen)
+        candidates = df_bg[df_bg["percent_colored"] == pct]
+        rows += _sample_unique(candidates, rng, 1, used_objects)
 
+    assert len(rows) == 5
     return rows
 
 
-def sample_priors_objects(df, rng):
+def sample_prior_objects(df_priors, rng):
     rows = []
+    df_priors = df_priors.copy()
+    
+    df_priors["percent_colored"] = df_priors["percent_colored"].astype(int)
 
     for pct in PCTS_13:
-        candidates = df[
-            (df["percent_colored"] == pct) &
-            (df["condition"] == "priors")
-        ]
-        chosen = _sample_unique(candidates, rng, 3)
-        rows.extend(chosen)
+        candidates = df_priors[df_priors["percent_colored"] == pct]
+        if candidates.empty:
+            raise RuntimeError(f"No candidates found for percent_colored={pct}")
+        rows += _sample_unique(candidates, rng, 3)
 
+    assert len(rows) == 39
     return rows
 
 
-# SHAPE SAMPLERS
-def sample_background_shapes(df, rng):
+
+# Shape samplers
+def sample_background_shapes(df_bg, rng):
     rows = []
     used_shapes = set()
+    df_bg = df_bg.copy()
+    df_bg["percent_colored"] = df_bg["percent_colored"].astype(int)
 
     for pct in PCTS_5_BG:
-        candidates = df[
-            (df["percent_colored"] == pct) &
-            (df["condition"] == "background") &
-            (~df["object"].isin(used_shapes))
-        ]
-        chosen = _sample_unique(candidates, rng, 1)[0]
-        used_shapes.add(chosen["object"])
-        rows.append(chosen)
+        candidates = df_bg[df_bg["percent_colored"] == pct]
+        rows += _sample_unique(candidates, rng, 1, used_shapes)
 
+    assert len(rows) == 5
     return rows
 
 
-def sample_priors_shapes(df, rng):
+def sample_priors_shapes(df_priors, rng):
     rows = []
+    df_priors = df_priors.copy()
+    df_priors["percent_colored"] = df_priors["percent_colored"].astype(int)
 
     for pct in PCTS_13:
-        candidates = df[
-            (df["percent_colored"] == pct) &
-            (df["condition"] == "priors")
-        ]
-        chosen = _sample_unique(candidates, rng, 3)
-        rows.extend(chosen)
+        candidates = df_priors[df_priors["percent_colored"] == pct]
+        rows += _sample_unique(candidates, rng, 3)
 
+    assert len(rows) == 39
     return rows
 
 
-# FIXED QUESTIONS
-def make_sanity_question(idx):
-    return {
-        "question_type": "sanity",
-        "sanity_id": idx
-    }
-
-
+# Fixed questions
 def make_introspection_question():
     return {
         "question_type": "introspection",
@@ -119,34 +119,115 @@ def make_introspection_question():
             "for it to be considered that color. What value should x% be?"
         ),
         "min": 0,
-        "max": 100
+        "max": 100,
     }
 
+# Sanity questions
+SANITY_QUESTIONS = [
+    {
+        "question_type": "sanity",
+        "sanity_id": 1,
+        "prompt": "To show you are paying attention, please select Strongly Disagree.",
+        "options": [
+            "Strongly Agree",
+            "Agree",
+            "Neither Agree nor Disagree",
+            "Disagree",
+            "Strongly Disagree"
+        ],
+        "correct_response": "Strongly Disagree",
+    },
+    {
+        "question_type": "sanity",
+        "sanity_id": 2,
+        "prompt": "Ignore the options below and type the word BLUE in the box.",
+        "response_type": "text",
+        "correct_response": "BLUE",
+    },
+    {
+        "question_type": "sanity",
+        "sanity_id": 3,
+        "prompt": "Please select option number 3 for this item.",
+        "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+        "correct_response": "Option 3",
+    },
+    {
+        "question_type": "sanity",
+        "sanity_id": 4,
+        "prompt": "I have never used the internet.",
+        "options": [
+            "Strongly Agree",
+            "Agree",
+            "Neither Agree nor Disagree",
+            "Disagree",
+            "Strongly Disagree"
+        ],
+        "correct_response": "Strongly Disagree",
+    },
+    {
+        "question_type": "sanity",
+        "sanity_id": 5,
+        "prompt": (
+            "For this statement, please select Neither Agree nor Disagree."
+        ),
+        "options": [
+            "Strongly Agree",
+            "Agree",
+            "Neither Agree nor Disagree",
+            "Disagree",
+            "Strongly Disagree"
+        ],
+        "correct_response": "Neither Agree nor Disagree",
+    },
+]
 
-# PROFILE GENERATION
-def generate_profile(df_objects, df_shapes, seed, introspection_position):
+def insert_sanity_questions(questions):
+    sanity_positions = [5, 25, 45, 65, 85]  # 1-based
+    sanity_iter = iter(SANITY_QUESTIONS)
+
+    for pos in sorted(sanity_positions):
+        questions.insert(pos - 1, next(sanity_iter))
+
+
+# Profile generator
+def generate_profile(
+    df_priors,
+    df_cf,
+    df_shapes,
+    seed,
+    introspection_position,
+):
     rng = random.Random(seed)
 
     questions = []
 
-    # --- Objects ---
-    questions += sample_counterfactual_objects(df_objects, rng)
-    questions += sample_background_objects(df_objects, rng)
-    questions += sample_priors_objects(df_objects, rng)
+    # Objects with priors
+    df_priors_fg = df_priors[df_priors["variant_region"] == "FG"]
+    df_priors_bg = df_priors[df_priors["variant_region"] == "BG"]
+    questions += sample_prior_objects(df_priors_fg, rng)
+    questions += sample_background_objects(df_priors_bg, rng)
+    
 
-    # --- Shapes ---
-    questions += sample_background_shapes(df_shapes, rng)
-    questions += sample_priors_shapes(df_shapes, rng)
+    # Counterfacts
+    df_cf_fg = df_cf[df_cf["variant_region"] == "FG"]
+    questions += sample_counterfactual_objects(df_cf_fg, rng)
+
+    # Shapes
+    df_shapes_fg = df_shapes[df_shapes["variant_region"] == "FG"]
+    df_shapes_bg = df_shapes[df_shapes["variant_region"] == "BG"]
+    questions += sample_priors_shapes(df_shapes_fg, rng)
+    questions += sample_background_shapes(df_shapes_bg, rng)
 
     if len(questions) != 100:
-        raise RuntimeError(f"Expected 100 variable questions, got {len(questions)}")
+        raise RuntimeError(
+            f"Expected 100 variable questions, got {len(questions)}"
+        )
 
-    # Shuffle all variable questions together
+    # Randomize all variable questions together
     rng.shuffle(questions)
 
-    # Insert sanity checks (1-based positions)
-    for pos in sorted(SANITY_POSITIONS):
-        questions.insert(pos - 1, make_sanity_question(pos))
+    # Insert sanity questions
+    insert_sanity_questions(questions)
 
     # Insert introspection
     introspection = make_introspection_question()
@@ -165,33 +246,7 @@ def generate_profile(df_objects, df_shapes, seed, introspection_position):
     return questions
 
 
-# CLI
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--objects-table", type=Path, required=True)
-    parser.add_argument("--shapes-table", type=Path, required=True)
-    parser.add_argument("--seed", type=int, required=True)
-    parser.add_argument("--introspection", choices=["first", "last"], required=True)
-    parser.add_argument("--out", type=Path, required=True)
-
-    args = parser.parse_args()
-
-    df_objects = pd.read_csv(args.objects_table)
-    df_shapes = pd.read_csv(args.shapes_table)
-
-    profile = generate_profile(
-        df_objects=df_objects,
-        df_shapes=df_shapes,
-        seed=args.seed,
-        introspection_position=args.introspection
-    )
-
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    with open(args.out, "w") as f:
+def save_profile(profile, out_path: Path):
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(out_path, "w") as f:
         json.dump(profile, f, indent=2)
-
-    print(f"Wrote survey profile with {len(profile)} questions → {args.out}")
-
-
-if __name__ == "__main__":
-    main()

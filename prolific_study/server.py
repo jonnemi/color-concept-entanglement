@@ -1,81 +1,101 @@
 from flask import Flask, request, jsonify, send_from_directory
+from pathlib import Path
 import json
+import hashlib
 import uuid
 import os
-import pandas as pd
-import hashlib
-from sample_experiment import sample_experiment_1
 
+# ---------------------------------------------------------------------
+# App setup
+# ---------------------------------------------------------------------
 
 app = Flask(__name__, static_folder="static", static_url_path="")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = Path(__file__).resolve().parent
 
-STIMULUS_TABLE = pd.read_csv(
-    os.path.join(
-        BASE_DIR,
-        "..",
-        "data",
-        "prolific_stimuli",
-        "stimulus_table.csv"
-    )
-)
+# ---------------------------------------------------------------------
+# Profile loading
+# ---------------------------------------------------------------------
 
+PROFILE_DIR = BASE_DIR / "static" /"img" / "dataset" / "prolific_stimuli" / "profiles"
+PROFILE_FILES = sorted(PROFILE_DIR.glob("profile_*.json"))
 
-def seed_from_prolific_id(pid: str) -> int:
-    return int(
-        hashlib.sha256(pid.encode()).hexdigest(),
-        16
-    ) % (10**8)
+N_PROFILES = len(PROFILE_FILES)
+assert N_PROFILES == 74, f"Expected 74 profiles, found {N_PROFILES}"
+
+# ---------------------------------------------------------------------
+# Deterministic profile assignment
+# ---------------------------------------------------------------------
+
+def assign_profile_index(prolific_pid: str) -> int:
+    """
+    Deterministically assign a participant to one of the precomputed profiles.
+    """
+    h = hashlib.sha256(prolific_pid.encode()).hexdigest()
+    return int(h, 16) % N_PROFILES
+
+# ---------------------------------------------------------------------
+# Routes
+# ---------------------------------------------------------------------
 
 @app.route("/")
 def index():
     return send_from_directory("static", "index.html")
 
-@app.route("/get_stimuli")
-def get_stimuli():
-    prolific_id = request.args.get("PROLIFIC_PID")
-    if prolific_id is None:
+
+@app.route("/get_profile")
+def get_profile():
+    """
+    Return the assigned survey profile for a given Prolific participant.
+    """
+    prolific_pid = request.args.get("PROLIFIC_PID")
+
+    if not prolific_pid:
         return jsonify({"error": "Missing PROLIFIC_PID"}), 400
 
-    seed = seed_from_prolific_id(prolific_id)
+    profile_idx = assign_profile_index(prolific_pid)
+    profile_path = PROFILE_FILES[profile_idx]
 
-    sampled = sample_experiment_1(
-        STIMULUS_TABLE,
-        seed=seed
-    )
-
-    # Convert to JSON-safe format
-    records = sampled.to_dict(orient="records")
+    with open(profile_path, "r") as f:
+        profile = json.load(f)
 
     return jsonify({
-        "seed": seed,
-        "stimuli": records
+        "profile_id": profile_path.stem,
+        "profile_index": profile_idx,
+        "questions": profile["questions"],
     })
+
+
+@app.route("/save_results", methods=["POST"])
+def save_results():
+    """
+    Save participant responses.
+    """
+    payload = request.get_json()
+
+    prolific_pid = payload.get("PROLIFIC_PID", "UNKNOWN")
+    profile_id = payload.get("profile_id", "UNKNOWN")
+    data = payload.get("data", [])
+
+    out_dir = BASE_DIR / "results"
+    out_dir.mkdir(exist_ok=True)
+
+    session_id = uuid.uuid4().hex
+    out_path = out_dir / f"{prolific_pid}_{profile_id}_{session_id}.json"
+
+    with open(out_path, "w") as f:
+        json.dump(payload, f, indent=2)
+
+    return jsonify({"status": "ok"}), 200
+
 
 @app.route("/finish.html")
 def finish():
     return send_from_directory("static", "finish.html")
 
-
-@app.route("/save-json", methods=["POST"])
-def save_json():
-    try:
-        payload = request.get_json()
-        exp = payload.get("experiment_type", "unknown")
-        data = payload.get("data", {})
-
-        session_id = str(uuid.uuid4())
-        save_dir = f"data/exp{exp}"
-        os.makedirs(save_dir, exist_ok=True)
-
-        with open(f"{save_dir}/session-{session_id}.json", "w") as f:
-            json.dump(data, f, indent=2)
-
-        return jsonify({"message": "Saved"}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+# ---------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------
 
 if __name__ == "__main__":
     app.run(debug=True)
-

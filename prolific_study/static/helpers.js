@@ -12,17 +12,55 @@ function shuffle(array) {
   return arr;
 }
 
+
 const ALL_COLORS = [
-  "red", "green", "blue", "yellow", "orange",
-  "purple", "pink", "brown", "gray"
+  "red",
+  "orange",
+  "yellow",
+  "green",
+  "blue",
+  "purple",
+  "pink",
+  "brown",
+  "grey"
 ];
 
-function sampleDistractors(correctColor) {
-  const candidates = ALL_COLORS.filter(
-    c => c !== correctColor && c !== "black"
-  );
-  return shuffle(candidates).slice(0, 2);
+function circularDistance(a, b, wheel) {
+  const n = wheel.length;
+  const ia = wheel.indexOf(a);
+  const ib = wheel.indexOf(b);
+
+  if (ia === -1 || ib === -1) {
+    throw new Error(`Color not in wheel: ${a}, ${b}`);
+  }
+
+  const d = Math.abs(ia - ib);
+  return Math.min(d, n - d);
 }
+
+function sampleDistractors(correctColor, n = 2) {
+  // Guard against non-wheel colors
+  if (!correctColor || correctColor === "white") {
+    return shuffle(
+      ALL_COLORS.filter(c => c !== "black")
+    ).slice(0, n);
+  }
+
+  const MIN_DIST = 3;
+
+  const candidates = ALL_COLORS.filter(c =>
+    c !== correctColor &&
+    circularDistance(c, correctColor, ALL_COLORS) >= MIN_DIST
+  );
+
+  if (candidates.length < n) {
+    throw new Error(`Not enough distractors for ${correctColor}`);
+  }
+
+  return shuffle(candidates).slice(0, n);
+}
+
+
 
 function saveData() {
     var completion_date = new Date();
