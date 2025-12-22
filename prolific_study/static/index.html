@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Experiment: Color Judgments</title>
+    <title>Experiment: Visual Color Judgments</title>
 
     <!-- Silence Firefox favicon error -->
     <link rel="icon" href="data:,">
@@ -20,7 +20,6 @@
     <script src="https://unpkg.com/@jspsych/plugin-preload@1.1.2"></script>
     <script src="https://unpkg.com/@jspsych/plugin-call-function@1.1.2"></script>
 
-
     <!-- Local scripts -->
     <script src="jquery.min.js"></script>
     <script src="helpers.js"></script>
@@ -35,67 +34,69 @@
     <div class="jspsych-content" style="padding:80px 0;width:800px;font-size:20px;text-align:left;">
 
         <div style="text-align:center;">
-            <img src="img/Brown_Logo.png" height="100" style="margin-right:200px;">
-            <img src="img/lunarlogo.svg" height="100">
+            <img src="img/Tuebingen_Logo.png" height="100" style="margin-right:200px;">
+            <img src="img/Brown_Logo.png" height="100">
         </div>
 
         <p style="text-align:center;">
             <br><b>
-                LANGUAGE UNDERSTANDING AND REPRESENTATION LABORATORY<br>
-                Department of Computer Science<br>
-                Brown University
+                HEALTH NLP LAB <br>
+                University of Tübingen &nbsp;·&nbsp; Brown University
             </b><br>
         </p>
 
-        <p>Dear Participants,</p>
+        <p>Dear Participant,</p>
 
         <p>
-            Thank you for your interest! In this study, you will be asked to answer
-            simple questions about the colors you see in images.
-            The study is expected to take about 10 minutes.
+            Thank you for your interest! In this study, you will be asked to answer simple questions about the color you see in images.
+            The study is expected to take about 30 minutes. 
         </p>
 
         <p>
-            You are being asked to participate in a project conducted at Brown University
-            under the direction of Dr. Ellie Pavlick.
+            You are being asked to participate in a project conducted at the University of Tübingen
+            and Brown University under the direction of Prof. Carsten Eickhoff.
         </p>
 
         <p>
             Your participation is voluntary. You may withdraw at any time without penalty.
-            There are no known risks associated with participation.
+            There are no known risks associated with participation. 
         </p>
 
         <p>
             All responses are associated only with a Prolific Subject ID and are confidential.
-            Unidentifiable data may be shared publicly for research transparency.
+            Unidentifiable data may be shared publicly for research transparency and be used to create an open-source dataset distributed via Hugging Face. 
         </p>
 
         <p>
-            You will be reimbursed at a rate of $12/hr for your participation.
+            You will be reimbursed at a rate of $12/hr for your participation. 
         </p>
 
         <p>
-            If you have questions, contact:
-            <a href="mailto:lunar.lab.nlp@gmail.com">lunar.lab.nlp@gmail.com</a>
+            If you have questions, contact: <a href="mailto:c.eickhoff@acm.org">c.eickhoff@acm.org</a>
         </p>
 
         <p><b>Consent Statement</b></p>
 
         <p>
-            By clicking “CONSENT” below, you confirm that you are at least 18 years old
-            and agree to participate in this study.
+            By clicking CONSENT below, you confirm that:
         </p>
+
+        <ul>
+            <li>You are at least 18 years old.</li>
+            <li>You are not visually impaired (including color vision deficiencies).</li>
+        </ul>
 
         <div style="text-align:right;">
             <button class="jspsych-btn" type="button" onclick="run_experiment()">CONSENT</button>
         </div>
 
-        <br>
-
-        <p>If you do NOT agree, click DECLINE.</p>
+        <p>If you do NOT agree to participate,click DECLINE.</p>
 
         <div style="text-align:right;">
-            <button class="jspsych-btn" type="button" onclick="window.close()">DECLINE</button>
+            <button class="jspsych-btn" type="button"
+            onclick="window.location.href='decline.html'">
+            DECLINE
+            </button>
         </div>
 
     </div>

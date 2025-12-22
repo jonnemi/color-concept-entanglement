@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Study Declined</title>
+
+  <!-- Silence favicon warnings -->
+  <link rel="icon" href="data:,">
+
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: 100px auto;
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      font-size: 18px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .btn {
+      margin-top: 30px;
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background-color: #1976d2;
+      color: white;
+    }
+
+    .btn:hover {
+      background-color: #145ea8;
+    }
+
+    .note {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>Study Declined</h2>
+
+    <p>
+      You have chosen not to participate in this study.
+    </p>
+
+    <p>
+      Please click the button below to return the study on Prolific.
+    </p>
+
+    <button class="btn"
+      onclick="window.location.href='https://app.prolific.com/submissions/complete?cc=RETURN'">
+      Return Study on Prolific
+    </button>
+
+    <p class="note">
+      After returning the study, you may safely close this tab.
+    </p>
+  </div>
+</body>
+</html>
