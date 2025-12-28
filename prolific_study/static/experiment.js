@@ -13,6 +13,9 @@ var jsPsych = initJsPsych({
 
 let experimentEnded = false;
 const MAX_DURATION_MS = 1000 * 30; // 30s test mode (use 30 * 60 * 1000 in prod)
+let distractorErrors = 0; // global error tracking
+let warningShown = false;
+
 
 /**************************************************************************
  * Capture Prolific info
@@ -69,12 +72,51 @@ function safeEndExperiment(message, reason) {
  * RENDERERS
  **************************************************************************/
 
+function warningTrial(message) {
+  return {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `
+      <div style="
+        max-width: 1000px;
+        margin: 0 auto;
+        text-align: center;
+      ">
+        <h3>Warning</h3>
+        <p>${message}</p>
+        <p>
+          Please answer carefully. The study will end if this happens again.
+        </p>
+      </div>
+    `,
+    choices: ["Continue"],
+    data: {
+      task_type: "warning",
+    },
+  };
+}
+
+
+
+function warningNode() {
+  return {
+    timeline: [
+      warningTrial("You selected an unreasonable color."),
+    ],
+    conditional_function: function () {
+      return distractorErrors === 1 && !warningShown;
+    },
+    on_timeline_finish: function () {
+      warningShown = true;
+    },
+  };
+}
+
+
+
 function renderColorJudgment(q) {
-  const choices = shuffle([
-    q.target_color,
-    "white",
-    ...sampleDistractors(q.target_color, 2),
-  ]);
+  const choices = shuffle(
+    getColorAnswerOptions(q.target_color)
+  );
 
   return {
     type: jsPsychHtmlButtonResponse,
@@ -109,16 +151,24 @@ function renderColorJudgment(q) {
       data.is_distractor = is_wrong;
 
       if (is_wrong) {
-        safeEndExperiment(
-          "You selected an implausible color.",
-          "failed_distractor"
-        );
-        return;
+        distractorErrors += 1;
+
+        jsPsych.data.addProperties({
+          distractor_errors: distractorErrors,
+        });
+
+        if (distractorErrors >= 2) {
+          safeEndExperiment(
+            "You selected unreasonable colors two times.",
+            "failed_distractor"
+          );
+        }
       }
+
 
       const cur = jsPsych.getProgressBarCompleted();
       jsPsych.setProgressBar(cur + 1 / 106);
-    },
+    }
   };
 }
 
@@ -189,19 +239,45 @@ function renderIntrospection(q) {
   return {
     type: jsPsychHtmlSliderResponse,
     stimulus: `
-      <p>
-        For any object, <b>x%</b> of its pixels should be colored
-        for it to be considered that color.
-      </p>
-      <p>What value should <b>x%</b> be?</p>
+      <div style="width:700px; margin:0 auto; text-align:left;">
+        <p>
+          For any object, <b>x%</b> of its pixels should be colored
+          for it to be considered that color.
+        </p>
+        <p>
+          What value should <b>x%</b> be?
+        </p>
+
+        <p style="text-align:center; font-size:24px; margin-top:20px;">
+          Selected value: <b><span id="slider-value">50</span>%</b>
+        </p>
+      </div>
     `,
-    min: q.min,
-    max: q.max,
+    min: q.min ?? 0,
+    max: q.max ?? 100,
+    start: 50,
     step: 1,
     labels: ["0%", "100%"],
-    data: { task_type: "introspection" },
+    require_movement: true,
+
+    on_load: function () {
+      const slider = document.querySelector('input[type="range"]');
+      const valueSpan = document.getElementById("slider-value");
+
+      // Initialize display
+      valueSpan.textContent = slider.value;
+
+      slider.addEventListener("input", () => {
+        valueSpan.textContent = slider.value;
+      });
+    },
+
+    data: {
+      task_type: "introspection",
+    },
   };
 }
+
 
 /**************************************************************************
  * GLOBAL TIMEOUT
@@ -215,12 +291,12 @@ function startGlobalTimeout() {
   });
 
   window.setTimeout(() => {
-    if (experimentEnded) return;
+    jsPsych.data.addProperties({
+      timed_out: true,
+      timeout_time: Date.now(),
+    });
 
-    safeEndExperiment(
-      "The study timed out.",
-      "timeout"
-    );
+    console.warn("Experiment time limit reached (not terminating).");
   }, MAX_DURATION_MS);
 }
 
@@ -240,7 +316,7 @@ function buildTimeline(questions) {
         <h2>Welcome!</h2>
 
         <p>
-          You will see a series of images and answer questions about their colors.
+          You will see a series of images and answer questions about them.
         </p>
 
         <p>
@@ -249,9 +325,9 @@ function buildTimeline(questions) {
 
         <p><b>Important:</b></p>
         <ul>
-          <li>You will be removed if you select an implausible color.</li>
-          <li>You will be removed if you fail an attention check.</li>
-          <li>The study has a <b>30-minute time limit</b>.</li>
+          <li>You will be removed if you select a total of two unreasonable colors.</li>
+          <li>You will be removed if you fail an attention check question.</li>
+          <li>The study should take you approximately <b>30 minutes</b>.</li>
         </ul>
 
         <p>Click <b>Next</b> to begin.</p>
@@ -271,6 +347,8 @@ function buildTimeline(questions) {
       timeline.push(renderIntrospection(q));
     } else {
       timeline.push(renderColorJudgment(q));
+      timeline.push(warningNode());
+
     }
   });
 
@@ -295,10 +373,8 @@ function buildTimeline(questions) {
 
   // Finish
   timeline.push({
-    type: jsPsychHtmlButtonResponse,
-    stimulus: "Click below to complete the study.",
-    choices: ["Finish"],
-    on_finish: () => {
+    type: jsPsychCallFunction,
+    func: () => {
       window.location.href = "finish.html";
     },
   });

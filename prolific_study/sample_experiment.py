@@ -127,7 +127,7 @@ SANITY_QUESTIONS = [
     {
         "question_type": "sanity",
         "sanity_id": 1,
-        "prompt": "To show you are paying attention, please select Strongly Disagree.",
+        "prompt": 'To show you are paying attention, please select "Strongly Disagree".',
         "options": [
             "Strongly Agree",
             "Agree",
@@ -156,11 +156,11 @@ SANITY_QUESTIONS = [
         "sanity_id": 4,
         "prompt": "I have never used the internet.",
         "options": [
-            "Strongly Agree",
-            "Agree",
-            "Neither Agree nor Disagree",
+            "Strongly Disagree",
             "Disagree",
-            "Strongly Disagree"
+            "Neither Agree nor Disagree",
+            "Agree",
+            "Strongly Agree"         
         ],
         "correct_response": "Strongly Disagree",
     },
@@ -168,7 +168,7 @@ SANITY_QUESTIONS = [
         "question_type": "sanity",
         "sanity_id": 5,
         "prompt": (
-            "For this statement, please select Neither Agree nor Disagree."
+            'For this statement, please select "Neither Agree nor Disagree".'
         ),
         "options": [
             "Strongly Agree",
@@ -244,6 +244,54 @@ def generate_profile(
         )
 
     return questions
+
+
+def generate_debug_profile(df_priors, df_shapes):
+    """
+    Small deterministic profile for debugging:
+    - 5 normal color questions
+    - all sanity questions
+    - 1 introspection question
+    """
+
+    questions = []
+
+    # --- 5 NORMAL QUESTIONS (hand-picked, deterministic) ---
+
+    normals = [
+        df_priors.iloc[0].to_dict(),
+        df_priors.iloc[1].to_dict(),
+        df_shapes.iloc[0].to_dict(),
+        df_shapes.iloc[1].to_dict(),
+        df_priors.iloc[2].to_dict(),
+    ]
+
+    # Ensure required fields exist
+    for q in normals:
+        q.pop("question_type", None)
+
+    # --- BUILD QUESTION LIST ---
+
+    questions.append(normals[0])
+    questions.append(normals[1])
+    questions.append(SANITY_QUESTIONS[0])
+
+    questions.append(normals[2])
+    questions.append(SANITY_QUESTIONS[1])
+
+    questions.append(normals[3])
+    questions.append(SANITY_QUESTIONS[2])
+
+    questions.append(normals[4])
+    questions.append(SANITY_QUESTIONS[3])
+    questions.append(SANITY_QUESTIONS[4])
+
+    questions.append(make_introspection_question())
+
+    return {
+        "profile_id": "debug_profile",
+        "questions": questions,
+    }
 
 
 def save_profile(profile, out_path: Path):

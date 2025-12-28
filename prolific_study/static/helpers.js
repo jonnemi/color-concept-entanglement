@@ -13,52 +13,28 @@ function shuffle(array) {
 }
 
 
-const ALL_COLORS = [
-  "red",
-  "orange",
-  "yellow",
-  "green",
-  "blue",
-  "purple",
-  "pink",
-  "brown",
-  "grey"
-];
+const COLOR_ANSWER_OPTIONS = {
+  red:    ["red", "white", "green"],
+  orange:["orange", "white", "blue"],
+  yellow:["yellow", "white", "purple"],
+  green: ["green", "white", "red"],
+  blue:  ["blue", "white", "orange"],
+  purple:["purple", "white", "yellow"],
+  pink:  ["pink", "white", "green"],
+  brown: ["brown", "white", "blue"],
+  grey:  ["grey", "white", "red"],
+};
 
-function circularDistance(a, b, wheel) {
-  const n = wheel.length;
-  const ia = wheel.indexOf(a);
-  const ib = wheel.indexOf(b);
 
-  if (ia === -1 || ib === -1) {
-    throw new Error(`Color not in wheel: ${a}, ${b}`);
+function getColorAnswerOptions(targetColor) {
+  if (!COLOR_ANSWER_OPTIONS[targetColor]) {
+    throw new Error(`No answer options defined for color: ${targetColor}`);
   }
-
-  const d = Math.abs(ia - ib);
-  return Math.min(d, n - d);
+  return COLOR_ANSWER_OPTIONS[targetColor];
 }
 
-function sampleDistractors(correctColor, n = 2) {
-  // Guard against non-wheel colors
-  if (!correctColor || correctColor === "white") {
-    return shuffle(
-      ALL_COLORS.filter(c => c !== "black")
-    ).slice(0, n);
-  }
 
-  const MIN_DIST = 3;
 
-  const candidates = ALL_COLORS.filter(c =>
-    c !== correctColor &&
-    circularDistance(c, correctColor, ALL_COLORS) >= MIN_DIST
-  );
-
-  if (candidates.length < n) {
-    throw new Error(`Not enough distractors for ${correctColor}`);
-  }
-
-  return shuffle(candidates).slice(0, n);
-}
 
 
 

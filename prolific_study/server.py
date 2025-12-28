@@ -3,7 +3,6 @@ from pathlib import Path
 import json
 import hashlib
 import uuid
-import os
 
 # ---------------------------------------------------------------------
 # App setup
@@ -17,11 +16,23 @@ BASE_DIR = Path(__file__).resolve().parent
 # Profile loading
 # ---------------------------------------------------------------------
 
-PROFILE_DIR = BASE_DIR / "static" /"img" / "dataset" / "prolific_stimuli" / "profiles"
-PROFILE_FILES = sorted(PROFILE_DIR.glob("profile_*.json"))
+PROFILE_DIR = (
+    BASE_DIR
+    / "static"
+    / "img"
+    / "dataset"
+    / "prolific_stimuli"
+    / "profiles"
+)
 
+# Production profiles
+PROFILE_FILES = sorted(PROFILE_DIR.glob("profile_*.json"))
 N_PROFILES = len(PROFILE_FILES)
 assert N_PROFILES == 74, f"Expected 74 profiles, found {N_PROFILES}"
+
+# Debug profile (explicit, never part of assignment)
+DEBUG_PROFILE_PATH = PROFILE_DIR / "debug_profile.json"
+assert DEBUG_PROFILE_PATH.exists(), "debug_profile.json not found"
 
 # ---------------------------------------------------------------------
 # Deterministic profile assignment
@@ -29,7 +40,7 @@ assert N_PROFILES == 74, f"Expected 74 profiles, found {N_PROFILES}"
 
 def assign_profile_index(prolific_pid: str) -> int:
     """
-    Deterministically assign a participant to one of the precomputed profiles.
+    Deterministically assign a participant to one of the production profiles.
     """
     h = hashlib.sha256(prolific_pid.encode()).hexdigest()
     return int(h, 16) % N_PROFILES
@@ -48,11 +59,28 @@ def get_profile():
     """
     Return the assigned survey profile for a given Prolific participant.
     """
+
     prolific_pid = request.args.get("PROLIFIC_PID")
 
     if not prolific_pid:
         return jsonify({"error": "Missing PROLIFIC_PID"}), 400
 
+    # --------------------------------------------------
+    # DEBUG MODE
+    # --------------------------------------------------
+    if prolific_pid == "DEBUG":
+        with open(DEBUG_PROFILE_PATH, "r") as f:
+            profile = json.load(f)
+
+        return jsonify({
+            "profile_id": "debug_profile",
+            "profile_index": -1,
+            "questions": profile["questions"],
+        })
+
+    # --------------------------------------------------
+    # PRODUCTION MODE
+    # --------------------------------------------------
     profile_idx = assign_profile_index(prolific_pid)
     profile_path = PROFILE_FILES[profile_idx]
 
@@ -75,7 +103,6 @@ def save_results():
 
     prolific_pid = payload.get("PROLIFIC_PID", "UNKNOWN")
     profile_id = payload.get("profile_id", "UNKNOWN")
-    data = payload.get("data", [])
 
     out_dir = BASE_DIR / "results"
     out_dir.mkdir(exist_ok=True)
@@ -92,6 +119,7 @@ def save_results():
 @app.route("/finish.html")
 def finish():
     return send_from_directory("static", "finish.html")
+
 
 # ---------------------------------------------------------------------
 # Main
