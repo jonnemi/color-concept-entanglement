@@ -26,7 +26,10 @@ making_color_images/__pycache__/
 *.zip
 
 # Styling images for prolific
-prolific_study/static/img/
+prolific_study/static/img/*
+!prolific_study/static/img/Brown_Logo.png
+!prolific_study/static/img/Tuebingen_Logo.png
+!prolific_study/static/img/UTAustin_Logo.png
 prolific_study/static/dataset/
 prolific_study/data/
 prolific_study/results/

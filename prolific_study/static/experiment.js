@@ -62,19 +62,37 @@ async function fetchProfile() {
  * SAFE TERMINATION
  **************************************************************************/
 
-function safeEndExperiment(message, reason) {
+async function saveResults(exit_reason) {
+  try {
+    jsPsych.data.addProperties({
+      exit_reason,
+      exit_time: Date.now(),
+    });
+
+    await fetch("/save_results", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        PROLIFIC_PID: subject_id,
+        data: jsPsych.data.get().values(),
+      }),
+    });
+  } catch (err) {
+    console.error("Failed to save results:", err);
+  }
+}
+
+async function safeEndExperiment(message, reason) {
   if (experimentEnded) return;
   experimentEnded = true;
 
-  jsPsych.data.addProperties({
-    exit_reason: reason,
-    exit_time: Date.now(),
-  });
+  await saveResults(reason);
 
   jsPsych.endExperiment(
     message + "<br><br>Please return the study on Prolific."
   );
 }
+
 
 /**************************************************************************
  * RENDERERS
@@ -364,18 +382,7 @@ function buildTimeline(questions) {
   timeline.push({
     type: jsPsychCallFunction,
     func: async function () {
-      jsPsych.data.addProperties({
-        exit_reason: "completed",
-      });
-
-      await fetch("/save_results", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          PROLIFIC_PID: subject_id,
-          data: jsPsych.data.get().values(),
-        }),
-      });
+      await saveResults("completed");
     },
   });
 
