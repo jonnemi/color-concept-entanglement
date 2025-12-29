@@ -3,8 +3,16 @@
 .ipynb_checkpoints/
 
 # Data & models (keep out of Git)
-data/
+data/*
+!data/prolific_stimuli/
+!data/prolific_stimuli/**
 !data/prolific_stimuli/profiles/
+!data/prolific_stimuli/profiles/**
+data/prolific_stimuli/stimulus_table_counterfact.csv
+data/prolific_stimuli/stimulus_table_image_priors.csv
+data/prolific_stimuli/stimulus_table_shapes.csv
+data/prolific_stimuli/stimulus_table.parquet
+
 segment-anything-2/
 checkpoints/
 __pycache__/

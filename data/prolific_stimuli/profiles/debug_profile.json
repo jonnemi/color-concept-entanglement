@@ -1,0 +1,119 @@
+{
+  "profile_id": "debug_profile",
+  "questions": [
+    {
+      "object": "Band Aid",
+      "stimulus_type": "correct_prior",
+      "target_color": "pink",
+      "variant_region": "BG",
+      "percent_colored": 0,
+      "mode": "seq",
+      "variant_label": "BG 0% (seq)",
+      "image_path": "color_images/gpt-4o/image_priors/Band_Aid_1_e73eed92_resized_pink/BG_000_seq.png"
+    },
+    {
+      "object": "Band Aid",
+      "stimulus_type": "correct_prior",
+      "target_color": "pink",
+      "variant_region": "BG",
+      "percent_colored": 1,
+      "mode": "seq",
+      "variant_label": "BG 1% (seq)",
+      "image_path": "color_images/gpt-4o/image_priors/Band_Aid_1_e73eed92_resized_pink/BG_001_seq.png"
+    },
+    {
+      "question_type": "sanity",
+      "sanity_id": 1,
+      "prompt": "To show you are paying attention, please select \"Strongly Disagree\".",
+      "options": [
+        "Strongly Agree",
+        "Agree",
+        "Neither Agree nor Disagree",
+        "Disagree",
+        "Strongly Disagree"
+      ],
+      "correct_response": "Strongly Disagree"
+    },
+    {
+      "object": "circle",
+      "stimulus_type": "shape",
+      "target_color": "blue",
+      "variant_region": "BG",
+      "percent_colored": 0,
+      "mode": "seq",
+      "variant_label": "BG 0% (seq)",
+      "image_path": "shapes/shape_colored/circle_v0_blue/BG_000_seq.png"
+    },
+    {
+      "question_type": "sanity",
+      "sanity_id": 2,
+      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "response_type": "text",
+      "correct_response": "BLUE"
+    },
+    {
+      "object": "circle",
+      "stimulus_type": "shape",
+      "target_color": "blue",
+      "variant_region": "BG",
+      "percent_colored": 1,
+      "mode": "seq",
+      "variant_label": "BG 1% (seq)",
+      "image_path": "shapes/shape_colored/circle_v0_blue/BG_001_seq.png"
+    },
+    {
+      "question_type": "sanity",
+      "sanity_id": 3,
+      "prompt": "Please select option number 3 for this item.",
+      "options": [
+        "Option 1",
+        "Option 2",
+        "Option 3",
+        "Option 4"
+      ],
+      "correct_response": "Option 3"
+    },
+    {
+      "object": "Band Aid",
+      "stimulus_type": "correct_prior",
+      "target_color": "pink",
+      "variant_region": "BG",
+      "percent_colored": 2,
+      "mode": "seq",
+      "variant_label": "BG 2% (seq)",
+      "image_path": "color_images/gpt-4o/image_priors/Band_Aid_1_e73eed92_resized_pink/BG_002_seq.png"
+    },
+    {
+      "question_type": "sanity",
+      "sanity_id": 4,
+      "prompt": "I have never used the internet.",
+      "options": [
+        "Strongly Disagree",
+        "Disagree",
+        "Neither Agree nor Disagree",
+        "Agree",
+        "Strongly Agree"
+      ],
+      "correct_response": "Strongly Disagree"
+    },
+    {
+      "question_type": "sanity",
+      "sanity_id": 5,
+      "prompt": "For this statement, please select \"Neither Agree nor Disagree\".",
+      "options": [
+        "Strongly Agree",
+        "Agree",
+        "Neither Agree nor Disagree",
+        "Disagree",
+        "Strongly Disagree"
+      ],
+      "correct_response": "Neither Agree nor Disagree"
+    },
+    {
+      "question_type": "introspection",
+      "prompt": "For any object, x% of its pixels should be colored for it to be considered that color. What value should x% be?",
+      "min": 0,
+      "max": 100
+    }
+  ]
+}
