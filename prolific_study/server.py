@@ -35,12 +35,11 @@ supabase: Client = create_client(
 
 PROFILE_DIR = (
     BASE_DIR
-    / "static"
-    / "img"
-    / "dataset"
+    / "data"
     / "prolific_stimuli"
     / "profiles"
 )
+
 
 # Production profiles
 PROFILE_FILES = sorted(

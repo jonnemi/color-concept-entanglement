@@ -16,6 +16,14 @@ const MAX_DURATION_MS = 1000 * 30; // 30s test mode (use 30 * 60 * 1000 in prod)
 let distractorErrors = 0; // global error tracking
 let warningShown = false;
 
+// ---------------------------------------------------------------------
+// IMAGE HOSTING (Supabase)
+// ---------------------------------------------------------------------
+
+const SUPABASE_IMAGE_BASE =
+  "https://utwhgfveotpusdjopcnl.supabase.co" +
+  "/storage/v1/object/public/prolific_images/";
+
 
 /**************************************************************************
  * Capture Prolific info
@@ -122,7 +130,7 @@ function renderColorJudgment(q) {
     type: jsPsychHtmlButtonResponse,
     stimulus: `
       <div style="text-align:center">
-        <img src="img/dataset/${q.image_path}" style="max-width:400px;"><br><br>
+        <img src="${SUPABASE_IMAGE_BASE}${q.image_path}" style="max-width:400px;"><br><br>
         <b>What color is the ${q.object} in the image?</b>
       </div>
     `,
