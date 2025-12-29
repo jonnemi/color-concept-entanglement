@@ -4,6 +4,7 @@
 
 # Data & models (keep out of Git)
 data/
+!data/prolific_stimuli/profiles/
 segment-anything-2/
 checkpoints/
 __pycache__/
