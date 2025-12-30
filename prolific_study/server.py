@@ -18,7 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent
 # Supabase setup
 # ---------------------------------------------------------------------
 
-"""SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY")
 
 if not SUPABASE_URL or not SUPABASE_SERVICE_KEY:
@@ -27,7 +27,7 @@ if not SUPABASE_URL or not SUPABASE_SERVICE_KEY:
 supabase: Client = create_client(
     SUPABASE_URL,
     SUPABASE_SERVICE_KEY
-)"""
+)
 
 # ---------------------------------------------------------------------
 # Profile loading
@@ -152,13 +152,6 @@ def decline():
 # Main
 # ---------------------------------------------------------------------
 
-"""if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)"""
-
-
-
 if __name__ == "__main__":
-
-
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)

@@ -416,7 +416,18 @@ function buildTimeline(questions) {
     type: jsPsychCallFunction,
     func: async () => {
       await saveResults("completed");
-      window.location.href = "finish.html";
+      const finishUrl = new URL("finish.html", window.location.origin);
+
+      if (TEST_MODE) {
+        finishUrl.searchParams.set("test", "1");
+        finishUrl.searchParams.set(
+          "feedback",
+          encodeURIComponent(GOOGLE_FEEDBACK_URL)
+        );
+      }
+
+      window.location.href = finishUrl.toString();
+
     },
   });
 }
