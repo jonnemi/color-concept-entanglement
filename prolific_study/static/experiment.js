@@ -29,6 +29,10 @@ const SUPABASE_IMAGE_BASE =
   "https://utwhgfveotpusdjopcnl.supabase.co" +
   "/storage/v1/object/public/prolific_images/";
 
+function preloadImage(url) {
+  const img = new Image();
+  img.src = url;
+}
 
 /**************************************************************************
  * Capture Prolific info
@@ -169,14 +173,27 @@ function renderColorJudgment(q) {
     getColorAnswerOptions(q.target_color)
   );
 
+  const imgId = `stim-img-${jsPsych.randomization.randomID(8)}`;
+
   return {
     type: jsPsychHtmlButtonResponse,
+
     stimulus: `
       <div style="text-align:center">
-        <img src="${SUPABASE_IMAGE_BASE}${q.image_path}" style="max-width:400px;"><br><br>
+        <div id="loading" style="margin-bottom:10px;">
+          Loading image…
+        </div>
+
+        <img
+          id="${imgId}"
+          src="${SUPABASE_IMAGE_BASE}${q.image_path}"
+          style="max-width:400px; display:none;"
+        ><br><br>
+
         <b>What color is the ${q.object} in the image?</b>
       </div>
     `,
+
     choices,
 
     data: {
@@ -186,6 +203,27 @@ function renderColorJudgment(q) {
       percent_colored: q.percent_colored,
       variant_region: q.variant_region,
       target_color: q.target_color,
+      image_path: q.image_path, // helpful for analysis
+    },
+
+    on_load: function () {
+      const img = document.getElementById(imgId);
+      const loading = document.getElementById("loading");
+      const buttons = document.querySelectorAll(".jspsych-btn");
+
+      // Disable responses until image is ready
+      buttons.forEach(b => b.disabled = true);
+
+      img.onload = () => {
+        loading.style.display = "none";
+        img.style.display = "block";
+        buttons.forEach(b => b.disabled = false);
+      };
+
+      img.onerror = () => {
+        loading.innerText = "Image failed to load. Please continue.";
+        buttons.forEach(b => b.disabled = false);
+      };
     },
 
     on_finish: function (data) {
@@ -216,12 +254,16 @@ function renderColorJudgment(q) {
         }
       }
 
-
       const cur = jsPsych.getProgressBarCompleted();
       jsPsych.setProgressBar(cur + 1 / 106);
-    }
+
+      if (q._next_image_path) {
+        preloadImage(SUPABASE_IMAGE_BASE + q._next_image_path);
+      }
+    },
   };
 }
+
 
 
 function renderSanity(q) {
@@ -388,6 +430,13 @@ function buildTimeline(questions) {
     show_clickable_nav: true,
     allow_backward: false,
     on_finish: startGlobalTimeout,
+  });
+
+  // Annotate each question with the next image path (for preloading)
+  questions.forEach((q, i) => {
+    if (questions[i + 1]?.image_path) {
+      q._next_image_path = questions[i + 1].image_path;
+    }
   });
 
   // Questions
