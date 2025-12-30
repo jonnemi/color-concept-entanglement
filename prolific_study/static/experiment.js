@@ -403,33 +403,28 @@ function buildTimeline(questions) {
     }
   });
 
-  // Save results
   timeline.push({
-    type: jsPsychCallFunction,
-    func: async function () {
-      await saveResults("completed");
-    },
-  });
+  type: jsPsychCallFunction,
+  func: async () => {
+    await saveResults("completed");
 
-  // Finish
-  timeline.push({
-    type: jsPsychCallFunction,
-    func: async () => {
-      await saveResults("completed");
-      const finishUrl = new URL("finish.html", window.location.origin);
+    const finishUrl = new URL("finish.html", window.location.origin);
 
-      if (TEST_MODE) {
-        finishUrl.searchParams.set("test", "1");
-        finishUrl.searchParams.set(
-          "feedback",
-          encodeURIComponent(GOOGLE_FEEDBACK_URL)
-        );
-      }
+    if (TEST_MODE) {
+      finishUrl.searchParams.set("test", "1");
+      finishUrl.searchParams.set(
+        "feedback",
+        encodeURIComponent(GOOGLE_FEEDBACK_URL)
+      );
+    }
 
+    // ⏳ allow POST to complete before navigation
+    setTimeout(() => {
       window.location.href = finishUrl.toString();
+    }, 300);
+  },
+});
 
-    },
-  });
 }
 
 /**************************************************************************
