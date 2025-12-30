@@ -35,7 +35,11 @@ const SUPABASE_IMAGE_BASE =
  **************************************************************************/
 
 let subject_id = jsPsych.data.getURLVariable("PROLIFIC_PID");
-if (!subject_id) subject_id = "DEBUG_LOCAL_USER";
+
+if (!subject_id) {
+  subject_id = getOrCreateTestPID();
+}
+
 
 const study_id = jsPsych.data.getURLVariable("STUDY_ID");
 const session_id = jsPsych.data.getURLVariable("SESSION_ID");
@@ -55,6 +59,20 @@ let timeline = [];
 /**************************************************************************
  * FETCH PROFILE FROM SERVER
  **************************************************************************/
+
+function getOrCreateTestPID() {
+  const key = "TEST_PROLIFIC_PID";
+  let pid = localStorage.getItem(key);
+
+  if (!pid) {
+    // Generate a Prolific-like ID (string, high entropy)
+    pid = "TEST_" + crypto.randomUUID();
+    localStorage.setItem(key, pid);
+  }
+
+  return pid;
+}
+
 
 async function fetchProfile() {
   const params = new URLSearchParams({ PROLIFIC_PID: subject_id });
