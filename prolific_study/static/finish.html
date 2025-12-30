@@ -44,8 +44,27 @@
       Back to Prolific
     </button>
 
-    <!-- CHANGE THE URL ABOVE FOR THE LIVE PROLIFIC EXPERIMENT -->
-  </div>
+    <div id="google-feedback" style="display:none; margin-top:30px;">
+      <hr style="margin:30px 0;">
+      <p style="font-size:16px;">
+        <b>Testing run?</b><br>
+        We'd really appreciate your feedback:
+      </p>
+
+      <button
+        class="jspsych-btn"
+        style="background-color:#4caf50"
+        onclick="window.open('https://docs.google.com/forms/d/e/XXXXXXXXXXXX/viewform', '_blank')">
+        Give Feedback (Google Form)
+      </button>
+    </div>
+
+    <script>
+      if (sessionStorage.getItem("test_mode") === "true") {
+        document.getElementById("google-feedback").style.display = "block";
+      }
+    </script>
+    </div>
 
 </body>
 </html>

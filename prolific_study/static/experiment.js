@@ -2,6 +2,11 @@
  * INITIALIZATION
  **************************************************************************/
 
+const TEST_MODE = true;
+const GOOGLE_FEEDBACK_URL =
+  "https://docs.google.com/forms/d/e/XXXXXXXXXXXX/viewform";
+
+
 var jsPsych = initJsPsych({
   show_progress_bar: true,
   auto_update_progress_bar: false,
@@ -88,9 +93,11 @@ async function safeEndExperiment(message, reason) {
 
   await saveResults(reason);
 
-  jsPsych.endExperiment(
-    message + "<br><br>Please return the study on Prolific."
-  );
+  // Store message so the exit page can display it
+  sessionStorage.setItem("exit_message", message);
+  sessionStorage.setItem("exit_reason", reason);
+
+  window.location.href = "exit_return.html";
 }
 
 
@@ -389,7 +396,8 @@ function buildTimeline(questions) {
   // Finish
   timeline.push({
     type: jsPsychCallFunction,
-    func: () => {
+    func: async () => {
+      await saveResults("completed");
       window.location.href = "finish.html";
     },
   });
@@ -409,6 +417,9 @@ async function run_experiment() {
     });
 
     buildTimeline(payload.questions);
+    if (TEST_MODE) {
+      sessionStorage.setItem("test_mode", "true");
+    }
     jsPsych.run(timeline);
 
   } catch (err) {
