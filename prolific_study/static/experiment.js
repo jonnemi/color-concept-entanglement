@@ -4,7 +4,7 @@
 
 const TEST_MODE = true;
 const GOOGLE_FEEDBACK_URL =
-  "https://docs.google.com/forms/d/e/XXXXXXXXXXXX/viewform";
+  "https://docs.google.com/forms/d/e/1FAIpQLSeo9oxXp7fjrct1EQYdvnWMRFo8AahNQFZGtMyjYWnOfkNPhg/viewform?usp=header";
 
 
 var jsPsych = initJsPsych({
