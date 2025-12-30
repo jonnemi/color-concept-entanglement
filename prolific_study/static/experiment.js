@@ -418,7 +418,7 @@ function buildTimeline(questions) {
       );
     }
 
-    // ⏳ allow POST to complete before navigation
+    // allow POST to complete before navigation
     setTimeout(() => {
       window.location.href = finishUrl.toString();
     }, 300);
