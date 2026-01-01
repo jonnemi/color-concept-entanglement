@@ -30,7 +30,7 @@
       "image_path": "color_images/gpt-4o/counterfact/cello_1_b59efadb_resized_purple/FG_005_seq.png"
     },
     {
-      "object": "Rottweiler",
+      "object": "rottweiler",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -360,7 +360,7 @@
       "image_path": "color_images/gpt-4o/image_priors/dalmatian_2_266c20b5_resized_grey/FG_020_seq.png"
     },
     {
-      "object": "Christmas stocking",
+      "object": "christmas stocking",
       "stimulus_type": "correct_prior",
       "target_color": "red",
       "variant_region": "FG",
@@ -592,7 +592,7 @@
       "image_path": "color_images/gpt-4o/image_priors/goldfish_2_7ef7f0d5_resized_blue/FG_070_seq.png"
     },
     {
-      "object": "mouse (computer)",
+      "object": "mouse",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -998,7 +998,7 @@
       "image_path": "color_images/gpt-4o/image_priors/picket_fence_2_61569d00_resized_brown/FG_010_seq.png"
     },
     {
-      "object": "Doberman",
+      "object": "doberman",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",

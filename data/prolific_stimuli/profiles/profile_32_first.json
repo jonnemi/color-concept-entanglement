@@ -30,7 +30,7 @@
       "image_path": "shapes/shape_colored/hexagon_v4_brown/FG_080_seq.png"
     },
     {
-      "object": "Band Aid",
+      "object": "band aid",
       "stimulus_type": "correct_prior",
       "target_color": "pink",
       "variant_region": "FG",
@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -290,7 +290,7 @@
       "image_path": "shapes/shape_colored/hexagon_v4_brown/BG_080_seq.png"
     },
     {
-      "object": "Maltese dog",
+      "object": "maltese dog",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -330,7 +330,7 @@
       "image_path": "color_images/gpt-4o/image_priors/canary_3_aef458ff_resized_brown/BG_060_seq.png"
     },
     {
-      "object": "crane (machine)",
+      "object": "crane",
       "stimulus_type": "correct_prior",
       "target_color": "yellow",
       "variant_region": "FG",
@@ -532,7 +532,7 @@
       "image_path": "shapes/shape_colored/pentagon_v1_pink/FG_030_seq.png"
     },
     {
-      "object": "green lizard",
+      "object": "lizard",
       "stimulus_type": "correct_prior",
       "target_color": "green",
       "variant_region": "FG",
@@ -705,7 +705,7 @@
       "image_path": "shapes/shape_colored/pentagon_v2_grey/FG_000_seq.png"
     },
     {
-      "object": "Irish setter",
+      "object": "irish setter",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",

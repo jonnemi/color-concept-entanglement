@@ -2,7 +2,7 @@
   "profile_id": "debug_profile",
   "questions": [
     {
-      "object": "Band Aid",
+      "object": "band aid",
       "stimulus_type": "correct_prior",
       "target_color": "pink",
       "variant_region": "BG",
@@ -12,7 +12,7 @@
       "image_path": "color_images/gpt-4o/image_priors/Band_Aid_1_e73eed92_resized_pink/BG_000_seq.png"
     },
     {
-      "object": "Band Aid",
+      "object": "band aid",
       "stimulus_type": "correct_prior",
       "target_color": "pink",
       "variant_region": "BG",
@@ -47,7 +47,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -74,7 +74,7 @@
       "correct_response": "Option 3"
     },
     {
-      "object": "Band Aid",
+      "object": "band aid",
       "stimulus_type": "correct_prior",
       "target_color": "pink",
       "variant_region": "BG",

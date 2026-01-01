@@ -233,7 +233,7 @@
       "image_path": "color_images/gpt-4o/counterfact/rocket_3_1f9b123d_resized_yellow/FG_020_seq.png"
     },
     {
-      "object": "Old English sheepdog",
+      "object": "old english sheepdog",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -360,7 +360,7 @@
       "image_path": "color_images/gpt-4o/image_priors/hare_2_4cbe00ed_resized_grey/FG_000_seq.png"
     },
     {
-      "object": "Doberman",
+      "object": "doberman",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -552,7 +552,7 @@
       "image_path": "color_images/gpt-4o/image_priors/rooster_3_c624c8db_resized_red/FG_030_seq.png"
     },
     {
-      "object": "green snake",
+      "object": "snake",
       "stimulus_type": "correct_prior",
       "target_color": "green",
       "variant_region": "FG",
@@ -888,7 +888,7 @@
       "image_path": "shapes/shape_colored/circle_v1_pink/FG_010_seq.png"
     },
     {
-      "object": "Doberman",
+      "object": "doberman",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -908,7 +908,7 @@
       "image_path": "shapes/shape_colored/hexagon_v0_brown/FG_030_seq.png"
     },
     {
-      "object": "green lizard",
+      "object": "lizard",
       "stimulus_type": "correct_prior",
       "target_color": "green",
       "variant_region": "FG",

@@ -63,7 +63,7 @@
       "correct_response": "Strongly Disagree"
     },
     {
-      "object": "Norwegian elkhound",
+      "object": "norwegian elkhound",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -203,7 +203,7 @@
       "image_path": "shapes/shape_colored/square_v3_grey/FG_060_seq.png"
     },
     {
-      "object": "Band Aid",
+      "object": "band aid",
       "stimulus_type": "counterfact",
       "target_color": "purple",
       "variant_region": "FG",
@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -330,7 +330,7 @@
       "image_path": "color_images/gpt-4o/image_priors/hippopotamus_3_8a2a39de_resized_grey/FG_055_seq.png"
     },
     {
-      "object": "Pomeranian",
+      "object": "pomeranian",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -370,7 +370,7 @@
       "image_path": "color_images/gpt-4o/image_priors/tow_truck_3_3fb95fa0_resized_brown/FG_005_seq.png"
     },
     {
-      "object": "Pomeranian",
+      "object": "pomeranian",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -685,7 +685,7 @@
       "image_path": "shapes/shape_colored/hexagon_v2_purple/FG_030_seq.png"
     },
     {
-      "object": "Sealyham terrier",
+      "object": "sealyham terrier",
       "stimulus_type": "counterfact",
       "target_color": "purple",
       "variant_region": "FG",
@@ -735,7 +735,7 @@
       "image_path": "shapes/shape_colored/triangle_v4_grey/FG_040_seq.png"
     },
     {
-      "object": "Sealyham terrier",
+      "object": "sealyham terrier",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -775,7 +775,7 @@
       "image_path": "shapes/shape_colored/hexagon_v3_yellow/FG_080_seq.png"
     },
     {
-      "object": "green snake",
+      "object": "snake",
       "stimulus_type": "correct_prior",
       "target_color": "green",
       "variant_region": "FG",
@@ -795,7 +795,7 @@
       "image_path": "shapes/shape_colored/square_v0_yellow/FG_060_seq.png"
     },
     {
-      "object": "Christmas stocking",
+      "object": "christmas stocking",
       "stimulus_type": "correct_prior",
       "target_color": "red",
       "variant_region": "FG",

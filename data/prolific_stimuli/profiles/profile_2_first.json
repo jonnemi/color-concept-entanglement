@@ -20,7 +20,7 @@
       "image_path": "color_images/gpt-4o/image_priors/beets_2_c2d2422e_resized_red/FG_020_seq.png"
     },
     {
-      "object": "Loafer",
+      "object": "loafer",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "BG",
@@ -203,7 +203,7 @@
       "image_path": "color_images/gpt-4o/image_priors/beetle_4_e03c36fe_resized_green/FG_060_seq.png"
     },
     {
-      "object": "Christmas stocking",
+      "object": "christmas stocking",
       "stimulus_type": "correct_prior",
       "target_color": "red",
       "variant_region": "FG",
@@ -233,7 +233,7 @@
       "image_path": "color_images/gpt-4o/image_priors/axolotl_4_154164db_resized_pink/FG_010_seq.png"
     },
     {
-      "object": "Doberman",
+      "object": "doberman",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -350,7 +350,7 @@
       "image_path": "color_images/gpt-4o/image_priors/housefly_3_bbecdd86_resized_yellow/FG_055_seq.png"
     },
     {
-      "object": "Band Aid",
+      "object": "band aid",
       "stimulus_type": "correct_prior",
       "target_color": "pink",
       "variant_region": "FG",
@@ -430,7 +430,7 @@
       "image_path": "color_images/gpt-4o/image_priors/fawn_4_29ccbd0c_resized_brown/FG_100_seq.png"
     },
     {
-      "object": "bat (animal)",
+      "object": "bat",
       "stimulus_type": "counterfact",
       "target_color": "pink",
       "variant_region": "FG",
@@ -988,7 +988,7 @@
       "image_path": "shapes/shape_colored/circle_v2_purple/FG_020_seq.png"
     },
     {
-      "object": "Christmas stocking",
+      "object": "christmas stocking",
       "stimulus_type": "correct_prior",
       "target_color": "red",
       "variant_region": "FG",
@@ -1028,7 +1028,7 @@
       "image_path": "shapes/shape_colored/hexagon_v3_orange/BG_100_seq.png"
     },
     {
-      "object": "Doberman",
+      "object": "doberman",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",

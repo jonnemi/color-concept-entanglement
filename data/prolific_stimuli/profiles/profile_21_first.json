@@ -255,12 +255,12 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
     {
-      "object": "crane (machine)",
+      "object": "crane",
       "stimulus_type": "correct_prior",
       "target_color": "yellow",
       "variant_region": "FG",
@@ -380,7 +380,7 @@
       "image_path": "color_images/gpt-4o/counterfact/bluejay_3_21fbbc11_resized_orange/FG_005_seq.png"
     },
     {
-      "object": "keyboard (musical)",
+      "object": "keyboard",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -715,7 +715,7 @@
       "image_path": "shapes/shape_colored/square_v1_brown/FG_000_seq.png"
     },
     {
-      "object": "mouse (computer)",
+      "object": "mouse",
       "stimulus_type": "counterfact",
       "target_color": "purple",
       "variant_region": "FG",
@@ -725,7 +725,7 @@
       "image_path": "color_images/gpt-4o/counterfact/mouse_(computer)_2_df53ad98_resized_purple/FG_020_seq.png"
     },
     {
-      "object": "Old English sheepdog",
+      "object": "old english sheepdog",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -888,7 +888,7 @@
       "image_path": "color_images/gpt-4o/image_priors/bullfrog_4_55480f4e_resized_green/FG_060_seq.png"
     },
     {
-      "object": "Komodo dragon",
+      "object": "komodo dragon",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -918,7 +918,7 @@
       "image_path": "shapes/shape_colored/pentagon_v1_grey/FG_005_seq.png"
     },
     {
-      "object": "Doberman",
+      "object": "doberman",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -978,7 +978,7 @@
       "image_path": "color_images/gpt-4o/counterfact/american_football_4_f17fd44d_resized_pink/FG_060_seq.png"
     },
     {
-      "object": "crane (machine)",
+      "object": "crane",
       "stimulus_type": "correct_prior",
       "target_color": "yellow",
       "variant_region": "BG",

@@ -63,7 +63,7 @@
       "correct_response": "Strongly Disagree"
     },
     {
-      "object": "crane (machine)",
+      "object": "crane",
       "stimulus_type": "correct_prior",
       "target_color": "yellow",
       "variant_region": "BG",
@@ -83,7 +83,7 @@
       "image_path": "shapes/shape_colored/square_v2_pink/FG_030_seq.png"
     },
     {
-      "object": "Doberman",
+      "object": "doberman",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -300,7 +300,7 @@
       "image_path": "color_images/gpt-4o/counterfact/tiger_5_875b6e5b_resized_purple/FG_070_seq.png"
     },
     {
-      "object": "Komodo dragon",
+      "object": "komodo dragon",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -675,7 +675,7 @@
       "image_path": "shapes/shape_colored/hexagon_v0_orange/FG_100_seq.png"
     },
     {
-      "object": "crane (machine)",
+      "object": "crane",
       "stimulus_type": "correct_prior",
       "target_color": "yellow",
       "variant_region": "FG",
@@ -695,7 +695,7 @@
       "image_path": "shapes/shape_colored/circle_v4_pink/FG_080_seq.png"
     },
     {
-      "object": "Doberman",
+      "object": "doberman",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -988,7 +988,7 @@
       "image_path": "color_images/gpt-4o/image_priors/rooster_3_c624c8db_resized_red/BG_100_seq.png"
     },
     {
-      "object": "Rottweiler",
+      "object": "rottweiler",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "BG",
@@ -998,7 +998,7 @@
       "image_path": "color_images/gpt-4o/image_priors/Rottweiler_4_131e8b4b_resized_brown/BG_040_seq.png"
     },
     {
-      "object": "Christmas stocking",
+      "object": "christmas stocking",
       "stimulus_type": "correct_prior",
       "target_color": "red",
       "variant_region": "FG",
@@ -1058,7 +1058,7 @@
       "image_path": "shapes/shape_colored/circle_v3_yellow/FG_030_seq.png"
     },
     {
-      "object": "Band Aid",
+      "object": "band aid",
       "stimulus_type": "correct_prior",
       "target_color": "pink",
       "variant_region": "FG",

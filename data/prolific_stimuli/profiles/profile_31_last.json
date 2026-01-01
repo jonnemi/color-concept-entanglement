@@ -57,7 +57,7 @@
       "correct_response": "Strongly Disagree"
     },
     {
-      "object": "Sealyham terrier",
+      "object": "sealyham terrier",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -137,7 +137,7 @@
       "image_path": "color_images/gpt-4o/image_priors/rooster_3_c624c8db_resized_red/FG_030_seq.png"
     },
     {
-      "object": "Chesapeake Bay retriever",
+      "object": "chesapeake bay retriever",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -249,7 +249,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -556,7 +556,7 @@
       "image_path": "shapes/shape_colored/square_v0_green/FG_090_seq.png"
     },
     {
-      "object": "Band Aid",
+      "object": "band aid",
       "stimulus_type": "correct_prior",
       "target_color": "pink",
       "variant_region": "FG",

@@ -24,7 +24,7 @@
       "image_path": "color_images/gpt-4o/image_priors/otter_3_34461c24_resized_brown/BG_020_seq.png"
     },
     {
-      "object": "Komodo dragon",
+      "object": "komodo dragon",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "BG",
@@ -137,7 +137,7 @@
       "image_path": "color_images/gpt-4o/counterfact/canary_3_aef458ff_resized_green/FG_055_seq.png"
     },
     {
-      "object": "Old English sheepdog",
+      "object": "old english sheepdog",
       "stimulus_type": "counterfact",
       "target_color": "yellow",
       "variant_region": "FG",
@@ -249,7 +249,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -354,7 +354,7 @@
       "image_path": "color_images/gpt-4o/image_priors/penguin_4_ae245348_resized_orange/FG_020_seq.png"
     },
     {
-      "object": "crane (machine)",
+      "object": "crane",
       "stimulus_type": "correct_prior",
       "target_color": "yellow",
       "variant_region": "FG",
@@ -404,7 +404,7 @@
       "image_path": "color_images/gpt-4o/image_priors/impala_4_47f6110a_resized_brown/FG_060_seq.png"
     },
     {
-      "object": "Maltese dog",
+      "object": "maltese dog",
       "stimulus_type": "counterfact",
       "target_color": "orange",
       "variant_region": "FG",
@@ -434,7 +434,7 @@
       "image_path": "color_images/gpt-4o/image_priors/forklift_3_0064e694_resized_yellow/FG_010_seq.png"
     },
     {
-      "object": "mouse (computer)",
+      "object": "mouse",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -669,7 +669,7 @@
       "image_path": "shapes/shape_colored/square_v4_pink/BG_040_seq.png"
     },
     {
-      "object": "keyboard (musical)",
+      "object": "keyboard",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -1022,7 +1022,7 @@
       "image_path": "color_images/gpt-4o/image_priors/bullfrog_4_55480f4e_resized_green/FG_090_seq.png"
     },
     {
-      "object": "green lizard",
+      "object": "lizard",
       "stimulus_type": "correct_prior",
       "target_color": "green",
       "variant_region": "FG",
@@ -1042,7 +1042,7 @@
       "image_path": "color_images/gpt-4o/image_priors/flat-coated_retriever_3_52e2a611_resized_brown/FG_005_seq.png"
     },
     {
-      "object": "bat (animal)",
+      "object": "bat",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "BG",

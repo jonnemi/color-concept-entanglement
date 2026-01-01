@@ -63,7 +63,7 @@
       "correct_response": "Strongly Disagree"
     },
     {
-      "object": "Pomeranian",
+      "object": "pomeranian",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -173,7 +173,7 @@
       "image_path": "shapes/shape_colored/square_v2_blue/FG_070_seq.png"
     },
     {
-      "object": "bat (animal)",
+      "object": "bat",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -430,7 +430,7 @@
       "image_path": "color_images/gpt-4o/image_priors/lobster_5_2bf42fc8_resized_red/FG_100_seq.png"
     },
     {
-      "object": "Maltese dog",
+      "object": "maltese dog",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -675,7 +675,7 @@
       "image_path": "color_images/gpt-4o/image_priors/oak_3_6df01d6f_resized_green/FG_040_seq.png"
     },
     {
-      "object": "Loafer",
+      "object": "loafer",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -765,7 +765,7 @@
       "image_path": "shapes/shape_colored/square_v1_blue/FG_060_seq.png"
     },
     {
-      "object": "Pomeranian",
+      "object": "pomeranian",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -785,7 +785,7 @@
       "image_path": "shapes/shape_colored/pentagon_v1_purple/FG_090_seq.png"
     },
     {
-      "object": "French horn",
+      "object": "french horn",
       "stimulus_type": "counterfact",
       "target_color": "red",
       "variant_region": "FG",
@@ -998,7 +998,7 @@
       "image_path": "shapes/shape_colored/circle_v3_orange/BG_100_seq.png"
     },
     {
-      "object": "green snake",
+      "object": "snake",
       "stimulus_type": "correct_prior",
       "target_color": "green",
       "variant_region": "FG",

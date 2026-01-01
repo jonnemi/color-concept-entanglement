@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -542,7 +542,7 @@
       "image_path": "shapes/shape_colored/circle_v2_blue/FG_020_seq.png"
     },
     {
-      "object": "Irish setter",
+      "object": "irish setter",
       "stimulus_type": "counterfact",
       "target_color": "green",
       "variant_region": "FG",
@@ -835,7 +835,7 @@
       "image_path": "shapes/shape_colored/triangle_v2_red/FG_050_seq.png"
     },
     {
-      "object": "green lizard",
+      "object": "lizard",
       "stimulus_type": "correct_prior",
       "target_color": "green",
       "variant_region": "FG",
@@ -845,7 +845,7 @@
       "image_path": "color_images/gpt-4o/image_priors/green_lizard_5_79432524_resized_green/FG_030_seq.png"
     },
     {
-      "object": "Maltese dog",
+      "object": "maltese dog",
       "stimulus_type": "counterfact",
       "target_color": "orange",
       "variant_region": "FG",

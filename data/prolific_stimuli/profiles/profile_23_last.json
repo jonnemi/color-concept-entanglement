@@ -197,7 +197,7 @@
       "image_path": "color_images/gpt-4o/image_priors/fox_2_52cadfa8_resized_orange/FG_080_seq.png"
     },
     {
-      "object": "Band Aid",
+      "object": "band aid",
       "stimulus_type": "correct_prior",
       "target_color": "pink",
       "variant_region": "FG",
@@ -217,7 +217,7 @@
       "image_path": "color_images/gpt-4o/image_priors/basketball_3_e20e77ec_resized_orange/FG_090_seq.png"
     },
     {
-      "object": "Loafer",
+      "object": "loafer",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -249,7 +249,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -546,7 +546,7 @@
       "image_path": "color_images/gpt-4o/image_priors/corn_2_9ff217f3_resized_green/FG_090_seq.png"
     },
     {
-      "object": "Old English sheepdog",
+      "object": "old english sheepdog",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -606,7 +606,7 @@
       "image_path": "color_images/gpt-4o/counterfact/ground_beetle_1_ec844287_resized_pink/FG_010_seq.png"
     },
     {
-      "object": "Chesapeake Bay retriever",
+      "object": "chesapeake bay retriever",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",

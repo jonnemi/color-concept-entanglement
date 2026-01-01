@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -562,7 +562,7 @@
       "image_path": "shapes/shape_colored/pentagon_v4_red/FG_050_seq.png"
     },
     {
-      "object": "Pomeranian",
+      "object": "pomeranian",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -622,7 +622,7 @@
       "image_path": "shapes/shape_colored/square_v0_red/BG_020_seq.png"
     },
     {
-      "object": "Chesapeake Bay retriever",
+      "object": "chesapeake bay retriever",
       "stimulus_type": "counterfact",
       "target_color": "green",
       "variant_region": "FG",
@@ -908,7 +908,7 @@
       "image_path": "shapes/shape_colored/hexagon_v2_red/FG_055_seq.png"
     },
     {
-      "object": "bat (animal)",
+      "object": "bat",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -938,7 +938,7 @@
       "image_path": "color_images/gpt-4o/image_priors/strawberry_1_23ac2bc5_resized_red/FG_040_seq.png"
     },
     {
-      "object": "Komodo dragon",
+      "object": "komodo dragon",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",

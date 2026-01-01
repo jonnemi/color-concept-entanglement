@@ -113,7 +113,7 @@
       "image_path": "color_images/gpt-4o/counterfact/penguin_4_ae245348_resized_green/FG_010_seq.png"
     },
     {
-      "object": "green lizard",
+      "object": "lizard",
       "stimulus_type": "correct_prior",
       "target_color": "green",
       "variant_region": "FG",
@@ -143,7 +143,7 @@
       "image_path": "shapes/shape_colored/pentagon_v4_green/FG_010_seq.png"
     },
     {
-      "object": "Rottweiler",
+      "object": "rottweiler",
       "stimulus_type": "counterfact",
       "target_color": "pink",
       "variant_region": "FG",
@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -715,7 +715,7 @@
       "image_path": "color_images/gpt-4o/counterfact/bathtub_3_07b8f09d_resized_green/FG_060_seq.png"
     },
     {
-      "object": "crane (machine)",
+      "object": "crane",
       "stimulus_type": "counterfact",
       "target_color": "red",
       "variant_region": "FG",
@@ -775,7 +775,7 @@
       "image_path": "shapes/shape_colored/hexagon_v1_blue/BG_100_seq.png"
     },
     {
-      "object": "green snake",
+      "object": "snake",
       "stimulus_type": "correct_prior",
       "target_color": "green",
       "variant_region": "FG",
@@ -988,7 +988,7 @@
       "image_path": "color_images/gpt-4o/image_priors/american_football_4_f17fd44d_resized_brown/FG_050_seq.png"
     },
     {
-      "object": "green lizard",
+      "object": "lizard",
       "stimulus_type": "correct_prior",
       "target_color": "green",
       "variant_region": "FG",

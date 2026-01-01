@@ -30,7 +30,7 @@
       "image_path": "color_images/gpt-4o/counterfact/strainer_4_c5445557_resized_green/FG_040_seq.png"
     },
     {
-      "object": "Christmas stocking",
+      "object": "christmas stocking",
       "stimulus_type": "correct_prior",
       "target_color": "red",
       "variant_region": "BG",
@@ -123,7 +123,7 @@
       "image_path": "color_images/gpt-4o/image_priors/jaguar_4_a2624ff9_resized_yellow/FG_100_seq.png"
     },
     {
-      "object": "crane (machine)",
+      "object": "crane",
       "stimulus_type": "correct_prior",
       "target_color": "yellow",
       "variant_region": "FG",
@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -612,7 +612,7 @@
       "image_path": "shapes/shape_colored/pentagon_v1_orange/FG_030_seq.png"
     },
     {
-      "object": "mouse (computer)",
+      "object": "mouse",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -622,7 +622,7 @@
       "image_path": "color_images/gpt-4o/image_priors/mouse_(computer)_2_df53ad98_resized_grey/FG_060_seq.png"
     },
     {
-      "object": "Old English sheepdog",
+      "object": "old english sheepdog",
       "stimulus_type": "counterfact",
       "target_color": "yellow",
       "variant_region": "FG",
@@ -845,7 +845,7 @@
       "image_path": "shapes/shape_colored/circle_v4_grey/FG_010_seq.png"
     },
     {
-      "object": "Loafer",
+      "object": "loafer",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -868,7 +868,7 @@
       "correct_response": "Neither Agree nor Disagree"
     },
     {
-      "object": "Band Aid",
+      "object": "band aid",
       "stimulus_type": "counterfact",
       "target_color": "purple",
       "variant_region": "FG",
@@ -878,7 +878,7 @@
       "image_path": "color_images/gpt-4o/counterfact/Band_Aid_1_e73eed92_resized_purple/FG_080_seq.png"
     },
     {
-      "object": "Christmas stocking",
+      "object": "christmas stocking",
       "stimulus_type": "correct_prior",
       "target_color": "red",
       "variant_region": "FG",

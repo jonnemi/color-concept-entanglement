@@ -143,7 +143,7 @@
       "image_path": "shapes/shape_colored/pentagon_v1_pink/FG_070_seq.png"
     },
     {
-      "object": "Christmas stocking",
+      "object": "christmas stocking",
       "stimulus_type": "correct_prior",
       "target_color": "red",
       "variant_region": "FG",
@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -310,7 +310,7 @@
       "image_path": "color_images/gpt-4o/image_priors/asparagus_3_14687666_resized_green/FG_005_seq.png"
     },
     {
-      "object": "Loafer",
+      "object": "loafer",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -825,7 +825,7 @@
       "image_path": "color_images/gpt-4o/image_priors/jaguar_4_a2624ff9_resized_yellow/FG_100_seq.png"
     },
     {
-      "object": "Old English sheepdog",
+      "object": "old english sheepdog",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "BG",
@@ -878,7 +878,7 @@
       "image_path": "color_images/gpt-4o/image_priors/bagel_2_be16f710_resized_brown/FG_080_seq.png"
     },
     {
-      "object": "mouse (computer)",
+      "object": "mouse",
       "stimulus_type": "counterfact",
       "target_color": "purple",
       "variant_region": "FG",
@@ -898,7 +898,7 @@
       "image_path": "shapes/shape_colored/pentagon_v0_pink/FG_100_seq.png"
     },
     {
-      "object": "mouse (computer)",
+      "object": "mouse",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -918,7 +918,7 @@
       "image_path": "color_images/gpt-4o/image_priors/great_white_shark_4_c223edfe_resized_grey/FG_020_seq.png"
     },
     {
-      "object": "Komodo dragon",
+      "object": "komodo dragon",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",

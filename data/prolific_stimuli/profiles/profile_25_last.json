@@ -207,7 +207,7 @@
       "image_path": "color_images/gpt-4o/image_priors/flat-coated_retriever_3_52e2a611_resized_brown/BG_080_seq.png"
     },
     {
-      "object": "bat (animal)",
+      "object": "bat",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -249,7 +249,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -294,7 +294,7 @@
       "image_path": "shapes/shape_colored/circle_v0_pink/FG_050_seq.png"
     },
     {
-      "object": "Doberman",
+      "object": "doberman",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "BG",
@@ -324,7 +324,7 @@
       "image_path": "color_images/gpt-4o/image_priors/lawn_mower_5_d5f853d5_resized_green/FG_040_seq.png"
     },
     {
-      "object": "Norwegian elkhound",
+      "object": "norwegian elkhound",
       "stimulus_type": "counterfact",
       "target_color": "red",
       "variant_region": "FG",
@@ -476,7 +476,7 @@
       "image_path": "shapes/shape_colored/hexagon_v4_grey/FG_005_seq.png"
     },
     {
-      "object": "Band Aid",
+      "object": "band aid",
       "stimulus_type": "correct_prior",
       "target_color": "pink",
       "variant_region": "FG",
@@ -586,7 +586,7 @@
       "image_path": "color_images/gpt-4o/image_priors/bullfrog_4_55480f4e_resized_green/FG_070_seq.png"
     },
     {
-      "object": "Maltese dog",
+      "object": "maltese dog",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -809,7 +809,7 @@
       "image_path": "shapes/shape_colored/circle_v2_red/FG_040_seq.png"
     },
     {
-      "object": "French horn",
+      "object": "french horn",
       "stimulus_type": "counterfact",
       "target_color": "red",
       "variant_region": "FG",

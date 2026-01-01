@@ -67,7 +67,7 @@
       "image_path": "shapes/shape_colored/pentagon_v0_yellow/BG_100_seq.png"
     },
     {
-      "object": "Irish setter",
+      "object": "irish setter",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -147,7 +147,7 @@
       "image_path": "shapes/shape_colored/triangle_v4_brown/FG_005_seq.png"
     },
     {
-      "object": "keyboard (musical)",
+      "object": "keyboard",
       "stimulus_type": "counterfact",
       "target_color": "red",
       "variant_region": "FG",
@@ -249,7 +249,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -556,7 +556,7 @@
       "image_path": "color_images/gpt-4o/image_priors/blackbird_1_4a3c037e_resized_blue/BG_080_seq.png"
     },
     {
-      "object": "mouse (computer)",
+      "object": "mouse",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -669,7 +669,7 @@
       "image_path": "color_images/gpt-4o/image_priors/mug_4_5308a46a_resized_red/FG_040_seq.png"
     },
     {
-      "object": "Christmas stocking",
+      "object": "christmas stocking",
       "stimulus_type": "counterfact",
       "target_color": "brown",
       "variant_region": "FG",
@@ -749,7 +749,7 @@
       "image_path": "color_images/gpt-4o/image_priors/goldfish_2_7ef7f0d5_resized_blue/FG_070_seq.png"
     },
     {
-      "object": "Loafer",
+      "object": "loafer",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -1002,7 +1002,7 @@
       "image_path": "color_images/gpt-4o/counterfact/rose_3_64713026_resized_blue/FG_070_seq.png"
     },
     {
-      "object": "green lizard",
+      "object": "lizard",
       "stimulus_type": "correct_prior",
       "target_color": "green",
       "variant_region": "BG",

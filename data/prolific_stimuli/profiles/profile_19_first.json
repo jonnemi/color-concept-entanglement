@@ -143,7 +143,7 @@
       "image_path": "shapes/shape_colored/hexagon_v4_yellow/FG_005_seq.png"
     },
     {
-      "object": "Norwegian elkhound",
+      "object": "norwegian elkhound",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -163,7 +163,7 @@
       "image_path": "shapes/shape_colored/hexagon_v3_brown/FG_020_seq.png"
     },
     {
-      "object": "Irish setter",
+      "object": "irish setter",
       "stimulus_type": "counterfact",
       "target_color": "green",
       "variant_region": "FG",
@@ -183,7 +183,7 @@
       "image_path": "shapes/shape_colored/square_v4_orange/FG_010_seq.png"
     },
     {
-      "object": "crane (machine)",
+      "object": "crane",
       "stimulus_type": "correct_prior",
       "target_color": "yellow",
       "variant_region": "FG",
@@ -233,7 +233,7 @@
       "image_path": "color_images/gpt-4o/image_priors/impala_4_47f6110a_resized_brown/FG_070_seq.png"
     },
     {
-      "object": "Rottweiler",
+      "object": "rottweiler",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -542,7 +542,7 @@
       "image_path": "color_images/gpt-4o/image_priors/celery_4_c500bddc_resized_green/FG_050_seq.png"
     },
     {
-      "object": "crane (machine)",
+      "object": "crane",
       "stimulus_type": "correct_prior",
       "target_color": "yellow",
       "variant_region": "FG",
@@ -562,7 +562,7 @@
       "image_path": "color_images/gpt-4o/image_priors/gasmask_2_6f8dba75_resized_grey/FG_010_seq.png"
     },
     {
-      "object": "Loafer",
+      "object": "loafer",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -968,7 +968,7 @@
       "image_path": "shapes/shape_colored/hexagon_v1_red/FG_060_seq.png"
     },
     {
-      "object": "green snake",
+      "object": "snake",
       "stimulus_type": "correct_prior",
       "target_color": "green",
       "variant_region": "FG",
@@ -998,7 +998,7 @@
       "image_path": "shapes/shape_colored/circle_v1_grey/FG_040_seq.png"
     },
     {
-      "object": "Rottweiler",
+      "object": "rottweiler",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",

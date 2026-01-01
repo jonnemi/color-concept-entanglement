@@ -83,7 +83,7 @@
       "image_path": "shapes/shape_colored/hexagon_v0_red/FG_050_seq.png"
     },
     {
-      "object": "Komodo dragon",
+      "object": "komodo dragon",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -153,7 +153,7 @@
       "image_path": "shapes/shape_colored/square_v3_orange/FG_020_seq.png"
     },
     {
-      "object": "Pomeranian",
+      "object": "pomeranian",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -223,7 +223,7 @@
       "image_path": "shapes/shape_colored/circle_v1_brown/BG_080_seq.png"
     },
     {
-      "object": "Doberman",
+      "object": "doberman",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -290,7 +290,7 @@
       "image_path": "shapes/shape_colored/pentagon_v2_orange/FG_070_seq.png"
     },
     {
-      "object": "green snake",
+      "object": "snake",
       "stimulus_type": "counterfact",
       "target_color": "pink",
       "variant_region": "FG",
@@ -472,7 +472,7 @@
       "image_path": "shapes/shape_colored/square_v3_green/BG_100_seq.png"
     },
     {
-      "object": "Christmas stocking",
+      "object": "christmas stocking",
       "stimulus_type": "correct_prior",
       "target_color": "red",
       "variant_region": "FG",
@@ -715,7 +715,7 @@
       "image_path": "color_images/gpt-4o/counterfact/daisy_2_9f5fd00f_resized_blue/FG_030_seq.png"
     },
     {
-      "object": "Doberman",
+      "object": "doberman",
       "stimulus_type": "counterfact",
       "target_color": "purple",
       "variant_region": "FG",
@@ -795,7 +795,7 @@
       "image_path": "shapes/shape_colored/triangle_v1_green/FG_060_seq.png"
     },
     {
-      "object": "crane (machine)",
+      "object": "crane",
       "stimulus_type": "correct_prior",
       "target_color": "yellow",
       "variant_region": "FG",
@@ -835,7 +835,7 @@
       "image_path": "color_images/gpt-4o/image_priors/fox_2_52cadfa8_resized_orange/FG_070_seq.png"
     },
     {
-      "object": "Band Aid",
+      "object": "band aid",
       "stimulus_type": "correct_prior",
       "target_color": "pink",
       "variant_region": "FG",
@@ -1008,7 +1008,7 @@
       "image_path": "color_images/gpt-4o/image_priors/strainer_4_c5445557_resized_blue/FG_060_seq.png"
     },
     {
-      "object": "bat (animal)",
+      "object": "bat",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",

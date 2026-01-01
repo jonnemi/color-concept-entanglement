@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -542,7 +542,7 @@
       "image_path": "shapes/shape_colored/pentagon_v1_red/BG_020_seq.png"
     },
     {
-      "object": "Band Aid",
+      "object": "band aid",
       "stimulus_type": "correct_prior",
       "target_color": "pink",
       "variant_region": "BG",
@@ -775,7 +775,7 @@
       "image_path": "color_images/gpt-4o/image_priors/acoustic_guitar_1_ab533cc0_resized_brown/FG_040_seq.png"
     },
     {
-      "object": "Komodo dragon",
+      "object": "komodo dragon",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -785,7 +785,7 @@
       "image_path": "color_images/gpt-4o/image_priors/Komodo_dragon_1_68027650_resized_brown/FG_020_seq.png"
     },
     {
-      "object": "green lizard",
+      "object": "lizard",
       "stimulus_type": "correct_prior",
       "target_color": "green",
       "variant_region": "FG",
@@ -1018,7 +1018,7 @@
       "image_path": "shapes/shape_colored/hexagon_v1_red/FG_020_seq.png"
     },
     {
-      "object": "Sealyham terrier",
+      "object": "sealyham terrier",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",

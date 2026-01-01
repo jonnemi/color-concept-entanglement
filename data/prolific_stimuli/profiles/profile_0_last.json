@@ -249,7 +249,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -456,7 +456,7 @@
       "correct_response": "Option 3"
     },
     {
-      "object": "Sealyham terrier",
+      "object": "sealyham terrier",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -779,7 +779,7 @@
       "image_path": "color_images/gpt-4o/image_priors/plastic_bag_1_60b6235f_resized_blue/FG_050_seq.png"
     },
     {
-      "object": "Komodo dragon",
+      "object": "komodo dragon",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -912,7 +912,7 @@
       "image_path": "shapes/shape_colored/hexagon_v1_brown/FG_060_seq.png"
     },
     {
-      "object": "crane (machine)",
+      "object": "crane",
       "stimulus_type": "counterfact",
       "target_color": "red",
       "variant_region": "FG",

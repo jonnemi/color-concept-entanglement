@@ -255,7 +255,7 @@
     {
       "question_type": "sanity",
       "sanity_id": 2,
-      "prompt": "Ignore the options below and type the word BLUE in the box.",
+      "prompt": "Type the word BLUE in the box below.",
       "response_type": "text",
       "correct_response": "BLUE"
     },
@@ -270,7 +270,7 @@
       "image_path": "shapes/shape_colored/circle_v3_green/FG_060_seq.png"
     },
     {
-      "object": "Loafer",
+      "object": "loafer",
       "stimulus_type": "correct_prior",
       "target_color": "brown",
       "variant_region": "FG",
@@ -532,7 +532,7 @@
       "image_path": "color_images/gpt-4o/image_priors/pigeon_4_61bf181e_resized_grey/FG_060_seq.png"
     },
     {
-      "object": "Old English sheepdog",
+      "object": "old english sheepdog",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "FG",
@@ -745,7 +745,7 @@
       "image_path": "color_images/gpt-4o/image_priors/plunger_5_eca725f5_resized_red/FG_010_seq.png"
     },
     {
-      "object": "Old English sheepdog",
+      "object": "old english sheepdog",
       "stimulus_type": "correct_prior",
       "target_color": "grey",
       "variant_region": "BG",

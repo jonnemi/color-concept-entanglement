@@ -2,6 +2,7 @@ import random
 import json
 from pathlib import Path
 import pandas as pd
+import re
 
 
 # CONFIG
@@ -13,6 +14,36 @@ PCTS_13 = [0, 5, 10, 20, 30, 40, 50, 55, 60, 70, 80, 90, 100]
 PCTS_12_NO_ZERO = [5, 10, 20, 30, 40, 50, 55, 60, 70, 80, 90, 100]
 PCTS_5_BG = [20, 40, 60, 80, 100]
 
+
+# Object name normalization
+COLOR_ADJECTIVES = {
+    "red", "green", "blue", "yellow", "orange", "purple",
+    "pink", "brown", "black", "white", "grey"
+}
+
+def normalize_object_name(name: str) -> str:
+    """
+    Normalize object names for participant-facing display:
+    - lowercase
+    - remove parenthetical disambiguators
+    - remove descriptive color adjectives
+    """
+    if not isinstance(name, str):
+        return name
+
+    name = name.lower().strip()
+
+    # Remove parentheticals: "bat (animal)" -> "bat"
+    name = re.sub(r"\s*\([^)]*\)", "", name)
+
+    tokens = name.split()
+
+    # Remove leading color adjectives (e.g. "green lizard")
+    if tokens and tokens[0] in COLOR_ADJECTIVES:
+        tokens = tokens[1:]
+
+    return " ".join(tokens)
+ 
 
 # Helpers
 def _sample_unique(df, rng, n, used=None):
@@ -140,7 +171,7 @@ SANITY_QUESTIONS = [
     {
         "question_type": "sanity",
         "sanity_id": 2,
-        "prompt": "Ignore the options below and type the word BLUE in the box.",
+        "prompt": "Type the word BLUE in the box below.",
         "response_type": "text",
         "correct_response": "BLUE",
     },
@@ -242,6 +273,12 @@ def generate_profile(
         raise RuntimeError(
             f"Final survey length mismatch: {len(questions)} != {TOTAL_QUESTIONS}"
         )
+    
+    # Normalize object names for labels
+    for q in questions:
+        if "object" in q:
+            q["object"] = normalize_object_name(q["object"])
+
 
     return questions
 
@@ -287,6 +324,12 @@ def generate_debug_profile(df_priors, df_shapes):
     questions.append(SANITY_QUESTIONS[4])
 
     questions.append(make_introspection_question())
+
+    # Normalize object names
+    for q in questions:
+        if isinstance(q, dict) and "object" in q:
+            q["object"] = normalize_object_name(q["object"])
+
 
     return {
         "profile_id": "debug_profile",
