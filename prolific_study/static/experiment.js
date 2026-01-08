@@ -409,11 +409,12 @@ function buildTimeline(questions) {
         <h2>Welcome!</h2>
 
         <p>
-          You will see a series of images and answer questions about them.
+          You will see a series of images showing an objectand answer questions about them.
         </p>
 
         <p>
-          Please answer <b>carefully and accurately</b>.
+          Please answer <b>carefully and accurately</b>. Base your answer only on what you see in the image. <br>
+          Some images may look unusual. Please answer as intuitively as possible.
         </p>
 
         <p><b>Important:</b></p>
