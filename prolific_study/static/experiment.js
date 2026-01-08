@@ -409,7 +409,7 @@ function buildTimeline(questions) {
         <h2>Welcome!</h2>
 
         <p>
-          You will see a series of images showing an objectand answer questions about them.
+          You will see a series of images showing an object and answer questions about them.
         </p>
 
         <p>

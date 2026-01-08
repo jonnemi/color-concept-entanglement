@@ -1063,7 +1063,7 @@
     },
     {
       "question_type": "introspection",
-      "prompt": "For any object, x% of its pixels should be colored for it to be considered that color. What value should x% be?",
+      "prompt": "<p>For any object, <b>x%</b> of its pixels should be colored for it to be considered that color.</p><p>For example, imagine an image of a banana, where only part of the banana in the image is colored yellow.</p><p>At what point would you personally say that the banana in the image is yellow?</p><p>What value should <b>x%</b> be?</p>",
       "min": 0,
       "max": 100
     }
