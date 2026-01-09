@@ -227,7 +227,7 @@ function renderColorJudgment(q) {
 
     prompt: `
       <div style="
-        margin-top:16px;
+        margin-top:10px;
         font-size:14px;
         color:#555;
         max-width:520px;
@@ -236,7 +236,7 @@ function renderColorJudgment(q) {
         text-align:center;
       ">
         Please choose the color that best matches your own judgment.
-        The answer is never “both” or “neither”, even if the image is ambiguous.
+        The answer is never both or neither, even if the image is ambiguous.
       </div>
     `,
 
