@@ -193,20 +193,39 @@ function renderColorJudgment(q) {
     type: jsPsychHtmlButtonResponse,
 
     stimulus: `
-      <div style="text-align:center">
-        <div id="loading" style="margin-bottom:10px;">
+      <div style="max-width:700px; margin:0 auto; text-align:center;">
+
+        <div id="loading" style="margin-bottom:12px;">
           Loading image…
         </div>
 
-        <img
-          id="${imgId}"
-          src="${SUPABASE_IMAGE_BASE}${q.image_path}"
-          style="max-width:400px; display:none;"
-        ><br><br>
+        <div style="
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          margin-bottom:20px;
+        ">
+          <img
+            id="${imgId}"
+            src="${SUPABASE_IMAGE_BASE}${q.image_path}"
+            style="max-width:400px; display:none;"
+          >
+        </div>
 
-        <b>What color is the ${q.object} in the image? <br>
-        Please choose the color that best matches your own judgment, even if the image is ambiguous.
-        </b>
+        <div style="margin-bottom:6px; font-weight:bold;">
+          What color is the ${q.object} in the image?
+        </div>
+
+        <div style="
+          font-size:14px;
+          color:#555;
+          max-width:520px;
+          margin:0 auto;
+        ">
+          Please choose the color that best matches your own judgment.
+          The answer is never “both” or “neither”, even if the image is ambiguous.
+        </div>
+
       </div>
     `,
 
@@ -219,7 +238,7 @@ function renderColorJudgment(q) {
       percent_colored: q.percent_colored,
       variant_region: q.variant_region,
       target_color: q.target_color,
-      image_path: q.image_path, // helpful for analysis
+      image_path: q.image_path,
     },
 
     on_load: function () {
@@ -227,7 +246,6 @@ function renderColorJudgment(q) {
       const loading = document.getElementById("loading");
       const buttons = document.querySelectorAll(".jspsych-btn");
 
-      // Disable responses until image is ready
       buttons.forEach(b => b.disabled = true);
 
       img.onload = () => {
@@ -257,10 +275,7 @@ function renderColorJudgment(q) {
 
       if (is_wrong) {
         distractorErrors += 1;
-
-        jsPsych.data.addProperties({
-          distractor_errors: distractorErrors,
-        });
+        jsPsych.data.addProperties({ distractor_errors: distractorErrors });
 
         if (distractorErrors >= 2) {
           safeEndExperiment(
@@ -279,6 +294,7 @@ function renderColorJudgment(q) {
     },
   };
 }
+
 
 
 
