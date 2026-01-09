@@ -181,7 +181,6 @@ function warningNode() {
 }
 
 
-
 function renderColorJudgment(q) {
   const choices = shuffle(
     getColorAnswerOptions(q.target_color)
@@ -212,24 +211,34 @@ function renderColorJudgment(q) {
           >
         </div>
 
-        <div style="margin-bottom:6px; font-weight:bold;">
+        <div style="margin-bottom:18px; font-weight:bold;">
           What color is the ${q.object} in the image?
-        </div>
-
-        <div style="
-          font-size:14px;
-          color:#555;
-          max-width:520px;
-          margin:0 auto;
-        ">
-          Please choose the color that best matches your own judgment.
-          The answer is never “both” or “neither”, even if the image is ambiguous.
         </div>
 
       </div>
     `,
 
     choices,
+
+    // This lets us append content *below* the buttons
+    button_html: `
+      <button class="jspsych-btn">%choice%</button>
+    `,
+
+    prompt: `
+      <div style="
+        margin-top:16px;
+        font-size:14px;
+        color:#555;
+        max-width:520px;
+        margin-left:auto;
+        margin-right:auto;
+        text-align:center;
+      ">
+        Please choose the color that best matches your own judgment.
+        The answer is never “both” or “neither”, even if the image is ambiguous.
+      </div>
+    `,
 
     data: {
       task_type: "color_judgment",
@@ -294,8 +303,6 @@ function renderColorJudgment(q) {
     },
   };
 }
-
-
 
 
 function renderSanity(q) {
