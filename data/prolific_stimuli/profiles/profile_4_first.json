@@ -12,6 +12,7 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
+      "manipulation_color": "pink",
       "target_color": "pink",
       "variant_region": "FG",
       "percent_colored": 40,
@@ -22,6 +23,7 @@
     {
       "object": "hare",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "grey",
       "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 80,
@@ -32,6 +34,7 @@
     {
       "object": "triangle",
       "stimulus_type": "shape",
+      "manipulation_color": "purple",
       "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 30,
@@ -42,6 +45,7 @@
     {
       "object": "bat",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 10,
@@ -65,6 +69,7 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
+      "manipulation_color": "yellow",
       "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 55,
@@ -75,6 +80,7 @@
     {
       "object": "ambulance",
       "stimulus_type": "counterfact",
+      "manipulation_color": "green",
       "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 20,
@@ -85,6 +91,7 @@
     {
       "object": "chesapeake bay retriever",
       "stimulus_type": "counterfact",
+      "manipulation_color": "green",
       "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 5,
@@ -95,6 +102,7 @@
     {
       "object": "band aid",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "pink",
       "target_color": "pink",
       "variant_region": "FG",
       "percent_colored": 50,
@@ -105,6 +113,7 @@
     {
       "object": "camel",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "BG",
       "percent_colored": 80,
@@ -115,6 +124,7 @@
     {
       "object": "frog",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "green",
       "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 80,
@@ -125,6 +135,7 @@
     {
       "object": "jack-o'-lantern",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "orange",
       "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 40,
@@ -135,6 +146,7 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 40,
@@ -145,6 +157,7 @@
     {
       "object": "circle",
       "stimulus_type": "shape",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "BG",
       "percent_colored": 100,
@@ -155,6 +168,7 @@
     {
       "object": "hare",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "grey",
       "target_color": "grey",
       "variant_region": "BG",
       "percent_colored": 60,
@@ -165,6 +179,7 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 80,
@@ -175,6 +190,7 @@
     {
       "object": "circle",
       "stimulus_type": "shape",
+      "manipulation_color": "pink",
       "target_color": "pink",
       "variant_region": "FG",
       "percent_colored": 10,
@@ -185,6 +201,7 @@
     {
       "object": "iguana",
       "stimulus_type": "counterfact",
+      "manipulation_color": "orange",
       "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 55,
@@ -195,6 +212,7 @@
     {
       "object": "christmas stocking",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "red",
       "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 30,
@@ -205,6 +223,7 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
+      "manipulation_color": "orange",
       "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 60,
@@ -215,6 +234,7 @@
     {
       "object": "triangle",
       "stimulus_type": "shape",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 60,
@@ -225,6 +245,7 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
+      "manipulation_color": "grey",
       "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 20,
@@ -235,6 +256,7 @@
     {
       "object": "wagon",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 60,
@@ -245,6 +267,7 @@
     {
       "object": "square",
       "stimulus_type": "shape",
+      "manipulation_color": "orange",
       "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 80,
@@ -262,6 +285,7 @@
     {
       "object": "pentagon",
       "stimulus_type": "shape",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 30,
@@ -272,6 +296,7 @@
     {
       "object": "oriole",
       "stimulus_type": "counterfact",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 10,
@@ -282,6 +307,7 @@
     {
       "object": "fawn",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
@@ -292,6 +318,7 @@
     {
       "object": "radio",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "red",
       "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 20,
@@ -302,7 +329,8 @@
     {
       "object": "forklift",
       "stimulus_type": "correct_prior",
-      "target_color": "yellow",
+      "manipulation_color": "yellow",
+      "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
@@ -312,6 +340,7 @@
     {
       "object": "chimpanzee",
       "stimulus_type": "counterfact",
+      "manipulation_color": "orange",
       "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 60,
@@ -322,6 +351,7 @@
     {
       "object": "tricycle",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "red",
       "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 90,
@@ -332,6 +362,7 @@
     {
       "object": "triangle",
       "stimulus_type": "shape",
+      "manipulation_color": "yellow",
       "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 100,
@@ -342,7 +373,8 @@
     {
       "object": "chinese lantern",
       "stimulus_type": "correct_prior",
-      "target_color": "red",
+      "manipulation_color": "red",
+      "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
@@ -352,6 +384,7 @@
     {
       "object": "square",
       "stimulus_type": "shape",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 70,
@@ -362,6 +395,7 @@
     {
       "object": "circle",
       "stimulus_type": "shape",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 10,
@@ -372,6 +406,7 @@
     {
       "object": "pentagon",
       "stimulus_type": "shape",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 60,
@@ -382,6 +417,7 @@
     {
       "object": "spoonbill",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "grey",
       "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 55,
@@ -392,6 +428,7 @@
     {
       "object": "tomato",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "red",
       "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 10,
@@ -402,6 +439,7 @@
     {
       "object": "dove",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "grey",
       "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 40,
@@ -412,6 +450,7 @@
     {
       "object": "turnip",
       "stimulus_type": "counterfact",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 40,
@@ -422,6 +461,7 @@
     {
       "object": "flute",
       "stimulus_type": "counterfact",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 80,
@@ -432,6 +472,7 @@
     {
       "object": "cannon",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "grey",
       "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 30,
@@ -442,6 +483,7 @@
     {
       "object": "dingo",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "grey",
       "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 5,
@@ -464,6 +506,7 @@
     {
       "object": "ostrich",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 10,
@@ -474,6 +517,7 @@
     {
       "object": "square",
       "stimulus_type": "shape",
+      "manipulation_color": "purple",
       "target_color": "purple",
       "variant_region": "BG",
       "percent_colored": 40,
@@ -484,6 +528,7 @@
     {
       "object": "triangle",
       "stimulus_type": "shape",
+      "manipulation_color": "purple",
       "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 50,
@@ -494,6 +539,7 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 20,
@@ -504,6 +550,7 @@
     {
       "object": "pentagon",
       "stimulus_type": "shape",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
@@ -514,6 +561,7 @@
     {
       "object": "square",
       "stimulus_type": "shape",
+      "manipulation_color": "green",
       "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 50,
@@ -524,6 +572,7 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
+      "manipulation_color": "pink",
       "target_color": "pink",
       "variant_region": "BG",
       "percent_colored": 60,
@@ -534,6 +583,7 @@
     {
       "object": "worm",
       "stimulus_type": "counterfact",
+      "manipulation_color": "purple",
       "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 30,
@@ -544,6 +594,7 @@
     {
       "object": "bat",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 70,
@@ -554,6 +605,7 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 100,
@@ -564,6 +616,7 @@
     {
       "object": "triangle",
       "stimulus_type": "shape",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 90,
@@ -574,6 +627,7 @@
     {
       "object": "doberman",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 40,
@@ -584,6 +638,7 @@
     {
       "object": "pill bottle",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 70,
@@ -594,16 +649,18 @@
     {
       "object": "square",
       "stimulus_type": "shape",
-      "target_color": "brown",
+      "manipulation_color": "red",
+      "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/square_v0_brown/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/square_v1_red/FG_000_seq.png"
     },
     {
       "object": "ambulance",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "red",
       "target_color": "red",
       "variant_region": "BG",
       "percent_colored": 40,
@@ -614,6 +671,7 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 5,
@@ -622,18 +680,20 @@
       "image_path": "shapes/shape_colored/hexagon_v3_blue/FG_005_seq.png"
     },
     {
-      "object": "triangle",
+      "object": "circle",
       "stimulus_type": "shape",
-      "target_color": "red",
+      "manipulation_color": "yellow",
+      "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/triangle_v2_red/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/circle_v2_yellow/FG_000_seq.png"
     },
     {
       "object": "trailer truck",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "red",
       "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 60,
@@ -644,6 +704,7 @@
     {
       "object": "corn",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "green",
       "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 5,
@@ -667,6 +728,7 @@
     {
       "object": "carrot",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "orange",
       "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 30,
@@ -677,6 +739,7 @@
     {
       "object": "pentagon",
       "stimulus_type": "shape",
+      "manipulation_color": "orange",
       "target_color": "orange",
       "variant_region": "BG",
       "percent_colored": 20,
@@ -687,6 +750,7 @@
     {
       "object": "fox",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "orange",
       "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 50,
@@ -697,6 +761,7 @@
     {
       "object": "triangle",
       "stimulus_type": "shape",
+      "manipulation_color": "green",
       "target_color": "green",
       "variant_region": "BG",
       "percent_colored": 80,
@@ -707,6 +772,7 @@
     {
       "object": "pentagon",
       "stimulus_type": "shape",
+      "manipulation_color": "green",
       "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 90,
@@ -717,6 +783,7 @@
     {
       "object": "pentagon",
       "stimulus_type": "shape",
+      "manipulation_color": "red",
       "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 90,
@@ -727,6 +794,7 @@
     {
       "object": "pentagon",
       "stimulus_type": "shape",
+      "manipulation_color": "orange",
       "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 5,
@@ -737,6 +805,7 @@
     {
       "object": "triangle",
       "stimulus_type": "shape",
+      "manipulation_color": "yellow",
       "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 80,
@@ -747,6 +816,7 @@
     {
       "object": "tiger",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "orange",
       "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 20,
@@ -757,6 +827,7 @@
     {
       "object": "tabby",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "orange",
       "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 5,
@@ -767,6 +838,7 @@
     {
       "object": "lettuce",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "green",
       "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 90,
@@ -777,6 +849,7 @@
     {
       "object": "triangle",
       "stimulus_type": "shape",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 70,
@@ -787,6 +860,7 @@
     {
       "object": "cheese",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "yellow",
       "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 70,
@@ -797,6 +871,7 @@
     {
       "object": "bath towel",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 50,
@@ -805,18 +880,20 @@
       "image_path": "color_images/gpt-4o/image_priors/bath_towel_4_10cc8e6d_resized_blue/FG_050_seq.png"
     },
     {
-      "object": "pentagon",
+      "object": "circle",
       "stimulus_type": "shape",
-      "target_color": "yellow",
+      "manipulation_color": "grey",
+      "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/pentagon_v1_yellow/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/circle_v3_grey/FG_000_seq.png"
     },
     {
       "object": "tick",
       "stimulus_type": "counterfact",
+      "manipulation_color": "purple",
       "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 100,
@@ -827,6 +904,7 @@
     {
       "object": "komodo dragon",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 100,
@@ -837,6 +915,7 @@
     {
       "object": "square",
       "stimulus_type": "shape",
+      "manipulation_color": "yellow",
       "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 50,
@@ -847,6 +926,7 @@
     {
       "object": "dingo",
       "stimulus_type": "counterfact",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 90,
@@ -870,6 +950,7 @@
     {
       "object": "jaguar",
       "stimulus_type": "counterfact",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 70,
@@ -880,6 +961,7 @@
     {
       "object": "pretzel",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 60,
@@ -890,6 +972,7 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
+      "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 20,
@@ -900,6 +983,7 @@
     {
       "object": "corn",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "green",
       "target_color": "green",
       "variant_region": "BG",
       "percent_colored": 20,
@@ -910,6 +994,7 @@
     {
       "object": "pentagon",
       "stimulus_type": "shape",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 40,
@@ -920,6 +1005,7 @@
     {
       "object": "giraffe",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 100,
@@ -930,7 +1016,8 @@
     {
       "object": "bread",
       "stimulus_type": "correct_prior",
-      "target_color": "brown",
+      "manipulation_color": "brown",
+      "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
@@ -940,6 +1027,7 @@
     {
       "object": "dandelion",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "green",
       "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 100,
@@ -950,6 +1038,7 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
+      "manipulation_color": "pink",
       "target_color": "pink",
       "variant_region": "FG",
       "percent_colored": 30,
@@ -960,6 +1049,7 @@
     {
       "object": "tricycle",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "red",
       "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 20,
@@ -970,6 +1060,7 @@
     {
       "object": "reflex camera",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "grey",
       "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 90,
@@ -980,6 +1071,7 @@
     {
       "object": "square",
       "stimulus_type": "shape",
+      "manipulation_color": "grey",
       "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 5,
@@ -990,6 +1082,7 @@
     {
       "object": "pentagon",
       "stimulus_type": "shape",
+      "manipulation_color": "red",
       "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 100,
@@ -1000,6 +1093,7 @@
     {
       "object": "turnip",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "purple",
       "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 55,
@@ -1010,6 +1104,7 @@
     {
       "object": "cheeseburger",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 80,
@@ -1020,6 +1115,7 @@
     {
       "object": "square",
       "stimulus_type": "shape",
+      "manipulation_color": "red",
       "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 10,
@@ -1030,6 +1126,7 @@
     {
       "object": "toilet",
       "stimulus_type": "counterfact",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 50,
@@ -1040,6 +1137,7 @@
     {
       "object": "triangle",
       "stimulus_type": "shape",
+      "manipulation_color": "orange",
       "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 70,
@@ -1050,6 +1148,7 @@
     {
       "object": "cockroach",
       "stimulus_type": "correct_prior",
+      "manipulation_color": "brown",
       "target_color": "brown",
       "variant_region": "BG",
       "percent_colored": 100,
@@ -1060,6 +1159,7 @@
     {
       "object": "pentagon",
       "stimulus_type": "shape",
+      "manipulation_color": "yellow",
       "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 55,

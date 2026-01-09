@@ -31,9 +31,6 @@ SHAPE_FOLDER_RE = re.compile(
 )
 
 def parse_folder_name(name: str, stimulus_type: str) -> dict:
-    """
-    Parse dataset folder name for objects or shapes.
-    """
     if stimulus_type == "shape":
         m = SHAPE_FOLDER_RE.match(name)
     elif stimulus_type in {"correct_prior", "counterfact"}:
@@ -48,7 +45,7 @@ def parse_folder_name(name: str, stimulus_type: str) -> dict:
 
     return {
         "object": m.group("object"),
-        "target_color": m.group("color"),
+        "manipulation_color": m.group("color"),
     }
 
 
@@ -97,12 +94,22 @@ def build_stimulus_table(
                 variant_region = "white"
                 mode = "base"
 
+            manipulation_color = meta["manipulation_color"]
+
+            if percent_colored == 0:
+                target_color = "white"
+            else:
+                target_color = manipulation_color
+
             rows.append({
                 "object": meta["object"].replace("_", " "),
                 "stimulus_type": stimulus_type,
 
-                # color used for manipulation
-                "target_color": meta["target_color"],
+                # experimental condition
+                "manipulation_color": manipulation_color,
+
+                # what the participant should report
+                "target_color": target_color,
 
                 # manipulation metadata
                 "variant_region": variant_region,
@@ -113,6 +120,5 @@ def build_stimulus_table(
                 # path for jsPsych
                 "image_path": str(img.relative_to(data_root)),
             })
-
 
     return pd.DataFrame(rows)

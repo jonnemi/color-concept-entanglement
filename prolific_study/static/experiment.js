@@ -81,9 +81,23 @@ function getOrCreateTestPID() {
 async function fetchProfile() {
   const params = new URLSearchParams({ PROLIFIC_PID: subject_id });
   const response = await fetch(`/get_profile?${params.toString()}`);
+
+  if (response.status === 403) {
+    const payload = await response.json();
+
+    sessionStorage.setItem(
+      "exit_message",
+      "You have already participated in this study."
+    );
+
+    window.location.href = "exit_return.html";
+    throw new Error("Participant blocked");
+  }
+
   if (!response.ok) throw new Error("Failed to fetch profile");
   return await response.json();
 }
+
 
 /**************************************************************************
  * SAFE TERMINATION
@@ -190,7 +204,9 @@ function renderColorJudgment(q) {
           style="max-width:400px; display:none;"
         ><br><br>
 
-        <b>What color is the ${q.object} in the image?</b>
+        <b>What color is the ${q.object} in the image? <br>
+        Please choose the color that best matches your own judgment, even if the image is ambiguous.
+        </b>
       </div>
     `,
 
@@ -333,13 +349,7 @@ function renderIntrospection(q) {
     type: jsPsychHtmlSliderResponse,
     stimulus: `
       <div style="width:700px; margin:0 auto; text-align:left;">
-        <p>
-          For any object, <b>x%</b> of its pixels should be colored
-          for it to be considered that color.
-        </p>
-        <p>
-          What value should <b>x%</b> be?
-        </p>
+        ${q.prompt}
 
         <p style="text-align:center; font-size:24px; margin-top:20px;">
           Selected value: <b><span id="slider-value">50</span>%</b>
@@ -357,7 +367,6 @@ function renderIntrospection(q) {
       const slider = document.querySelector('input[type="range"]');
       const valueSpan = document.getElementById("slider-value");
 
-      // Initialize display
       valueSpan.textContent = slider.value;
 
       slider.addEventListener("input", () => {
@@ -370,6 +379,7 @@ function renderIntrospection(q) {
     },
   };
 }
+
 
 
 /**************************************************************************

@@ -23,6 +23,7 @@ const COLOR_ANSWER_OPTIONS = {
   pink:  ["pink", "white", "green"],
   brown: ["brown", "white", "blue"],
   grey:  ["grey", "white", "red"],
+  white: ["white", "red", "blue"],
 };
 
 

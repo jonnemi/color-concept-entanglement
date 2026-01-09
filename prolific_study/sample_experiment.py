@@ -18,8 +18,13 @@ PCTS_5_BG = [20, 40, 60, 80, 100]
 # Object name normalization
 COLOR_ADJECTIVES = {
     "red", "green", "blue", "yellow", "orange", "purple",
-    "pink", "brown", "black", "white", "grey"
+    "pink", "brown", "black", "grey"
 }
+
+SPECIAL_RENAMES = {
+    "mouse (computer)": "computer mouse",
+}
+
 
 def normalize_object_name(name: str) -> str:
     """
@@ -30,6 +35,9 @@ def normalize_object_name(name: str) -> str:
     """
     if not isinstance(name, str):
         return name
+    
+    if name in SPECIAL_RENAMES:
+        return SPECIAL_RENAMES[name]
 
     name = name.lower().strip()
 
@@ -39,8 +47,7 @@ def normalize_object_name(name: str) -> str:
     tokens = name.split()
 
     # Remove leading color adjectives (e.g. "green lizard")
-    if tokens and tokens[0] in COLOR_ADJECTIVES:
-        tokens = tokens[1:]
+    tokens = [t for t in tokens if t not in COLOR_ADJECTIVES]
 
     return " ".join(tokens)
  

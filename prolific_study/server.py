@@ -75,31 +75,33 @@ def index():
 
 @app.route("/get_profile")
 def get_profile():
-    """
-    Return the assigned survey profile for a given Prolific participant.
-    """
-
     prolific_pid = request.args.get("PROLIFIC_PID")
 
     if not prolific_pid:
         return jsonify({"error": "Missing PROLIFIC_PID"}), 400
 
-    # --------------------------------------------------
-    # DEBUG MODE
-    # --------------------------------------------------
-    if prolific_pid == "DEBUG":
-        with open(DEBUG_PROFILE_PATH, "r") as f:
-            profile = json.load(f)
+    #TEST MODE: allow unlimited re-entry
+    ALLOW_TEST_RERUNS = True
 
-        return jsonify({
-            "profile_id": "debug_profile",
-            "profile_index": -1,
-            "questions": profile["questions"],
-        })
+    is_test = prolific_pid.startswith("TEST_") or prolific_pid == "DEBUG"
 
-    # --------------------------------------------------
-    # PRODUCTION MODE
-    # --------------------------------------------------
+    if not is_test or (is_test and not ALLOW_TEST_RERUNS):
+        existing = (
+            supabase
+            .table("results")
+            .select("exit_reason")
+            .eq("prolific_pid", prolific_pid)
+            .limit(1)
+            .execute()
+        )
+
+        if existing.data:
+            return jsonify({
+                "status": "blocked",
+                "reason": existing.data[0]["exit_reason"]
+            }), 403
+
+    # normal profile assignment
     profile_idx = assign_profile_index(prolific_pid)
     profile_path = PROFILE_FILES[profile_idx]
 
@@ -111,6 +113,7 @@ def get_profile():
         "profile_index": profile_idx,
         "questions": profile["questions"],
     })
+
 
 
 @app.route("/save_results", methods=["POST"])
