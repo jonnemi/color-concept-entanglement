@@ -81,7 +81,7 @@ def get_profile():
         return jsonify({"error": "Missing PROLIFIC_PID"}), 400
 
     #TEST MODE: allow unlimited re-entry
-    ALLOW_TEST_RERUNS = True
+    ALLOW_TEST_RERUNS = False
 
     is_test = prolific_pid.startswith("TEST_") or prolific_pid == "DEBUG"
 
