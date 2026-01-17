@@ -204,11 +204,7 @@ function renderColorJudgment(q) {
           <img
             id="${imgId}"
             src="${SUPABASE_IMAGE_BASE}${q.image_path}"
-            style="
-              max-width:400px;
-              display:none;
-              margin:0 auto;
-            "
+            style="max-width:400px; display:none;"
           >
         </div>
 
@@ -216,12 +212,24 @@ function renderColorJudgment(q) {
           What color is the ${q.object} in the image?
         </div>
 
+        <div style="
+          margin-top:10px;
+          font-size:14px;
+          color:#555;
+          max-width:520px;
+          margin-left:auto;
+          margin-right:auto;
+        ">
+          Choose the color that best matches your own judgment.
+          The answer is never both or neither.
+        </div>
+
         <div id="color-buttons"
           style="
             display:flex;
             justify-content:center;
-            gap:16px;
-            margin:20px 0 24px 0;
+            gap:20px;
+            margin:24px 0 28px 0;
           ">
           ${choices.map(c => `
             <button class="color-btn" data-color="${c}">
@@ -230,7 +238,7 @@ function renderColorJudgment(q) {
           `).join("")}
         </div>
 
-        <div id="certainty-container" style="display:none; margin-top:28px;">
+        <div id="certainty-container" style="display:none; margin-top:24px;">
 
           <div style="margin-bottom:6px; font-size:14px;">
             How certain are you in your assessment?
@@ -249,12 +257,12 @@ function renderColorJudgment(q) {
           </div>
 
           <div id="certainty-dots"
-              style="
-                display:flex;
-                justify-content:space-between;
-                max-width:420px;
-                margin:0 auto;
-              ">
+            style="
+              display:flex;
+              justify-content:space-between;
+              max-width:420px;
+              margin:0 auto;
+            ">
             ${Array.from({ length: 10 }, (_, i) => `
               <div style="text-align:center;">
                 <div
@@ -276,63 +284,22 @@ function renderColorJudgment(q) {
             `).join("")}
           </div>
         </div>
+
+        <div style="margin-top:28px;">
+          <button
+            id="next-btn"
+            class="jspsych-btn"
+            style="opacity:0.4;"
+            disabled
+          >
+            Next
+          </button>
+        </div>
+
       </div>
     `,
-
 
     choices: [],
-
-    button_html: `
-      <button class="jspsych-btn color-btn">%choice%</button>
-    `,
-    prompt: `
-      <div style="
-        margin-top:10px;
-        font-size:14px;
-        color:#555;
-        max-width:520px;
-        margin-left:auto;
-        margin-right:auto;
-      ">
-        Choose the color that best matches your own judgment.
-        The answer is never both or neither.
-      </div>
-
-      <div id="certainty-container" style="display:none; margin-top:18px;">
-        <div style="margin-bottom:8px; font-size:14px;">
-          How certain are you in your assessment?
-        </div>
-
-        <div id="certainty-dots" style="display:flex; justify-content:center; gap:8px;">
-          ${Array.from({ length: 10 }, (_, i) => `
-            <div
-              class="certainty-dot"
-              data-value="${i + 1}"
-              style="
-                width:18px;
-                height:18px;
-                border-radius:50%;
-                border:2px solid #999;
-                cursor:pointer;
-              "
-            ></div>
-          `).join("")}
-        </div>
-      </div>
-      <div style="margin-top:24px;">
-      <button
-        id="next-btn"
-        class="jspsych-btn"
-        style="opacity:0.4;"
-        disabled
-      >
-        Next
-      </button>
-    </div>
-    `,
-
-    
-
 
     data: {
       task_type: "color_judgment",
@@ -346,21 +313,19 @@ function renderColorJudgment(q) {
 
     on_load: function () {
       const img = document.getElementById(imgId);
-      const buttons = document.querySelectorAll(".color-btn");
-
-      let selectedColor = null;
-      let certainty = null;
+      const colorButtons = document.querySelectorAll(".color-btn");
+      const nextBtn = document.getElementById("next-btn");
 
       img.onload = () => {
         img.style.display = "block";
       };
 
-      // Color selection
-      buttons.forEach(btn => {
+      // ---- color selection ----
+      colorButtons.forEach(btn => {
         btn.onclick = () => {
           selectedColor = btn.dataset.color;
 
-          buttons.forEach(b => {
+          colorButtons.forEach(b => {
             b.disabled = true;
             b.style.opacity = "0.4";
           });
@@ -372,7 +337,7 @@ function renderColorJudgment(q) {
         };
       });
 
-      // Certainty dots
+      // ---- certainty selection ----
       document.querySelectorAll(".certainty-dot").forEach(dot => {
         dot.onclick = () => {
           certainty = Number(dot.dataset.value);
@@ -384,22 +349,23 @@ function renderColorJudgment(q) {
           dot.style.background = "#1976d2";
           dot.style.borderColor = "#1976d2";
 
-
-          const nextBtn = document.getElementById("next-btn");
+          // start preloading next image EARLY
+          if (q._next_image_path) {
+            preloadImage(SUPABASE_IMAGE_BASE + q._next_image_path);
+          }
 
           nextBtn.disabled = false;
           nextBtn.style.opacity = "1";
-
-          nextBtn.onclick = () => {
-            jsPsych.finishTrial({
-              response_label: selectedColor,
-              certainty,
-            });
-          };
         };
       });
-    },
 
+      nextBtn.onclick = () => {
+        jsPsych.finishTrial({
+          response_label: selectedColor,
+          certainty: certainty,
+        });
+      };
+    },
 
     on_finish: function (data) {
       const allowed_answers =
@@ -423,13 +389,10 @@ function renderColorJudgment(q) {
 
       const cur = jsPsych.getProgressBarCompleted();
       jsPsych.setProgressBar(cur + 1 / 106);
-
-      if (q._next_image_path) {
-        preloadImage(SUPABASE_IMAGE_BASE + q._next_image_path);
-      }
     },
   };
 }
+
 
 
 function renderSanity(q) {
