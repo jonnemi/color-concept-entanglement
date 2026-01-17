@@ -397,10 +397,12 @@ function renderColorJudgment(q) {
 }
 
 
-
 function renderSanity(q) {
-  // TEXT sanity
-  if (q.response_type === "text") {
+
+  // -----------------------------
+  // TEXT SANITY (no q.options)
+  // -----------------------------
+  if (!q.options) {
     return {
       type: jsPsychSurveyText,
       questions: [{ prompt: q.prompt, rows: 3 }],
@@ -409,24 +411,37 @@ function renderSanity(q) {
         sanity_id: q.sanity_id,
         correct_response: q.correct_response,
       },
-      on_finish: function (data) {
-        const response = (data.response.Q0 || "").trim().toLowerCase();
-        const correct = q.correct_response.toLowerCase();
 
-        data.response_label = response;
-        data.passed = response === correct;
+      on_load: function () {
+        const form = document.querySelector("form");
 
-        if (!data.passed) {
-          safeEndExperiment(
-            "You did not pass the attention check.",
-            "failed_attention"
-          );
-        }
+        form.addEventListener("submit", (e) => {
+          e.preventDefault(); // stop jsPsych auto-advance
+
+          const textarea = document.querySelector("textarea");
+          const response = (textarea.value || "").trim().toLowerCase();
+          const correct = q.correct_response.toLowerCase();
+
+          if (response !== correct) {
+            safeEndExperiment(
+              "You did not pass the attention check.",
+              "failed_attention"
+            );
+            return;
+          }
+
+          jsPsych.finishTrial({
+            response_label: response,
+            passed: true,
+          });
+        });
       },
     };
   }
 
-  // LIKERT sanity
+  // -----------------------------
+  // LIKERT SANITY (q.options exists)
+  // -----------------------------
   return {
     type: jsPsychSurveyLikert,
     questions: [
@@ -441,6 +456,7 @@ function renderSanity(q) {
       sanity_id: q.sanity_id,
       correct_response: q.correct_response,
     },
+
     on_finish: function (data) {
       const selectedIndex = data.response.Q0;
       const selectedLabel = q.options[selectedIndex];
@@ -454,6 +470,7 @@ function renderSanity(q) {
           "You did not pass the attention check.",
           "failed_attention"
         );
+        return;
       }
     },
   };
