@@ -285,7 +285,6 @@ function renderColorJudgment(q) {
     button_html: `
       <button class="jspsych-btn color-btn">%choice%</button>
     `,
-
     prompt: `
       <div style="
         margin-top:10px;
@@ -320,7 +319,20 @@ function renderColorJudgment(q) {
           `).join("")}
         </div>
       </div>
+      <div style="margin-top:24px;">
+      <button
+        id="next-btn"
+        class="jspsych-btn"
+        style="opacity:0.4;"
+        disabled
+      >
+        Next
+      </button>
+    </div>
     `,
+
+    
+
 
     data: {
       task_type: "color_judgment",
@@ -373,10 +385,17 @@ function renderColorJudgment(q) {
           dot.style.borderColor = "#1976d2";
 
 
-          jsPsych.finishTrial({
-            response_label: selectedColor,
-            certainty: certainty
-          });
+          const nextBtn = document.getElementById("next-btn");
+
+          nextBtn.disabled = false;
+          nextBtn.style.opacity = "1";
+
+          nextBtn.onclick = () => {
+            jsPsych.finishTrial({
+              response_label: selectedColor,
+              certainty,
+            });
+          };
         };
       });
     },
