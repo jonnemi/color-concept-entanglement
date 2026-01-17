@@ -182,11 +182,11 @@ function warningNode() {
 
 
 function renderColorJudgment(q) {
-  const choices = shuffle(
-    getColorAnswerOptions(q.target_color)
-  );
-
+  const choices = shuffle(getColorAnswerOptions(q.target_color));
   const imgId = `stim-img-${jsPsych.randomization.randomID(8)}`;
+
+  let selectedColor = null;
+  let certainty = null;
 
   return {
     type: jsPsychHtmlButtonResponse,
@@ -198,31 +198,22 @@ function renderColorJudgment(q) {
           Loading image…
         </div>
 
-        <div style="
-          display:flex;
-          justify-content:center;
-          align-items:center;
-          margin-bottom:20px;
-        ">
-          <img
-            id="${imgId}"
-            src="${SUPABASE_IMAGE_BASE}${q.image_path}"
-            style="max-width:400px; display:none;"
-          >
-        </div>
+        <img
+          id="${imgId}"
+          src="${SUPABASE_IMAGE_BASE}${q.image_path}"
+          style="max-width:400px; display:none;"
+        >
 
-        <div style="margin-bottom:18px; font-weight:bold;">
+        <div style="margin:18px 0; font-weight:bold;">
           What color is the ${q.object} in the image?
         </div>
-
       </div>
     `,
 
     choices,
 
-    // This lets us append content *below* the buttons
     button_html: `
-      <button class="jspsych-btn">%choice%</button>
+      <button class="jspsych-btn color-btn">%choice%</button>
     `,
 
     prompt: `
@@ -233,10 +224,31 @@ function renderColorJudgment(q) {
         max-width:520px;
         margin-left:auto;
         margin-right:auto;
-        text-align:center;
       ">
-        Please choose the color that best matches your own judgment.
-        The answer is never both or neither, even if the image is ambiguous.
+        Choose the color that best matches your own judgment.
+        The answer is never both or neither.
+      </div>
+
+      <div id="certainty-container" style="display:none; margin-top:18px;">
+        <div style="margin-bottom:8px; font-size:14px;">
+          How certain are you in your assessment?
+        </div>
+
+        <div id="certainty-dots" style="display:flex; justify-content:center; gap:8px;">
+          ${Array.from({ length: 10 }, (_, i) => `
+            <div
+              class="certainty-dot"
+              data-value="${i + 1}"
+              style="
+                width:18px;
+                height:18px;
+                border-radius:50%;
+                border:2px solid #999;
+                cursor:pointer;
+              "
+            ></div>
+          `).join("")}
+        </div>
       </div>
     `,
 
@@ -253,7 +265,7 @@ function renderColorJudgment(q) {
     on_load: function () {
       const img = document.getElementById(imgId);
       const loading = document.getElementById("loading");
-      const buttons = document.querySelectorAll(".jspsych-btn");
+      const buttons = document.querySelectorAll(".color-btn");
 
       buttons.forEach(b => b.disabled = true);
 
@@ -267,22 +279,55 @@ function renderColorJudgment(q) {
         loading.innerText = "Image failed to load. Please continue.";
         buttons.forEach(b => b.disabled = false);
       };
+
+      // --- color button logic ---
+      buttons.forEach((btn, idx) => {
+        btn.addEventListener("click", () => {
+          selectedColor = choices[idx];
+
+          buttons.forEach(b => {
+            b.disabled = true;
+            b.style.opacity = "0.4";
+          });
+
+          btn.style.opacity = "1";
+          btn.style.border = "2px solid #1976d2";
+
+          document.getElementById("certainty-container").style.display = "block";
+        });
+      });
+
+      // --- certainty dot logic ---
+      document.querySelectorAll(".certainty-dot").forEach(dot => {
+        dot.addEventListener("click", () => {
+          certainty = Number(dot.dataset.value);
+
+          document.querySelectorAll(".certainty-dot").forEach(d => {
+            d.style.background = "transparent";
+          });
+
+          dot.style.background = "#1976d2";
+
+          jsPsych.finishTrial({
+            response_label: selectedColor,
+            certainty,
+          });
+        });
+      });
     },
 
     on_finish: function (data) {
-      const chosen_label = choices[data.response];
+      data.response_label = selectedColor;
+      data.certainty = certainty;
 
       const allowed_answers =
         q.variant_region === "BG"
           ? ["white"]
           : [q.target_color, "white"];
 
-      const is_wrong = !allowed_answers.includes(chosen_label);
+      data.is_distractor = !allowed_answers.includes(selectedColor);
 
-      data.response_label = chosen_label;
-      data.is_distractor = is_wrong;
-
-      if (is_wrong) {
+      if (data.is_distractor) {
         distractorErrors += 1;
         jsPsych.data.addProperties({ distractor_errors: distractorErrors });
 
