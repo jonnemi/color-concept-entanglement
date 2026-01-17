@@ -360,33 +360,36 @@ function renderColorJudgment(q) {
       });
 
       nextBtn.onclick = () => {
+        const allowed_answers =
+          q.variant_region === "BG"
+            ? ["white"]
+            : [q.target_color, "white"];
+
+        const isDistractor = !allowed_answers.includes(selectedColor);
+
+        if (isDistractor) {
+          distractorErrors += 1;
+          jsPsych.data.addProperties({ distractor_errors: distractorErrors });
+
+          // 🚨 TERMINATE IMMEDIATELY on second error
+          if (distractorErrors >= 2) {
+            safeEndExperiment(
+              "You selected unreasonable colors two times.",
+              "failed_distractor"
+            );
+            return; // ⬅️ critical: stop here
+          }
+        }
+
         jsPsych.finishTrial({
           response_label: selectedColor,
           certainty: certainty,
+          is_distractor: isDistractor,
         });
       };
     },
 
     on_finish: function (data) {
-      const allowed_answers =
-        q.variant_region === "BG"
-          ? ["white"]
-          : [q.target_color, "white"];
-
-      data.is_distractor = !allowed_answers.includes(data.response_label);
-
-      if (data.is_distractor) {
-        distractorErrors += 1;
-        jsPsych.data.addProperties({ distractor_errors: distractorErrors });
-
-        if (distractorErrors >= 2) {
-          safeEndExperiment(
-            "You selected unreasonable colors two times.",
-            "failed_distractor"
-          );
-        }
-      }
-
       const cur = jsPsych.getProgressBarCompleted();
       jsPsych.setProgressBar(cur + 1 / 106);
     },
