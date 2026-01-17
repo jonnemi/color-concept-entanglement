@@ -194,17 +194,35 @@ function renderColorJudgment(q) {
     stimulus: `
       <div style="max-width:700px; margin:0 auto; text-align:center;">
 
-        <img
-          id="${imgId}"
-          src="${SUPABASE_IMAGE_BASE}${q.image_path}"
-          style="max-width:400px; display:none;"
-        >
+        <div style="
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          width:100%;
+          margin:20px 0;
+        ">
+          <img
+            id="${imgId}"
+            src="${SUPABASE_IMAGE_BASE}${q.image_path}"
+            style="
+              max-width:400px;
+              display:none;
+              margin:0 auto;
+            "
+          >
+        </div>
 
         <div style="margin:16px 0; font-weight:bold;">
           What color is the ${q.object} in the image?
         </div>
 
-        <div id="color-buttons" style="margin-bottom:16px;">
+        <div id="color-buttons"
+          style="
+            display:flex;
+            justify-content:center;
+            gap:16px;
+            margin:20px 0 24px 0;
+          ">
           ${choices.map(c => `
             <button class="color-btn" data-color="${c}">
               ${c}
@@ -212,28 +230,52 @@ function renderColorJudgment(q) {
           `).join("")}
         </div>
 
-        <div id="certainty-container" style="display:none; margin-top:20px;">
-          <div style="margin-bottom:8px;">
+        <div id="certainty-container" style="display:none; margin-top:28px;">
+
+          <div style="margin-bottom:6px; font-size:14px;">
             How certain are you in your assessment?
           </div>
 
-          <div id="certainty-dots" style="display:flex; justify-content:center; gap:8px;">
+          <div style="
+            display:flex;
+            justify-content:space-between;
+            max-width:420px;
+            margin:0 auto 6px auto;
+            font-size:12px;
+            color:#666;
+          ">
+            <span>Very uncertain</span>
+            <span>Very certain</span>
+          </div>
+
+          <div id="certainty-dots"
+              style="
+                display:flex;
+                justify-content:space-between;
+                max-width:420px;
+                margin:0 auto;
+              ">
             ${Array.from({ length: 10 }, (_, i) => `
-              <div
-                class="certainty-dot"
-                data-value="${i + 1}"
-                style="
-                  width:18px;
-                  height:18px;
-                  border-radius:50%;
-                  border:2px solid #999;
-                  cursor:pointer;
-                "
-              ></div>
+              <div style="text-align:center;">
+                <div
+                  class="certainty-dot"
+                  data-value="${i + 1}"
+                  style="
+                    width:18px;
+                    height:18px;
+                    border-radius:50%;
+                    border:2px solid #999;
+                    cursor:pointer;
+                    margin:0 auto 4px auto;
+                  "
+                ></div>
+                <div style="font-size:11px; color:#555;">
+                  ${i + 1}
+                </div>
+              </div>
             `).join("")}
           </div>
         </div>
-
       </div>
     `,
 
@@ -328,6 +370,8 @@ function renderColorJudgment(q) {
           });
 
           dot.style.background = "#1976d2";
+          dot.style.borderColor = "#1976d2";
+
 
           jsPsych.finishTrial({
             response_label: selectedColor,
