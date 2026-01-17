@@ -305,6 +305,57 @@ function renderColorJudgment(q) {
 }
 
 
+function renderCertainty(q) {
+  const imgUrl = SUPABASE_IMAGE_BASE + q.image_path;
+
+  return {
+    type: jsPsychHtmlSliderResponse,
+
+    stimulus: `
+      <div style="max-width:700px; margin:0 auto; text-align:center;">
+
+        <div style="margin-bottom:16px;">
+          <img src="${imgUrl}" style="max-width:300px;">
+        </div>
+
+        <div style="margin-bottom:12px; font-weight:bold;">
+          How certain are you about your color judgment?
+        </div>
+
+        <div style="font-size:14px; color:#555; margin-bottom:20px;">
+          1 = very uncertain &nbsp;&nbsp;·&nbsp;&nbsp; 10 = very certain
+        </div>
+
+      </div>
+    `,
+
+    min: 1,
+    max: 10,
+    start: 5,
+    step: 1,
+    labels: ["1", "10"],
+    require_movement: true,
+
+    data: {
+      task_type: "certainty",
+      object: q.object,
+      stimulus_type: q.stimulus_type,
+      image_path: q.image_path
+    },
+
+    on_finish: function (data) {
+      data.certainty = data.response;
+
+      // Link this certainty rating to the previous color judgment
+      data.linked_trial_index = jsPsych.data.get()
+        .filter({ task_type: "color_judgment" })
+        .last(1)
+        .values()[0].trial_index;
+    }
+  };
+}
+
+
 function renderSanity(q) {
   // TEXT sanity
   if (q.response_type === "text") {
@@ -454,7 +505,7 @@ function buildTimeline(questions) {
         <ul>
           <li>You will be removed if you select a total of two unreasonable colors.</li>
           <li>You will be removed if you fail an attention check question.</li>
-          <li>The study should take you approximately <b>30 minutes</b>.</li>
+          <li>The study should take you approximately <b>20 minutes</b>.</li>
         </ul>
 
         <p>Click <b>Next</b> to begin.</p>
@@ -481,8 +532,8 @@ function buildTimeline(questions) {
       timeline.push(renderIntrospection(q));
     } else {
       timeline.push(renderColorJudgment(q));
+      timeline.push(renderCertainty(q));
       timeline.push(warningNode());
-
     }
   });
 
