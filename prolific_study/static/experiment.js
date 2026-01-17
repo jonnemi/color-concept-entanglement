@@ -194,23 +194,51 @@ function renderColorJudgment(q) {
     stimulus: `
       <div style="max-width:700px; margin:0 auto; text-align:center;">
 
-        <div id="loading" style="margin-bottom:12px;">
-          Loading image…
-        </div>
-
         <img
           id="${imgId}"
           src="${SUPABASE_IMAGE_BASE}${q.image_path}"
           style="max-width:400px; display:none;"
         >
 
-        <div style="margin:18px 0; font-weight:bold;">
+        <div style="margin:16px 0; font-weight:bold;">
           What color is the ${q.object} in the image?
         </div>
+
+        <div id="color-buttons" style="margin-bottom:16px;">
+          ${choices.map(c => `
+            <button class="color-btn" data-color="${c}">
+              ${c}
+            </button>
+          `).join("")}
+        </div>
+
+        <div id="certainty-container" style="display:none; margin-top:20px;">
+          <div style="margin-bottom:8px;">
+            How certain are you in your assessment?
+          </div>
+
+          <div id="certainty-dots" style="display:flex; justify-content:center; gap:8px;">
+            ${Array.from({ length: 10 }, (_, i) => `
+              <div
+                class="certainty-dot"
+                data-value="${i + 1}"
+                style="
+                  width:18px;
+                  height:18px;
+                  border-radius:50%;
+                  border:2px solid #999;
+                  cursor:pointer;
+                "
+              ></div>
+            `).join("")}
+          </div>
+        </div>
+
       </div>
     `,
 
-    choices,
+
+    choices: [],
 
     button_html: `
       <button class="jspsych-btn color-btn">%choice%</button>
@@ -264,26 +292,19 @@ function renderColorJudgment(q) {
 
     on_load: function () {
       const img = document.getElementById(imgId);
-      const loading = document.getElementById("loading");
       const buttons = document.querySelectorAll(".color-btn");
 
-      buttons.forEach(b => b.disabled = true);
+      let selectedColor = null;
+      let certainty = null;
 
       img.onload = () => {
-        loading.style.display = "none";
         img.style.display = "block";
-        buttons.forEach(b => b.disabled = false);
       };
 
-      img.onerror = () => {
-        loading.innerText = "Image failed to load. Please continue.";
-        buttons.forEach(b => b.disabled = false);
-      };
-
-      // --- color button logic ---
-      buttons.forEach((btn, idx) => {
-        btn.addEventListener("click", () => {
-          selectedColor = choices[idx];
+      // Color selection
+      buttons.forEach(btn => {
+        btn.onclick = () => {
+          selectedColor = btn.dataset.color;
 
           buttons.forEach(b => {
             b.disabled = true;
@@ -294,12 +315,12 @@ function renderColorJudgment(q) {
           btn.style.border = "2px solid #1976d2";
 
           document.getElementById("certainty-container").style.display = "block";
-        });
+        };
       });
 
-      // --- certainty dot logic ---
+      // Certainty dots
       document.querySelectorAll(".certainty-dot").forEach(dot => {
-        dot.addEventListener("click", () => {
+        dot.onclick = () => {
           certainty = Number(dot.dataset.value);
 
           document.querySelectorAll(".certainty-dot").forEach(d => {
@@ -310,22 +331,20 @@ function renderColorJudgment(q) {
 
           jsPsych.finishTrial({
             response_label: selectedColor,
-            certainty,
+            certainty: certainty
           });
-        });
+        };
       });
     },
 
-    on_finish: function (data) {
-      data.response_label = selectedColor;
-      data.certainty = certainty;
 
+    on_finish: function (data) {
       const allowed_answers =
         q.variant_region === "BG"
           ? ["white"]
           : [q.target_color, "white"];
 
-      data.is_distractor = !allowed_answers.includes(selectedColor);
+      data.is_distractor = !allowed_answers.includes(data.response_label);
 
       if (data.is_distractor) {
         distractorErrors += 1;
@@ -346,57 +365,6 @@ function renderColorJudgment(q) {
         preloadImage(SUPABASE_IMAGE_BASE + q._next_image_path);
       }
     },
-  };
-}
-
-
-function renderCertainty(q) {
-  const imgUrl = SUPABASE_IMAGE_BASE + q.image_path;
-
-  return {
-    type: jsPsychHtmlSliderResponse,
-
-    stimulus: `
-      <div style="max-width:700px; margin:0 auto; text-align:center;">
-
-        <div style="margin-bottom:16px;">
-          <img src="${imgUrl}" style="max-width:300px;">
-        </div>
-
-        <div style="margin-bottom:12px; font-weight:bold;">
-          How certain are you about your color judgment?
-        </div>
-
-        <div style="font-size:14px; color:#555; margin-bottom:20px;">
-          1 = very uncertain &nbsp;&nbsp;·&nbsp;&nbsp; 10 = very certain
-        </div>
-
-      </div>
-    `,
-
-    min: 1,
-    max: 10,
-    start: 5,
-    step: 1,
-    labels: ["1", "10"],
-    require_movement: true,
-
-    data: {
-      task_type: "certainty",
-      object: q.object,
-      stimulus_type: q.stimulus_type,
-      image_path: q.image_path
-    },
-
-    on_finish: function (data) {
-      data.certainty = data.response;
-
-      // Link this certainty rating to the previous color judgment
-      data.linked_trial_index = jsPsych.data.get()
-        .filter({ task_type: "color_judgment" })
-        .last(1)
-        .values()[0].trial_index;
-    }
   };
 }
 
@@ -577,7 +545,6 @@ function buildTimeline(questions) {
       timeline.push(renderIntrospection(q));
     } else {
       timeline.push(renderColorJudgment(q));
-      timeline.push(renderCertainty(q));
       timeline.push(warningNode());
     }
   });
