@@ -360,15 +360,15 @@
       "image_path": "color_images/gpt-4o/image_priors/wombat_3_9263a7ff_resized_brown/FG_070_seq.png"
     },
     {
-      "object": "triangle",
+      "object": "square",
       "stimulus_type": "shape",
-      "manipulation_color": "yellow",
+      "manipulation_color": "blue",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/triangle_v3_yellow/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/square_v4_blue/FG_000_seq.png"
     },
     {
       "object": "binoculars",
@@ -382,15 +382,15 @@
       "image_path": "color_images/gpt-4o/image_priors/binoculars_4_13f723de_resized_green/FG_055_seq.png"
     },
     {
-      "object": "square",
+      "object": "hexagon",
       "stimulus_type": "shape",
-      "manipulation_color": "red",
+      "manipulation_color": "green",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/square_v3_red/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/hexagon_v3_green/FG_000_seq.png"
     },
     {
       "object": "ptarmigan",
@@ -404,15 +404,15 @@
       "image_path": "color_images/gpt-4o/image_priors/ptarmigan_2_98df7bf1_resized_brown/FG_055_seq.png"
     },
     {
-      "object": "circle",
+      "object": "square",
       "stimulus_type": "shape",
-      "manipulation_color": "black",
+      "manipulation_color": "pink",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/circle_v3_black/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/square_v4_pink/FG_000_seq.png"
     },
     {
       "object": "fawn",

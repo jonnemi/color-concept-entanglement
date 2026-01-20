@@ -122,15 +122,15 @@
       "image_path": "shapes/shape_colored/triangle_v4_brown/FG_080_seq.png"
     },
     {
-      "object": "hexagon",
+      "object": "square",
       "stimulus_type": "shape",
-      "manipulation_color": "grey",
+      "manipulation_color": "yellow",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/hexagon_v3_grey/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/square_v1_yellow/FG_000_seq.png"
     },
     {
       "object": "hexagon",
@@ -349,15 +349,15 @@
       "image_path": "color_images/gpt-4o/image_priors/binoculars_4_13f723de_resized_green/FG_010_seq.png"
     },
     {
-      "object": "circle",
+      "object": "pentagon",
       "stimulus_type": "shape",
-      "manipulation_color": "brown",
+      "manipulation_color": "red",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/circle_v0_brown/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/pentagon_v3_red/FG_000_seq.png"
     },
     {
       "object": "circle",
@@ -836,15 +836,15 @@
       "image_path": "color_images/gpt-4o/image_priors/tow_truck_3_3fb95fa0_resized_brown/FG_050_seq.png"
     },
     {
-      "object": "hexagon",
+      "object": "triangle",
       "stimulus_type": "shape",
-      "manipulation_color": "blue",
+      "manipulation_color": "green",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/hexagon_v2_blue/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/triangle_v3_green/FG_000_seq.png"
     },
     {
       "object": "carrot",

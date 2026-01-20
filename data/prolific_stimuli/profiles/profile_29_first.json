@@ -190,13 +190,13 @@
     {
       "object": "triangle",
       "stimulus_type": "shape",
-      "manipulation_color": "black",
+      "manipulation_color": "grey",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/triangle_v2_black/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/triangle_v2_grey/FG_000_seq.png"
     },
     {
       "object": "spotted salamander",
@@ -559,7 +559,7 @@
       "image_path": "color_images/gpt-4o/image_priors/spoonbill_2_c0c043d5_resized_grey/BG_040_seq.png"
     },
     {
-      "object": "triangle",
+      "object": "pentagon",
       "stimulus_type": "shape",
       "manipulation_color": "green",
       "target_color": "white",
@@ -567,7 +567,7 @@
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/triangle_v1_green/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/pentagon_v1_green/FG_000_seq.png"
     },
     {
       "object": "shark",
@@ -737,15 +737,15 @@
       "image_path": "shapes/shape_colored/hexagon_v3_pink/FG_020_seq.png"
     },
     {
-      "object": "hexagon",
+      "object": "circle",
       "stimulus_type": "shape",
-      "manipulation_color": "pink",
+      "manipulation_color": "blue",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/hexagon_v0_pink/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/circle_v4_blue/FG_000_seq.png"
     },
     {
       "object": "pentagon",

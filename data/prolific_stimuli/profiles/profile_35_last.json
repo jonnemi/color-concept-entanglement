@@ -610,13 +610,13 @@
     {
       "object": "circle",
       "stimulus_type": "shape",
-      "manipulation_color": "pink",
+      "manipulation_color": "blue",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/circle_v1_pink/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/circle_v4_blue/FG_000_seq.png"
     },
     {
       "object": "pentagon",
@@ -887,13 +887,13 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
-      "manipulation_color": "black",
+      "manipulation_color": "green",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/hexagon_v3_black/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/hexagon_v4_green/FG_000_seq.png"
     },
     {
       "object": "hexagon",
@@ -997,15 +997,15 @@
       "image_path": "shapes/shape_colored/square_v0_red/FG_010_seq.png"
     },
     {
-      "object": "hexagon",
+      "object": "square",
       "stimulus_type": "shape",
-      "manipulation_color": "black",
+      "manipulation_color": "grey",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/hexagon_v2_black/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/square_v0_grey/FG_000_seq.png"
     },
     {
       "object": "square",

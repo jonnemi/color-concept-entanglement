@@ -570,15 +570,15 @@
       "image_path": "color_images/gpt-4o/image_priors/forklift_3_0064e694_resized_yellow/FG_060_seq.png"
     },
     {
-      "object": "triangle",
+      "object": "square",
       "stimulus_type": "shape",
-      "manipulation_color": "black",
+      "manipulation_color": "grey",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/triangle_v4_black/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/square_v0_grey/FG_000_seq.png"
     },
     {
       "object": "celery",
@@ -880,15 +880,15 @@
       "image_path": "color_images/gpt-4o/image_priors/rattlesnake_1_b5817dd0_resized_brown/FG_000_seq.png"
     },
     {
-      "object": "triangle",
+      "object": "circle",
       "stimulus_type": "shape",
-      "manipulation_color": "purple",
+      "manipulation_color": "orange",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/triangle_v2_purple/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/circle_v3_orange/FG_000_seq.png"
     },
     {
       "object": "square",
@@ -1113,15 +1113,15 @@
       "image_path": "shapes/shape_colored/hexagon_v1_brown/FG_070_seq.png"
     },
     {
-      "object": "square",
+      "object": "triangle",
       "stimulus_type": "shape",
-      "manipulation_color": "orange",
+      "manipulation_color": "blue",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/square_v3_orange/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/triangle_v4_blue/FG_000_seq.png"
     },
     {
       "object": "brick",

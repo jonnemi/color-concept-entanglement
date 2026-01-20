@@ -23,6 +23,7 @@ COLOR_ADJECTIVES = {
 
 SPECIAL_RENAMES = {
     "mouse (computer)": "computer mouse",
+    "joystick": "game controller",
 }
 
 

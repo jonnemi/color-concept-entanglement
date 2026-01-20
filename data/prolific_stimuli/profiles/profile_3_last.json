@@ -94,15 +94,15 @@
       "image_path": "shapes/shape_colored/triangle_v3_grey/FG_070_seq.png"
     },
     {
-      "object": "triangle",
+      "object": "square",
       "stimulus_type": "shape",
-      "manipulation_color": "orange",
+      "manipulation_color": "blue",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/triangle_v1_orange/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/square_v4_blue/FG_000_seq.png"
     },
     {
       "object": "jack-o'-lantern",
@@ -160,15 +160,15 @@
       "image_path": "color_images/gpt-4o/image_priors/daisy_2_9f5fd00f_resized_yellow/FG_060_seq.png"
     },
     {
-      "object": "hexagon",
+      "object": "triangle",
       "stimulus_type": "shape",
-      "manipulation_color": "blue",
+      "manipulation_color": "red",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/hexagon_v0_blue/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/triangle_v4_red/FG_000_seq.png"
     },
     {
       "object": "cheeseburger",
@@ -1041,7 +1041,7 @@
       "image_path": "color_images/gpt-4o/image_priors/flute_2_ce750eec_resized_brown/FG_040_seq.png"
     },
     {
-      "object": "triangle",
+      "object": "hexagon",
       "stimulus_type": "shape",
       "manipulation_color": "green",
       "target_color": "white",
@@ -1049,7 +1049,7 @@
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/triangle_v1_green/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/hexagon_v3_green/FG_000_seq.png"
     },
     {
       "object": "triangle",

@@ -360,15 +360,15 @@
       "image_path": "shapes/shape_colored/triangle_v1_brown/BG_020_seq.png"
     },
     {
-      "object": "hexagon",
+      "object": "circle",
       "stimulus_type": "shape",
-      "manipulation_color": "orange",
+      "manipulation_color": "brown",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/hexagon_v1_orange/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/circle_v0_brown/FG_000_seq.png"
     },
     {
       "object": "gun",
@@ -770,15 +770,15 @@
       "image_path": "shapes/shape_colored/triangle_v1_purple/FG_010_seq.png"
     },
     {
-      "object": "triangle",
+      "object": "square",
       "stimulus_type": "shape",
-      "manipulation_color": "green",
+      "manipulation_color": "brown",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/triangle_v1_green/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/square_v1_brown/FG_000_seq.png"
     },
     {
       "object": "computer mouse",
@@ -1102,7 +1102,7 @@
       "image_path": "color_images/gpt-4o/image_priors/typewriter_4_0a946944_resized_grey/FG_050_seq.png"
     },
     {
-      "object": "square",
+      "object": "circle",
       "stimulus_type": "shape",
       "manipulation_color": "orange",
       "target_color": "white",
@@ -1110,7 +1110,7 @@
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/square_v2_orange/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/circle_v0_orange/FG_000_seq.png"
     },
     {
       "object": "wheelbarrow",

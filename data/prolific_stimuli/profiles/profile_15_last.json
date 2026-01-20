@@ -398,15 +398,15 @@
       "image_path": "color_images/gpt-4o/image_priors/tiger_5_875b6e5b_resized_orange/FG_005_seq.png"
     },
     {
-      "object": "pentagon",
+      "object": "hexagon",
       "stimulus_type": "shape",
-      "manipulation_color": "brown",
+      "manipulation_color": "orange",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/pentagon_v1_brown/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/hexagon_v3_orange/FG_000_seq.png"
     },
     {
       "object": "circle",
@@ -1074,15 +1074,15 @@
       "image_path": "color_images/gpt-4o/counterfact/rubber_eraser_4_d9f7256e_resized_green/FG_060_seq.png"
     },
     {
-      "object": "square",
+      "object": "circle",
       "stimulus_type": "shape",
-      "manipulation_color": "grey",
+      "manipulation_color": "blue",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/square_v0_grey/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/circle_v0_blue/FG_000_seq.png"
     },
     {
       "object": "square",
@@ -1129,7 +1129,7 @@
       "image_path": "shapes/shape_colored/circle_v3_purple/BG_100_seq.png"
     },
     {
-      "object": "square",
+      "object": "pentagon",
       "stimulus_type": "shape",
       "manipulation_color": "blue",
       "target_color": "white",
@@ -1137,7 +1137,7 @@
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/square_v2_blue/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/pentagon_v1_blue/FG_000_seq.png"
     },
     {
       "object": "squirrel",

@@ -39,13 +39,13 @@
     {
       "object": "circle",
       "stimulus_type": "shape",
-      "manipulation_color": "black",
+      "manipulation_color": "blue",
       "target_color": "white",
       "variant_region": "BG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "BG 0% (seq)",
-      "image_path": "shapes/shape_colored/circle_v0_black/BG_000_seq.png"
+      "image_path": "shapes/shape_colored/circle_v0_blue/BG_000_seq.png"
     },
     {
       "question_type": "sanity",
@@ -57,13 +57,13 @@
     {
       "object": "circle",
       "stimulus_type": "shape",
-      "manipulation_color": "black",
-      "target_color": "white",
-      "variant_region": "FG",
-      "percent_colored": 0,
+      "manipulation_color": "blue",
+      "target_color": "blue",
+      "variant_region": "BG",
+      "percent_colored": 1,
       "mode": "seq",
-      "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/circle_v0_black/FG_000_seq.png"
+      "variant_label": "BG 1% (seq)",
+      "image_path": "shapes/shape_colored/circle_v0_blue/BG_001_seq.png"
     },
     {
       "question_type": "sanity",

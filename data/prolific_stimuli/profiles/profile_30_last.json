@@ -334,13 +334,13 @@
     {
       "object": "triangle",
       "stimulus_type": "shape",
-      "manipulation_color": "black",
+      "manipulation_color": "pink",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/triangle_v0_black/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/triangle_v3_pink/FG_000_seq.png"
     },
     {
       "object": "rattlesnake",
@@ -409,15 +409,15 @@
       "image_path": "color_images/gpt-4o/counterfact/bear_4_e0d25554_resized_pink/FG_080_seq.png"
     },
     {
-      "object": "triangle",
+      "object": "circle",
       "stimulus_type": "shape",
-      "manipulation_color": "green",
+      "manipulation_color": "red",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/triangle_v1_green/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/circle_v0_red/FG_000_seq.png"
     },
     {
       "object": "triangle",
@@ -843,13 +843,13 @@
     {
       "object": "hexagon",
       "stimulus_type": "shape",
-      "manipulation_color": "purple",
+      "manipulation_color": "blue",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/hexagon_v3_purple/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/hexagon_v0_blue/FG_000_seq.png"
     },
     {
       "object": "triangle",

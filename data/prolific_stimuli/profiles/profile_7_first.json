@@ -199,15 +199,15 @@
       "image_path": "color_images/gpt-4o/counterfact/turnip_4_3a2c25f4_resized_blue/FG_050_seq.png"
     },
     {
-      "object": "circle",
+      "object": "hexagon",
       "stimulus_type": "shape",
-      "manipulation_color": "pink",
+      "manipulation_color": "brown",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/circle_v2_pink/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/hexagon_v1_brown/FG_000_seq.png"
     },
     {
       "object": "strainer",
@@ -770,15 +770,15 @@
       "image_path": "color_images/gpt-4o/image_priors/chinese_lantern_3_224eff52_resized_red/FG_100_seq.png"
     },
     {
-      "object": "square",
+      "object": "triangle",
       "stimulus_type": "shape",
-      "manipulation_color": "grey",
+      "manipulation_color": "green",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/square_v4_grey/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/triangle_v2_green/FG_000_seq.png"
     },
     {
       "object": "toad",
@@ -891,15 +891,15 @@
       "image_path": "color_images/gpt-4o/counterfact/dingo_2_26a21c78_resized_blue/FG_020_seq.png"
     },
     {
-      "object": "pentagon",
+      "object": "circle",
       "stimulus_type": "shape",
-      "manipulation_color": "red",
+      "manipulation_color": "blue",
       "target_color": "white",
       "variant_region": "FG",
       "percent_colored": 0,
       "mode": "seq",
       "variant_label": "FG 0% (seq)",
-      "image_path": "shapes/shape_colored/pentagon_v3_red/FG_000_seq.png"
+      "image_path": "shapes/shape_colored/circle_v3_blue/FG_000_seq.png"
     },
     {
       "object": "square",

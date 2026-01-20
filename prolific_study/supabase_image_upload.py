@@ -1,95 +1,124 @@
 import csv
+import requests
 from pathlib import Path
-import os
-from dotenv import load_dotenv
+from collections import defaultdict
 import time
-from supabase import create_client
-from httpx import RemoteProtocolError, ReadTimeout, WriteError
 
 # ------------------
 # CONFIG
 # ------------------
-load_dotenv()
 
-SUPABASE_URL = "https://utwhgfveotpusdjopcnl.supabase.co"
-SUPABASE_KEY = os.environ["SUPABASE_SERVICE_ROLE"]
-BUCKET_NAME = "prolific_images"
+SUPABASE_PUBLIC_BASE = (
+    "https://utwhgfveotpusdjopcnl.supabase.co"
+    "/storage/v1/object/public/prolific_images/"
+)
 
-LOCAL_IMAGE_ROOT = Path("/mnt/lustre/work/eickhoff/esx061/color-concept-entanglement/data")
-LOCAL_TABLE_ROOT = Path("/mnt/lustre/work/eickhoff/esx061/color-concept-entanglement/data/prolific_stimuli")
+LOCAL_IMAGE_ROOT = Path(
+    "/mnt/lustre/work/eickhoff/esx061/color-concept-entanglement/data"
+)
+
+LOCAL_TABLE_ROOT = Path(
+    "/mnt/lustre/work/eickhoff/esx061/color-concept-entanglement/data/prolific_stimuli"
+)
+
 CSV_FILES = [
-    # "stimulus_table_counterfact.csv",
     "stimulus_table_image_priors.csv",
     "stimulus_table_shapes.csv",
+    "stimulus_table_counterfact.csv",
 ]
 
-MAX_RETRIES = 6
-RESET_EVERY = 150
-SLEEP_BETWEEN_UPLOADS = 0.15
-RETRY_SLEEP = 3.0
-WRITE_ERROR_SLEEP = 5.0
-
-# ------------------
-# SUPABASE CLIENT
-# ------------------
-def make_supabase():
-    return create_client(SUPABASE_URL, SUPABASE_KEY)
-
-supabase = make_supabase()
+REQUEST_TIMEOUT = 10
+SLEEP_BETWEEN_REQUESTS = 0.05
 
 # ------------------
 # COLLECT IMAGE PATHS
 # ------------------
+
 image_paths = set()
+csv_sources = defaultdict(list)
 
 for csv_file in CSV_FILES:
-    with open(LOCAL_TABLE_ROOT / csv_file, newline="") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            image_paths.add(row["image_path"])
-
-print(f"Found {len(image_paths)} unique images")
-
-# ------------------
-# UPLOAD
-# ------------------
-for i, rel_path in enumerate(sorted(image_paths), 1):
-    local_path = LOCAL_IMAGE_ROOT / rel_path
-
-    if not local_path.exists():
-        print(f"Missing: {local_path}")
+    path = LOCAL_TABLE_ROOT / csv_file
+    if not path.exists():
+        print(f" CSV not found: {csv_file}")
         continue
 
-    for attempt in range(1, MAX_RETRIES + 1):
-        try:
-            with open(local_path, "rb") as f:
-                supabase.storage.from_(BUCKET_NAME).upload(
-                    path=rel_path,
-                    file=f,
-                    file_options={"content-type": "image/png"},
-                )
-            print(f"Uploaded {rel_path}")
-            break
+    with open(path, newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            img = row["image_path"].strip()
+            image_paths.add(img)
+            csv_sources[img].append(csv_file)
 
-        except WriteError:
-            # TLS connection is dead → must recreate client
-            print(f"WriteError ({attempt}/{MAX_RETRIES}) → resetting client")
-            supabase = make_supabase()
-            time.sleep(WRITE_ERROR_SLEEP)
+print(f"\nFound {len(image_paths)} unique image paths\n")
 
-        except (RemoteProtocolError, ReadTimeout):
-            print(f"Network error ({attempt}/{MAX_RETRIES}) on {rel_path}")
-            time.sleep(RETRY_SLEEP)
+# ------------------
+# CHECK IMAGES
+# ------------------
 
-        except Exception as e:
-            if "already exists" in str(e).lower():
-                print(f"Exists, skipping {rel_path}")
-                break
+missing_local = []
+http_errors = []
+ok_images = []
+
+for i, rel_path in enumerate(sorted(image_paths), 1):
+    local_path = LOCAL_IMAGE_ROOT / rel_path
+    public_url = SUPABASE_PUBLIC_BASE + rel_path
+
+    print(f"[{i}/{len(image_paths)}] Checking {rel_path}")
+
+    # --- local existence ---
+    if not local_path.exists():
+        missing_local.append(rel_path)
+        print("   Missing locally")
+        continue
+
+    # --- public URL ---
+    try:
+        r = requests.get(public_url, timeout=REQUEST_TIMEOUT)
+
+        if r.status_code != 200:
+            http_errors.append((rel_path, r.status_code))
+            print(f"   HTTP {r.status_code}")
+        else:
+            ct = r.headers.get("Content-Type", "")
+            if not ct.startswith("image"):
+                http_errors.append((rel_path, f"bad content-type: {ct}"))
+                print(f"   Bad content-type: {ct}")
             else:
-                raise
+                ok_images.append(rel_path)
+                print("   OK")
 
-    if i % RESET_EVERY == 0:
-        print("Periodic Supabase client reset")
-        supabase = make_supabase()
+    except requests.RequestException as e:
+        http_errors.append((rel_path, str(e)))
+        print(f"   Request error: {e}")
 
-    time.sleep(SLEEP_BETWEEN_UPLOADS)
+    time.sleep(SLEEP_BETWEEN_REQUESTS)
+
+# ------------------
+# SUMMARY
+# ------------------
+
+print("\n" + "=" * 60)
+print("SUMMARY")
+print("=" * 60)
+
+print(f"Total images checked: {len(image_paths)}")
+print(f"OK: {len(ok_images)}")
+print(f"Missing locally: {len(missing_local)}")
+print(f"HTTP / access errors: {len(http_errors)}")
+
+if missing_local:
+    print("\n MISSING LOCALLY:")
+    for p in missing_local:
+        print(f"  - {p} (referenced in {csv_sources[p]})")
+
+if http_errors:
+    print("\n PUBLIC ACCESS ERRORS:")
+    for p, err in http_errors:
+        print(f"  - {p}: {err} (from {csv_sources[p]})")
+
+if not missing_local and not http_errors:
+    print("\n All images are present and publicly accessible.")
+    print("Likely cause of failures: transient network / CDN issues.")
+
+print("=" * 60)

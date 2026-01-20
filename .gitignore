@@ -13,7 +13,6 @@ data/prolific_stimuli/stimulus_table_image_priors.csv
 data/prolific_stimuli/stimulus_table_shapes.csv
 data/prolific_stimuli/stimulus_table.parquet
 
-corrupted_images.txt
 segment-anything-2/
 checkpoints/
 __pycache__/
@@ -35,3 +34,4 @@ prolific_study/static/dataset/
 prolific_study/data/
 prolific_study/results/
 
+corrupt_images.txt
