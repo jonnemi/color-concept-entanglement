@@ -15,7 +15,7 @@ from pathlib import Path
 import os
 from openai import OpenAI
 from PIL import Image
-from test_MLLMs import prompt_mllm
+from model_evaluation.test_MLLMs import prompt_mllm
 from collections import Counter
 import string
 

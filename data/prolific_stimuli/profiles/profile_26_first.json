@@ -133,15 +133,15 @@
       "image_path": "color_images/gpt-4o/image_priors/turnip_4_3a2c25f4_resized_purple/FG_020_seq.png"
     },
     {
-      "object": "shrimp",
+      "object": "snail",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "pink",
-      "target_color": "pink",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/shrimp_4_e5d370a6_resized_pink/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/snail_1_0e2ab1c2_resized_brown/FG_055_seq.png"
     },
     {
       "object": "hexagon",
@@ -166,15 +166,15 @@
       "image_path": "color_images/gpt-4o/image_priors/bagel_2_be16f710_resized_brown/BG_080_seq.png"
     },
     {
-      "object": "coho",
+      "object": "buffalo",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/coho_1_a64d7b7a_resized_green/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/buffalo_1_9d5b6c9c_resized_brown/FG_055_seq.png"
     },
     {
       "object": "rattlesnake",
@@ -559,7 +559,7 @@
       "image_path": "shapes/shape_colored/circle_v2_pink/FG_005_seq.png"
     },
     {
-      "object": "joystick",
+      "object": "game controller",
       "stimulus_type": "correct_prior",
       "manipulation_color": "blue",
       "target_color": "blue",
@@ -614,15 +614,15 @@
       "image_path": "shapes/shape_colored/hexagon_v0_pink/FG_010_seq.png"
     },
     {
-      "object": "hornet",
+      "object": "trailer truck",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/hornet_1_728eaad6_resized_yellow/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/trailer_truck_3_44d969b6_resized_red/FG_055_seq.png"
     },
     {
       "object": "triangle",
@@ -702,7 +702,7 @@
       "image_path": "color_images/gpt-4o/image_priors/bath_towel_4_10cc8e6d_resized_blue/FG_000_seq.png"
     },
     {
-      "object": "worm",
+      "object": "picket fence",
       "stimulus_type": "counterfact",
       "manipulation_color": "purple",
       "target_color": "purple",
@@ -710,7 +710,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/worm_1_69c913c2_resized_purple/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/picket_fence_2_61569d00_resized_purple/FG_055_seq.png"
     },
     {
       "question_type": "sanity",
@@ -981,15 +981,15 @@
       "image_path": "color_images/gpt-4o/image_priors/tile_roof_2_f5edd85c_resized_red/FG_060_seq.png"
     },
     {
-      "object": "tomato",
+      "object": "trailer truck",
       "stimulus_type": "counterfact",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "orange",
+      "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 100,
       "mode": "seq",
       "variant_label": "FG 100% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/tomato_2_41acc4b2_resized_blue/FG_100_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/trailer_truck_3_44d969b6_resized_orange/FG_100_seq.png"
     },
     {
       "object": "lime",

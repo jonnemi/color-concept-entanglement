@@ -10,15 +10,15 @@
       "max": 100
     },
     {
-      "object": "rooster",
+      "object": "rose",
       "stimulus_type": "counterfact",
-      "manipulation_color": "purple",
-      "target_color": "purple",
+      "manipulation_color": "blue",
+      "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 100,
       "mode": "seq",
       "variant_label": "FG 100% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/rooster_3_c624c8db_resized_purple/FG_100_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/rose_3_64713026_resized_blue/FG_100_seq.png"
     },
     {
       "object": "hexagon",
@@ -100,15 +100,15 @@
       "image_path": "shapes/shape_colored/square_v3_blue/FG_005_seq.png"
     },
     {
-      "object": "rubber eraser",
+      "object": "cloud",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "pink",
-      "target_color": "pink",
+      "manipulation_color": "grey",
+      "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/rubber_eraser_4_d9f7256e_resized_pink/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/cloud_3_29898571_resized_grey/FG_055_seq.png"
     },
     {
       "object": "triangle",
@@ -210,15 +210,15 @@
       "image_path": "shapes/shape_colored/triangle_v4_brown/FG_010_seq.png"
     },
     {
-      "object": "sea lion",
+      "object": "hartebeest",
       "stimulus_type": "counterfact",
-      "manipulation_color": "purple",
-      "target_color": "purple",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/sea_lion_5_5968e630_resized_purple/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/hartebeest_3_57d59c1c_resized_red/FG_055_seq.png"
     },
     {
       "object": "oriole",
@@ -847,15 +847,15 @@
       "image_path": "color_images/gpt-4o/image_priors/walnut_2_a1599b1b_resized_brown/FG_070_seq.png"
     },
     {
-      "object": "ant",
+      "object": "daisy",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "red",
-      "target_color": "red",
+      "manipulation_color": "yellow",
+      "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/ant_4_96b67bf0_resized_red/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/daisy_2_9f5fd00f_resized_yellow/FG_055_seq.png"
     },
     {
       "object": "pentagon",
@@ -1014,15 +1014,15 @@
       "image_path": "color_images/gpt-4o/image_priors/Loafer_3_c6f11fa7_resized_brown/FG_055_seq.png"
     },
     {
-      "object": "penguin",
+      "object": "piano",
       "stimulus_type": "counterfact",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "yellow",
+      "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 80,
       "mode": "seq",
       "variant_label": "FG 80% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/penguin_4_ae245348_resized_green/FG_080_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/piano_4_cec4205a_resized_yellow/FG_080_seq.png"
     },
     {
       "object": "pentagon",

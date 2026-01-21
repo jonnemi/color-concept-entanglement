@@ -26,7 +26,7 @@
       "image_path": "color_images/gpt-4o/image_priors/housefly_3_bbecdd86_resized_yellow/FG_100_seq.png"
     },
     {
-      "object": "fawn",
+      "object": "ptarmigan",
       "stimulus_type": "correct_prior",
       "manipulation_color": "brown",
       "target_color": "brown",
@@ -34,7 +34,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/fawn_4_29ccbd0c_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/ptarmigan_2_98df7bf1_resized_brown/FG_055_seq.png"
     },
     {
       "object": "square",
@@ -138,15 +138,15 @@
       "image_path": "color_images/gpt-4o/image_priors/van_1_74c49701_resized_blue/FG_005_seq.png"
     },
     {
-      "object": "hartebeest",
+      "object": "dandelion",
       "stimulus_type": "counterfact",
-      "manipulation_color": "red",
-      "target_color": "red",
+      "manipulation_color": "purple",
+      "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/hartebeest_3_57d59c1c_resized_red/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/dandelion_1_7f3c1397_resized_purple/FG_055_seq.png"
     },
     {
       "object": "curly-coated retriever",
@@ -376,7 +376,7 @@
       "image_path": "shapes/shape_colored/hexagon_v0_purple/FG_060_seq.png"
     },
     {
-      "object": "joystick",
+      "object": "game controller",
       "stimulus_type": "correct_prior",
       "manipulation_color": "blue",
       "target_color": "blue",
@@ -475,15 +475,15 @@
       "image_path": "shapes/shape_colored/hexagon_v1_brown/FG_080_seq.png"
     },
     {
-      "object": "butternut squash",
+      "object": "skunk",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/butternut_squash_4_cca6a1a8_resized_green/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/skunk_4_7384eaa2_resized_brown/FG_055_seq.png"
     },
     {
       "question_type": "sanity",
@@ -553,15 +553,15 @@
       "image_path": "color_images/gpt-4o/image_priors/Rottweiler_4_131e8b4b_resized_brown/FG_090_seq.png"
     },
     {
-      "object": "impala",
+      "object": "artichoke",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/impala_4_47f6110a_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/artichoke_1_ee6756fc_resized_green/FG_055_seq.png"
     },
     {
       "object": "flute",

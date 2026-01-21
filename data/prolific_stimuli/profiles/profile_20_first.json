@@ -100,7 +100,7 @@
       "image_path": "shapes/shape_colored/hexagon_v4_orange/FG_090_seq.png"
     },
     {
-      "object": "american football",
+      "object": "picket fence",
       "stimulus_type": "correct_prior",
       "manipulation_color": "brown",
       "target_color": "brown",
@@ -108,7 +108,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/american_football_4_f17fd44d_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/picket_fence_2_61569d00_resized_brown/FG_055_seq.png"
     },
     {
       "object": "triangle",
@@ -144,15 +144,15 @@
       "image_path": "shapes/shape_colored/hexagon_v2_yellow/FG_060_seq.png"
     },
     {
-      "object": "gas pump",
+      "object": "tile roof",
       "stimulus_type": "counterfact",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "purple",
+      "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/gas_pump_5_beef7f46_resized_blue/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/tile_roof_2_f5edd85c_resized_purple/FG_055_seq.png"
     },
     {
       "object": "triangle",
@@ -691,15 +691,15 @@
       "image_path": "color_images/gpt-4o/image_priors/butternut_squash_4_cca6a1a8_resized_green/FG_030_seq.png"
     },
     {
-      "object": "housefly",
+      "object": "bullfrog",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/housefly_3_bbecdd86_resized_yellow/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/bullfrog_4_55480f4e_resized_green/FG_055_seq.png"
     },
     {
       "object": "sea lion",
@@ -781,15 +781,15 @@
       "image_path": "color_images/gpt-4o/counterfact/tuba_2_35148fb8_resized_red/FG_060_seq.png"
     },
     {
-      "object": "mug",
+      "object": "otter",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "red",
-      "target_color": "red",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/mug_4_5308a46a_resized_red/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/otter_3_34461c24_resized_brown/FG_055_seq.png"
     },
     {
       "object": "triangle",
@@ -803,15 +803,15 @@
       "image_path": "shapes/shape_colored/triangle_v1_yellow/FG_080_seq.png"
     },
     {
-      "object": "snail",
+      "object": "sloth bear",
       "stimulus_type": "counterfact",
-      "manipulation_color": "pink",
-      "target_color": "pink",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 100,
       "mode": "seq",
       "variant_label": "FG 100% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/snail_1_0e2ab1c2_resized_pink/FG_100_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/sloth_bear_1_d95b5bda_resized_red/FG_100_seq.png"
     },
     {
       "object": "circle",

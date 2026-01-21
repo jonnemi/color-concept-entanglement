@@ -83,15 +83,15 @@
       "image_path": "shapes/shape_colored/hexagon_v0_brown/BG_060_seq.png"
     },
     {
-      "object": "dandelion",
+      "object": "cockroach",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/dandelion_1_7f3c1397_resized_green/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/cockroach_1_057b48ee_resized_brown/FG_055_seq.png"
     },
     {
       "object": "sardine",
@@ -299,15 +299,15 @@
       "image_path": "color_images/gpt-4o/image_priors/siamang_3_aa296ead_resized_brown/BG_040_seq.png"
     },
     {
-      "object": "gas pump",
+      "object": "garlic",
       "stimulus_type": "counterfact",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "orange",
+      "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 60,
       "mode": "seq",
       "variant_label": "FG 60% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/gas_pump_5_beef7f46_resized_blue/FG_060_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/garlic_1_f21e0c13_resized_orange/FG_060_seq.png"
     },
     {
       "object": "circle",
@@ -354,15 +354,15 @@
       "image_path": "shapes/shape_colored/circle_v0_red/FG_020_seq.png"
     },
     {
-      "object": "joystick",
+      "object": "vulture",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/joystick_3_35952c2f_resized_blue/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/vulture_1_2086d1c1_resized_brown/FG_055_seq.png"
     },
     {
       "object": "tile roof",
@@ -753,15 +753,15 @@
       "image_path": "shapes/shape_colored/square_v2_blue/FG_050_seq.png"
     },
     {
-      "object": "kangaroo",
+      "object": "daisy",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "yellow",
+      "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/kangaroo_1_ea795cb8_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/daisy_2_9f5fd00f_resized_yellow/FG_055_seq.png"
     },
     {
       "object": "pentagon",
@@ -1030,15 +1030,15 @@
       "image_path": "color_images/gpt-4o/image_priors/sea_lion_5_5968e630_resized_brown/FG_070_seq.png"
     },
     {
-      "object": "cabbage butterfly",
+      "object": "butternut squash",
       "stimulus_type": "counterfact",
-      "manipulation_color": "red",
-      "target_color": "red",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 70,
       "mode": "seq",
       "variant_label": "FG 70% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/cabbage_butterfly_1_52c830b7_resized_red/FG_070_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/butternut_squash_4_cca6a1a8_resized_green/FG_070_seq.png"
     },
     {
       "object": "hexagon",
@@ -1118,15 +1118,15 @@
       "image_path": "shapes/shape_colored/triangle_v4_blue/FG_000_seq.png"
     },
     {
-      "object": "brick",
+      "object": "hare",
       "stimulus_type": "counterfact",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "yellow",
+      "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/brick_4_b7633a9d_resized_blue/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/hare_2_4cbe00ed_resized_yellow/FG_055_seq.png"
     },
     {
       "object": "triangle",
@@ -1140,15 +1140,15 @@
       "image_path": "shapes/shape_colored/triangle_v3_red/BG_040_seq.png"
     },
     {
-      "object": "cannon",
+      "object": "canary",
       "stimulus_type": "counterfact",
-      "manipulation_color": "purple",
-      "target_color": "purple",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 90,
       "mode": "seq",
       "variant_label": "FG 90% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/cannon_2_08ed4ed8_resized_purple/FG_090_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/canary_3_aef458ff_resized_green/FG_090_seq.png"
     },
     {
       "object": "square",

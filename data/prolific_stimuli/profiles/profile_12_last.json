@@ -204,7 +204,7 @@
       "image_path": "color_images/gpt-4o/image_priors/baseball_2_f1bd2e56_resized_red/FG_070_seq.png"
     },
     {
-      "object": "camel",
+      "object": "impala",
       "stimulus_type": "correct_prior",
       "manipulation_color": "brown",
       "target_color": "brown",
@@ -212,7 +212,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/camel_1_d4d473fe_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/impala_4_47f6110a_resized_brown/FG_055_seq.png"
     },
     {
       "object": "dalmatian",
@@ -475,15 +475,15 @@
       "image_path": "color_images/gpt-4o/image_priors/Maltese_dog_2_769e7078_resized_brown/FG_030_seq.png"
     },
     {
-      "object": "curly-coated retriever",
+      "object": "tabby",
       "stimulus_type": "counterfact",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/curly-coated_retriever_2_2190a917_resized_blue/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/tabby_4_ce76bae9_resized_green/FG_055_seq.png"
     },
     {
       "question_type": "sanity",
@@ -685,15 +685,15 @@
       "image_path": "shapes/shape_colored/triangle_v0_blue/FG_005_seq.png"
     },
     {
-      "object": "jaguar",
+      "object": "sea lion",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/jaguar_4_a2624ff9_resized_yellow/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/sea_lion_5_5968e630_resized_brown/FG_055_seq.png"
     },
     {
       "object": "pentagon",
@@ -964,15 +964,15 @@
       "image_path": "shapes/shape_colored/pentagon_v1_orange/FG_010_seq.png"
     },
     {
-      "object": "bath towel",
+      "object": "bread",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/bath_towel_4_10cc8e6d_resized_blue/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/bread_1_bb6e8d06_resized_brown/FG_055_seq.png"
     },
     {
       "object": "circle",

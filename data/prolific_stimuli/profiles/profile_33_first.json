@@ -177,7 +177,7 @@
       "image_path": "color_images/gpt-4o/image_priors/impala_4_47f6110a_resized_brown/FG_060_seq.png"
     },
     {
-      "object": "piano",
+      "object": "moth",
       "stimulus_type": "correct_prior",
       "manipulation_color": "brown",
       "target_color": "brown",
@@ -185,7 +185,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/piano_4_cec4205a_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/moth_1_90c32965_resized_brown/FG_055_seq.png"
     },
     {
       "object": "oak",
@@ -316,15 +316,15 @@
       "image_path": "color_images/gpt-4o/image_priors/ostrich_5_c53562f4_resized_brown/FG_000_seq.png"
     },
     {
-      "object": "frog",
+      "object": "frilled lizard",
       "stimulus_type": "counterfact",
-      "manipulation_color": "purple",
-      "target_color": "purple",
+      "manipulation_color": "pink",
+      "target_color": "pink",
       "variant_region": "FG",
       "percent_colored": 60,
       "mode": "seq",
       "variant_label": "FG 60% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/frog_4_ad92e1a9_resized_purple/FG_060_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/frilled_lizard_2_a4801bb1_resized_pink/FG_060_seq.png"
     },
     {
       "object": "toad",
@@ -702,7 +702,7 @@
       "image_path": "color_images/gpt-4o/counterfact/toilet_4_18560e2e_resized_brown/FG_100_seq.png"
     },
     {
-      "object": "joystick",
+      "object": "game controller",
       "stimulus_type": "correct_prior",
       "manipulation_color": "blue",
       "target_color": "blue",
@@ -726,7 +726,7 @@
       "correct_response": "Strongly Disagree"
     },
     {
-      "object": "ptarmigan",
+      "object": "acorn",
       "stimulus_type": "correct_prior",
       "manipulation_color": "brown",
       "target_color": "brown",
@@ -734,7 +734,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/ptarmigan_2_98df7bf1_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/acorn_1_7af9cac8_resized_brown/FG_055_seq.png"
     },
     {
       "object": "spinach",
@@ -891,15 +891,15 @@
       "image_path": "color_images/gpt-4o/image_priors/walrus_5_f0624c91_resized_brown/FG_030_seq.png"
     },
     {
-      "object": "bagel",
+      "object": "asparagus",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/bagel_2_be16f710_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/asparagus_3_14687666_resized_green/FG_055_seq.png"
     },
     {
       "object": "giraffe",
@@ -913,7 +913,7 @@
       "image_path": "color_images/gpt-4o/counterfact/giraffe_1_785f537c_resized_green/FG_050_seq.png"
     },
     {
-      "object": "eggplant",
+      "object": "gasmask",
       "stimulus_type": "counterfact",
       "manipulation_color": "yellow",
       "target_color": "yellow",
@@ -921,7 +921,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/eggplant_1_37ac0728_resized_yellow/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/gasmask_2_6f8dba75_resized_yellow/FG_055_seq.png"
     },
     {
       "object": "triangle",

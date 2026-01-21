@@ -100,15 +100,15 @@
       "image_path": "color_images/gpt-4o/image_priors/Doberman_1_d774b749_resized_brown/FG_100_seq.png"
     },
     {
-      "object": "housefly",
+      "object": "iguana",
       "stimulus_type": "counterfact",
-      "manipulation_color": "pink",
-      "target_color": "pink",
+      "manipulation_color": "orange",
+      "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 60,
       "mode": "seq",
       "variant_label": "FG 60% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/housefly_3_bbecdd86_resized_pink/FG_060_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/iguana_2_a2663064_resized_orange/FG_060_seq.png"
     },
     {
       "object": "gorilla",
@@ -122,7 +122,7 @@
       "image_path": "color_images/gpt-4o/image_priors/gorilla_3_bcd1ec66_resized_grey/FG_000_seq.png"
     },
     {
-      "object": "fox",
+      "object": "fridge",
       "stimulus_type": "counterfact",
       "manipulation_color": "yellow",
       "target_color": "yellow",
@@ -130,7 +130,7 @@
       "percent_colored": 100,
       "mode": "seq",
       "variant_label": "FG 100% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/fox_2_52cadfa8_resized_yellow/FG_100_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/fridge_5_c95cbde9_resized_yellow/FG_100_seq.png"
     },
     {
       "object": "buffalo",
@@ -144,7 +144,7 @@
       "image_path": "color_images/gpt-4o/counterfact/buffalo_1_9d5b6c9c_resized_green/FG_030_seq.png"
     },
     {
-      "object": "elephant",
+      "object": "envelope",
       "stimulus_type": "counterfact",
       "manipulation_color": "orange",
       "target_color": "orange",
@@ -152,7 +152,7 @@
       "percent_colored": 90,
       "mode": "seq",
       "variant_label": "FG 90% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/elephant_2_d9a9678b_resized_orange/FG_090_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/envelope_1_36c3c6c1_resized_orange/FG_090_seq.png"
     },
     {
       "object": "rose",
@@ -327,7 +327,7 @@
       "image_path": "color_images/gpt-4o/counterfact/tiger_5_875b6e5b_resized_purple/FG_070_seq.png"
     },
     {
-      "object": "komodo dragon",
+      "object": "frilled lizard",
       "stimulus_type": "correct_prior",
       "manipulation_color": "brown",
       "target_color": "brown",
@@ -335,7 +335,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/Komodo_dragon_1_68027650_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/frilled_lizard_2_a4801bb1_resized_brown/FG_055_seq.png"
     },
     {
       "object": "lycaenid",
@@ -470,15 +470,15 @@
       "image_path": "color_images/gpt-4o/image_priors/axolotl_4_154164db_resized_pink/FG_040_seq.png"
     },
     {
-      "object": "housefly",
+      "object": "binoculars",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/housefly_3_bbecdd86_resized_yellow/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/binoculars_4_13f723de_resized_green/FG_055_seq.png"
     },
     {
       "object": "square",
@@ -548,15 +548,15 @@
       "image_path": "shapes/shape_colored/square_v1_green/FG_000_seq.png"
     },
     {
-      "object": "digital watch",
+      "object": "squirrel",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/digital_watch_3_015799f8_resized_blue/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/squirrel_3_065470ea_resized_brown/FG_055_seq.png"
     },
     {
       "object": "typewriter",
@@ -581,15 +581,15 @@
       "image_path": "shapes/shape_colored/triangle_v3_green/FG_100_seq.png"
     },
     {
-      "object": "cello",
+      "object": "cheese",
       "stimulus_type": "counterfact",
-      "manipulation_color": "purple",
-      "target_color": "purple",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 80,
       "mode": "seq",
       "variant_label": "FG 80% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/cello_1_b59efadb_resized_purple/FG_080_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/cheese_1_78f6ea0b_resized_green/FG_080_seq.png"
     },
     {
       "object": "square",
@@ -603,15 +603,15 @@
       "image_path": "shapes/shape_colored/square_v1_grey/FG_050_seq.png"
     },
     {
-      "object": "spinach",
+      "object": "armadillo",
       "stimulus_type": "counterfact",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "purple",
+      "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/spinach_2_093ee484_resized_blue/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/armadillo_3_76675318_resized_purple/FG_055_seq.png"
     },
     {
       "object": "vulture",

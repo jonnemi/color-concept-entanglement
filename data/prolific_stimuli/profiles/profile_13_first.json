@@ -517,13 +517,13 @@
     {
       "object": "plunger",
       "stimulus_type": "counterfact",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "blue",
+      "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 50,
       "mode": "seq",
       "variant_label": "FG 50% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/plunger_5_eca725f5_resized_brown/FG_050_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/plunger_5_eca725f5_resized_blue/FG_050_seq.png"
     },
     {
       "object": "grapefruit",
@@ -581,7 +581,7 @@
       "image_path": "color_images/gpt-4o/image_priors/jeans_4_f3ddfe77_resized_blue/BG_060_seq.png"
     },
     {
-      "object": "joystick",
+      "object": "game controller",
       "stimulus_type": "correct_prior",
       "manipulation_color": "blue",
       "target_color": "blue",
@@ -614,15 +614,15 @@
       "image_path": "shapes/shape_colored/triangle_v3_orange/FG_005_seq.png"
     },
     {
-      "object": "lime",
+      "object": "giraffe",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "orange",
-      "target_color": "orange",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/lime_3_8ad48edf_resized_orange/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/giraffe_1_785f537c_resized_brown/FG_055_seq.png"
     },
     {
       "object": "hexagon",
@@ -748,15 +748,15 @@
       "image_path": "shapes/shape_colored/triangle_v1_yellow/FG_070_seq.png"
     },
     {
-      "object": "beetle",
+      "object": "boat",
       "stimulus_type": "counterfact",
-      "manipulation_color": "pink",
-      "target_color": "pink",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/beetle_4_e03c36fe_resized_pink/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/boat_2_a24f9044_resized_green/FG_055_seq.png"
     },
     {
       "object": "wagon",
@@ -869,15 +869,15 @@
       "image_path": "color_images/gpt-4o/image_priors/pigeon_4_61bf181e_resized_grey/FG_100_seq.png"
     },
     {
-      "object": "shrimp",
+      "object": "alligator",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "pink",
-      "target_color": "pink",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/shrimp_4_e5d370a6_resized_pink/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/alligator_3_549188bb_resized_green/FG_055_seq.png"
     },
     {
       "object": "circle",

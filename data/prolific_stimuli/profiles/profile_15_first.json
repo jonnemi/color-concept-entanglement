@@ -32,15 +32,15 @@
       "image_path": "color_images/gpt-4o/image_priors/little_blue_heron_4_775a9164_resized_grey/BG_060_seq.png"
     },
     {
-      "object": "digital watch",
+      "object": "acoustic guitar",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/digital_watch_3_015799f8_resized_blue/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/acoustic_guitar_1_ab533cc0_resized_brown/FG_055_seq.png"
     },
     {
       "object": "flute",
@@ -625,15 +625,15 @@
       "image_path": "color_images/gpt-4o/image_priors/Pomeranian_1_be789852_resized_brown/FG_070_seq.png"
     },
     {
-      "object": "corn",
+      "object": "jaguar",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "yellow",
+      "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/corn_2_9ff217f3_resized_green/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/jaguar_4_a2624ff9_resized_yellow/FG_055_seq.png"
     },
     {
       "object": "lobster",
@@ -880,15 +880,15 @@
       "image_path": "color_images/gpt-4o/image_priors/apple_1_4c576907_resized_red/FG_010_seq.png"
     },
     {
-      "object": "flat-coated retriever",
+      "object": "hare",
       "stimulus_type": "counterfact",
-      "manipulation_color": "orange",
-      "target_color": "orange",
+      "manipulation_color": "yellow",
+      "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/flat-coated_retriever_3_52e2a611_resized_orange/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/hare_2_4cbe00ed_resized_yellow/FG_055_seq.png"
     },
     {
       "object": "waffle iron",
@@ -992,15 +992,15 @@
       "image_path": "shapes/shape_colored/hexagon_v2_red/FG_055_seq.png"
     },
     {
-      "object": "bat",
+      "object": "lizard",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/bat_(animal)_2_c58feb12_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/green_lizard_5_79432524_resized_green/FG_055_seq.png"
     },
     {
       "object": "pentagon",

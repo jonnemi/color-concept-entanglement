@@ -18,10 +18,10 @@
       "manipulation_color": "pink",
       "target_color": "pink",
       "variant_region": "BG",
-      "percent_colored": 1,
+      "percent_colored": 5,
       "mode": "seq",
-      "variant_label": "BG 1% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/Band_Aid_1_e73eed92_resized_pink/BG_001_seq.png"
+      "variant_label": "BG 5% (seq)",
+      "image_path": "color_images/gpt-4o/image_priors/Band_Aid_1_e73eed92_resized_pink/BG_005_seq.png"
     },
     {
       "question_type": "sanity",
@@ -60,10 +60,10 @@
       "manipulation_color": "blue",
       "target_color": "blue",
       "variant_region": "BG",
-      "percent_colored": 1,
+      "percent_colored": 5,
       "mode": "seq",
-      "variant_label": "BG 1% (seq)",
-      "image_path": "shapes/shape_colored/circle_v0_blue/BG_001_seq.png"
+      "variant_label": "BG 5% (seq)",
+      "image_path": "shapes/shape_colored/circle_v0_blue/BG_005_seq.png"
     },
     {
       "question_type": "sanity",
@@ -83,10 +83,10 @@
       "manipulation_color": "pink",
       "target_color": "pink",
       "variant_region": "BG",
-      "percent_colored": 2,
+      "percent_colored": 10,
       "mode": "seq",
-      "variant_label": "BG 2% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/Band_Aid_1_e73eed92_resized_pink/BG_002_seq.png"
+      "variant_label": "BG 10% (seq)",
+      "image_path": "color_images/gpt-4o/image_priors/Band_Aid_1_e73eed92_resized_pink/BG_010_seq.png"
     },
     {
       "question_type": "sanity",

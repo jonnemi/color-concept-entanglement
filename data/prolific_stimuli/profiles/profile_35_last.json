@@ -171,15 +171,15 @@
       "image_path": "shapes/shape_colored/triangle_v2_brown/FG_055_seq.png"
     },
     {
-      "object": "sewing machine",
+      "object": "shark",
       "stimulus_type": "counterfact",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "orange",
+      "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 100,
       "mode": "seq",
       "variant_label": "FG 100% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/sewing_machine_5_3e33c5c8_resized_yellow/FG_100_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/shark_5_3fe7d0c2_resized_orange/FG_100_seq.png"
     },
     {
       "object": "circle",
@@ -204,15 +204,15 @@
       "image_path": "shapes/shape_colored/circle_v3_yellow/FG_020_seq.png"
     },
     {
-      "object": "tow truck",
+      "object": "tricycle",
       "stimulus_type": "counterfact",
-      "manipulation_color": "purple",
-      "target_color": "purple",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 90,
       "mode": "seq",
       "variant_label": "FG 90% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/tow_truck_3_3fb95fa0_resized_purple/FG_090_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/tricycle_5_ff4a892c_resized_green/FG_090_seq.png"
     },
     {
       "object": "seaweed",
@@ -288,7 +288,7 @@
       "image_path": "color_images/gpt-4o/image_priors/walnut_2_a1599b1b_resized_brown/FG_050_seq.png"
     },
     {
-      "object": "piano",
+      "object": "bread",
       "stimulus_type": "correct_prior",
       "manipulation_color": "brown",
       "target_color": "brown",
@@ -296,7 +296,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/piano_4_cec4205a_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/bread_1_bb6e8d06_resized_brown/FG_055_seq.png"
     },
     {
       "object": "pentagon",
@@ -332,15 +332,15 @@
       "image_path": "shapes/shape_colored/pentagon_v0_purple/FG_030_seq.png"
     },
     {
-      "object": "beetle",
+      "object": "computer mouse",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "grey",
+      "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/beetle_4_e03c36fe_resized_green/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/mouse_(computer)_2_df53ad98_resized_grey/FG_055_seq.png"
     },
     {
       "object": "square",
@@ -509,15 +509,15 @@
       "image_path": "color_images/gpt-4o/image_priors/seaweed_3_a20cdafe_resized_green/FG_010_seq.png"
     },
     {
-      "object": "great white shark",
+      "object": "lizard",
       "stimulus_type": "counterfact",
-      "manipulation_color": "red",
-      "target_color": "red",
+      "manipulation_color": "pink",
+      "target_color": "pink",
       "variant_region": "FG",
       "percent_colored": 80,
       "mode": "seq",
       "variant_label": "FG 80% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/great_white_shark_4_c223edfe_resized_red/FG_080_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/green_lizard_5_79432524_resized_pink/FG_080_seq.png"
     },
     {
       "object": "triangle",
@@ -964,15 +964,15 @@
       "image_path": "shapes/shape_colored/pentagon_v1_yellow/FG_055_seq.png"
     },
     {
-      "object": "vulture",
+      "object": "fridge",
       "stimulus_type": "counterfact",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "yellow",
+      "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/vulture_1_2086d1c1_resized_green/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/fridge_5_c95cbde9_resized_yellow/FG_055_seq.png"
     },
     {
       "object": "lawn mower",
@@ -1140,7 +1140,7 @@
       "image_path": "shapes/shape_colored/square_v0_red/FG_040_seq.png"
     },
     {
-      "object": "cheeseburger",
+      "object": "squirrel",
       "stimulus_type": "correct_prior",
       "manipulation_color": "brown",
       "target_color": "brown",
@@ -1148,7 +1148,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/cheeseburger_1_57791783_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/squirrel_3_065470ea_resized_brown/FG_055_seq.png"
     },
     {
       "object": "golf ball",

@@ -32,15 +32,15 @@
       "image_path": "color_images/gpt-4o/image_priors/canary_3_aef458ff_resized_brown/FG_020_seq.png"
     },
     {
-      "object": "bison",
+      "object": "binoculars",
       "stimulus_type": "counterfact",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 90,
       "mode": "seq",
       "variant_label": "FG 90% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/bison_3_ff31d3bf_resized_blue/FG_090_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/binoculars_4_13f723de_resized_red/FG_090_seq.png"
     },
     {
       "object": "baseball",
@@ -338,15 +338,15 @@
       "image_path": "shapes/shape_colored/circle_v1_yellow/FG_000_seq.png"
     },
     {
-      "object": "baseball",
+      "object": "carrot",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "red",
-      "target_color": "red",
+      "manipulation_color": "orange",
+      "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/baseball_2_f1bd2e56_resized_red/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/carrot_1_c288d230_resized_orange/FG_055_seq.png"
     },
     {
       "object": "square",
@@ -548,15 +548,15 @@
       "image_path": "shapes/shape_colored/square_v2_orange/FG_055_seq.png"
     },
     {
-      "object": "plastic bag",
+      "object": "lawn mower",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/plastic_bag_1_60b6235f_resized_blue/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/lawn_mower_5_d5f853d5_resized_green/FG_055_seq.png"
     },
     {
       "object": "triangle",
@@ -581,15 +581,15 @@
       "image_path": "color_images/gpt-4o/image_priors/frog_4_ad92e1a9_resized_green/FG_050_seq.png"
     },
     {
-      "object": "orangutan",
+      "object": "pool table",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "orange",
-      "target_color": "orange",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/orangutan_1_36d17755_resized_orange/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/pool_table_2_12b5c00d_resized_brown/FG_055_seq.png"
     },
     {
       "object": "broccoli",
@@ -737,15 +737,15 @@
       "image_path": "color_images/gpt-4o/image_priors/mug_4_5308a46a_resized_red/FG_040_seq.png"
     },
     {
-      "object": "christmas stocking",
+      "object": "reflex camera",
       "stimulus_type": "counterfact",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "purple",
+      "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/Christmas_stocking_3_6e1cfabe_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/reflex_camera_1_bc049e04_resized_purple/FG_055_seq.png"
     },
     {
       "object": "triangle",
@@ -970,15 +970,15 @@
       "image_path": "color_images/gpt-4o/counterfact/broccoli_1_9487469d_resized_red/FG_030_seq.png"
     },
     {
-      "object": "boat",
+      "object": "bluejay",
       "stimulus_type": "counterfact",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "orange",
+      "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 100,
       "mode": "seq",
       "variant_label": "FG 100% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/boat_2_a24f9044_resized_green/FG_100_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/bluejay_3_21fbbc11_resized_orange/FG_100_seq.png"
     },
     {
       "object": "bear",

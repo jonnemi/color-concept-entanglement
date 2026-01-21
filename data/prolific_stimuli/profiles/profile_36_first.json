@@ -188,15 +188,15 @@
       "image_path": "shapes/shape_colored/hexagon_v0_purple/FG_100_seq.png"
     },
     {
-      "object": "gopher",
+      "object": "pigeon",
       "stimulus_type": "counterfact",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "pink",
+      "target_color": "pink",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/gopher_1_84a9cd8b_resized_yellow/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/pigeon_4_61bf181e_resized_pink/FG_055_seq.png"
     },
     {
       "object": "flute",
@@ -349,15 +349,15 @@
       "image_path": "shapes/shape_colored/pentagon_v1_pink/FG_005_seq.png"
     },
     {
-      "object": "hippopotamus",
+      "object": "asparagus",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "grey",
-      "target_color": "grey",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/hippopotamus_3_8a2a39de_resized_grey/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/asparagus_3_14687666_resized_green/FG_055_seq.png"
     },
     {
       "object": "pomeranian",
@@ -814,15 +814,15 @@
       "image_path": "color_images/gpt-4o/image_priors/Sealyham_terrier_1_be54a4a0_resized_grey/FG_010_seq.png"
     },
     {
-      "object": "grapefruit",
+      "object": "dingo",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "orange",
-      "target_color": "orange",
+      "manipulation_color": "grey",
+      "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/grapefruit_2_40b2df77_resized_orange/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/dingo_2_26a21c78_resized_grey/FG_055_seq.png"
     },
     {
       "object": "square",
@@ -1113,15 +1113,15 @@
       "image_path": "color_images/gpt-4o/image_priors/moth_1_90c32965_resized_brown/FG_000_seq.png"
     },
     {
-      "object": "ground beetle",
+      "object": "carrot",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "orange",
+      "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/ground_beetle_1_ec844287_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/carrot_1_c288d230_resized_orange/FG_055_seq.png"
     },
     {
       "object": "square",

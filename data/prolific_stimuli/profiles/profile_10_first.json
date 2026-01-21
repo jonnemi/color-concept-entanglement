@@ -188,7 +188,7 @@
       "image_path": "color_images/gpt-4o/image_priors/ant_4_96b67bf0_resized_red/FG_100_seq.png"
     },
     {
-      "object": "walnut",
+      "object": "pretzel",
       "stimulus_type": "correct_prior",
       "manipulation_color": "brown",
       "target_color": "brown",
@@ -196,7 +196,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/walnut_2_a1599b1b_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/pretzel_2_f0d079a5_resized_brown/FG_055_seq.png"
     },
     {
       "object": "apple",
@@ -210,26 +210,26 @@
       "image_path": "color_images/gpt-4o/image_priors/apple_1_4c576907_resized_red/FG_060_seq.png"
     },
     {
-      "object": "corn",
+      "object": "tile roof",
       "stimulus_type": "counterfact",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "purple",
+      "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/corn_2_9ff217f3_resized_blue/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/tile_roof_2_f5edd85c_resized_purple/FG_055_seq.png"
     },
     {
-      "object": "tick",
+      "object": "rubber eraser",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "pink",
+      "target_color": "pink",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/tick_1_6846a63c_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/rubber_eraser_4_d9f7256e_resized_pink/FG_055_seq.png"
     },
     {
       "object": "circle",
@@ -393,7 +393,7 @@
       "image_path": "shapes/shape_colored/circle_v4_red/FG_040_seq.png"
     },
     {
-      "object": "moth",
+      "object": "monarch",
       "stimulus_type": "counterfact",
       "manipulation_color": "pink",
       "target_color": "pink",
@@ -401,7 +401,7 @@
       "percent_colored": 80,
       "mode": "seq",
       "variant_label": "FG 80% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/moth_1_90c32965_resized_pink/FG_080_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/monarch_5_6c88323e_resized_pink/FG_080_seq.png"
     },
     {
       "object": "pentagon",
@@ -415,7 +415,7 @@
       "image_path": "shapes/shape_colored/pentagon_v1_pink/FG_055_seq.png"
     },
     {
-      "object": "golf ball",
+      "object": "goldfish",
       "stimulus_type": "counterfact",
       "manipulation_color": "pink",
       "target_color": "pink",
@@ -423,7 +423,7 @@
       "percent_colored": 90,
       "mode": "seq",
       "variant_label": "FG 90% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/golf_ball_5_12adffd1_resized_pink/FG_090_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/goldfish_2_7ef7f0d5_resized_pink/FG_090_seq.png"
     },
     {
       "object": "pentagon",
@@ -636,15 +636,15 @@
       "image_path": "color_images/gpt-4o/image_priors/rose_3_64713026_resized_red/FG_070_seq.png"
     },
     {
-      "object": "forklift",
+      "object": "canary",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/forklift_3_0064e694_resized_yellow/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/canary_3_aef458ff_resized_brown/FG_055_seq.png"
     },
     {
       "object": "gorilla",
@@ -658,15 +658,15 @@
       "image_path": "color_images/gpt-4o/image_priors/gorilla_3_bcd1ec66_resized_grey/FG_030_seq.png"
     },
     {
-      "object": "elephant",
+      "object": "eggplant",
       "stimulus_type": "counterfact",
-      "manipulation_color": "orange",
-      "target_color": "orange",
+      "manipulation_color": "yellow",
+      "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 60,
       "mode": "seq",
       "variant_label": "FG 60% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/elephant_2_d9a9678b_resized_orange/FG_060_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/eggplant_1_37ac0728_resized_yellow/FG_060_seq.png"
     },
     {
       "object": "hexagon",
@@ -891,15 +891,15 @@
       "image_path": "shapes/shape_colored/triangle_v3_pink/FG_090_seq.png"
     },
     {
-      "object": "rattlesnake",
+      "object": "radio",
       "stimulus_type": "counterfact",
-      "manipulation_color": "pink",
-      "target_color": "pink",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 70,
       "mode": "seq",
       "variant_label": "FG 70% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/rattlesnake_1_b5817dd0_resized_pink/FG_070_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/radio_3_4d87b11a_resized_green/FG_070_seq.png"
     },
     {
       "object": "fox",
@@ -992,15 +992,15 @@
       "image_path": "shapes/shape_colored/circle_v3_orange/FG_005_seq.png"
     },
     {
-      "object": "tiger shark",
+      "object": "tiger",
       "stimulus_type": "counterfact",
-      "manipulation_color": "orange",
-      "target_color": "orange",
+      "manipulation_color": "purple",
+      "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 100,
       "mode": "seq",
       "variant_label": "FG 100% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/tiger_shark_4_92ee8a5f_resized_orange/FG_100_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/tiger_5_875b6e5b_resized_purple/FG_100_seq.png"
     },
     {
       "object": "pentagon",

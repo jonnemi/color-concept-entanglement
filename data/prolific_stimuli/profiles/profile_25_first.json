@@ -78,15 +78,15 @@
       "image_path": "color_images/gpt-4o/counterfact/cloud_3_29898571_resized_yellow/FG_040_seq.png"
     },
     {
-      "object": "toad",
+      "object": "doberman",
       "stimulus_type": "counterfact",
-      "manipulation_color": "pink",
-      "target_color": "pink",
+      "manipulation_color": "purple",
+      "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/toad_3_f4ffdad4_resized_pink/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/Doberman_1_d774b749_resized_purple/FG_055_seq.png"
     },
     {
       "object": "cheeseburger",
@@ -459,15 +459,15 @@
       "image_path": "color_images/gpt-4o/image_priors/pine_5_81b3902d_resized_green/FG_030_seq.png"
     },
     {
-      "object": "tick",
+      "object": "tile roof",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/tick_1_6846a63c_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/tile_roof_2_f5edd85c_resized_red/FG_055_seq.png"
     },
     {
       "object": "triangle",
@@ -748,15 +748,15 @@
       "image_path": "shapes/shape_colored/hexagon_v0_brown/BG_060_seq.png"
     },
     {
-      "object": "seaweed",
+      "object": "sewing machine",
       "stimulus_type": "counterfact",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "yellow",
+      "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 70,
       "mode": "seq",
       "variant_label": "FG 70% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/seaweed_3_a20cdafe_resized_blue/FG_070_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/sewing_machine_5_3e33c5c8_resized_yellow/FG_070_seq.png"
     },
     {
       "object": "bus",
@@ -770,15 +770,15 @@
       "image_path": "color_images/gpt-4o/image_priors/bus_5_babef635_resized_yellow/FG_010_seq.png"
     },
     {
-      "object": "reflex camera",
+      "object": "coho",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "grey",
-      "target_color": "grey",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/reflex_camera_1_bc049e04_resized_grey/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/coho_1_a64d7b7a_resized_green/FG_055_seq.png"
     },
     {
       "object": "sardine",
@@ -858,15 +858,15 @@
       "image_path": "shapes/shape_colored/triangle_v3_purple/FG_010_seq.png"
     },
     {
-      "object": "baseball",
+      "object": "basketball",
       "stimulus_type": "counterfact",
-      "manipulation_color": "pink",
-      "target_color": "pink",
+      "manipulation_color": "purple",
+      "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 100,
       "mode": "seq",
       "variant_label": "FG 100% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/baseball_2_f1bd2e56_resized_pink/FG_100_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/basketball_3_e20e77ec_resized_purple/FG_100_seq.png"
     },
     {
       "object": "triangle",
@@ -891,15 +891,15 @@
       "image_path": "shapes/shape_colored/circle_v2_red/FG_040_seq.png"
     },
     {
-      "object": "french horn",
+      "object": "irish setter",
       "stimulus_type": "counterfact",
-      "manipulation_color": "red",
-      "target_color": "red",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 90,
       "mode": "seq",
       "variant_label": "FG 90% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/French_horn_1_961d420b_resized_red/FG_090_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/Irish_setter_3_4488adb8_resized_green/FG_090_seq.png"
     },
     {
       "object": "great white shark",
@@ -948,15 +948,15 @@
       "correct_response": "Neither Agree nor Disagree"
     },
     {
-      "object": "forklift",
+      "object": "cockroach",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/forklift_3_0064e694_resized_yellow/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/cockroach_1_057b48ee_resized_brown/FG_055_seq.png"
     },
     {
       "object": "triangle",
@@ -1036,15 +1036,15 @@
       "image_path": "shapes/shape_colored/square_v3_yellow/FG_040_seq.png"
     },
     {
-      "object": "thimble",
+      "object": "tick",
       "stimulus_type": "counterfact",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "purple",
+      "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 60,
       "mode": "seq",
       "variant_label": "FG 60% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/thimble_4_d96ac4c9_resized_blue/FG_060_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/tick_1_6846a63c_resized_purple/FG_060_seq.png"
     },
     {
       "object": "hexagon",

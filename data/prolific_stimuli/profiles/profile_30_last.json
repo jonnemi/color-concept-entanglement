@@ -215,15 +215,15 @@
       "image_path": "color_images/gpt-4o/image_priors/tomato_2_41acc4b2_resized_red/BG_060_seq.png"
     },
     {
-      "object": "strawberry",
+      "object": "mouse",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "red",
-      "target_color": "red",
+      "manipulation_color": "grey",
+      "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/strawberry_1_23ac2bc5_resized_red/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/mouse_2_cf4ddb3c_resized_grey/FG_055_seq.png"
     },
     {
       "object": "bullfrog",
@@ -453,7 +453,7 @@
       "image_path": "color_images/gpt-4o/image_priors/piano_4_cec4205a_resized_brown/FG_060_seq.png"
     },
     {
-      "object": "waffle iron",
+      "object": "faucet",
       "stimulus_type": "counterfact",
       "manipulation_color": "pink",
       "target_color": "pink",
@@ -461,7 +461,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/waffle_iron_1_2f147e81_resized_pink/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/faucet_1_d53206b7_resized_pink/FG_055_seq.png"
     },
     {
       "object": "impala",
@@ -619,15 +619,15 @@
       "image_path": "color_images/gpt-4o/image_priors/axolotl_4_154164db_resized_pink/FG_020_seq.png"
     },
     {
-      "object": "tiger",
+      "object": "tiger shark",
       "stimulus_type": "counterfact",
-      "manipulation_color": "purple",
-      "target_color": "purple",
+      "manipulation_color": "orange",
+      "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 100,
       "mode": "seq",
       "variant_label": "FG 100% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/tiger_5_875b6e5b_resized_purple/FG_100_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/tiger_shark_4_92ee8a5f_resized_orange/FG_100_seq.png"
     },
     {
       "object": "hexagon",
@@ -885,15 +885,15 @@
       "image_path": "shapes/shape_colored/triangle_v0_green/FG_005_seq.png"
     },
     {
-      "object": "daisy",
+      "object": "picket fence",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/daisy_2_9f5fd00f_resized_yellow/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/picket_fence_2_61569d00_resized_brown/FG_055_seq.png"
     },
     {
       "object": "square",
@@ -907,15 +907,15 @@
       "image_path": "shapes/shape_colored/square_v1_blue/FG_020_seq.png"
     },
     {
-      "object": "bread",
+      "object": "tricycle",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/bread_1_bb6e8d06_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/tricycle_5_ff4a892c_resized_red/FG_055_seq.png"
     },
     {
       "object": "wombat",
@@ -953,15 +953,15 @@
       "image_path": "shapes/shape_colored/hexagon_v1_red/FG_080_seq.png"
     },
     {
-      "object": "turtle",
+      "object": "typewriter",
       "stimulus_type": "counterfact",
-      "manipulation_color": "purple",
-      "target_color": "purple",
+      "manipulation_color": "yellow",
+      "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 70,
       "mode": "seq",
       "variant_label": "FG 70% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/turtle_3_42e6cc4c_resized_purple/FG_070_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/typewriter_4_0a946944_resized_yellow/FG_070_seq.png"
     },
     {
       "object": "housefly",

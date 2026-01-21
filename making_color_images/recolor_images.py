@@ -132,8 +132,8 @@ def recolor_region(
     """
     Recoloring with:
       - proportional patch contribution
-      - random but reproducible patch order (seeded)
-      - independent & sequential modes preserved
+      - random but reproducible patch order (seed)
+      - independent & sequential modes
     """
 
     flat = arr_rgb.reshape(-1, 3)
@@ -146,34 +146,43 @@ def recolor_region(
     if need <= 0:
         return arr_rgb
 
-    # PIXEL-WISE 
+    # PIXEL-WISE MODE
     if not use_patches:
         available = idx_flat[~colored_mask[idx_flat]]
         if len(available) == 0:
             return arr_rgb
 
-        chosen = rng.choice(available, size=min(need, len(available)), replace=False)
+        chosen = rng.choice(
+            available,
+            size=min(need, len(available)),
+            replace=False,
+        )
 
         for fi in chosen:
             r, g, b = flat[fi]
             flat[fi] = color_remap((int(r), int(g), int(b)), target_color)
-        colored_mask[chosen] = True
+            colored_mask[fi] = True
+
         return arr_rgb
 
-    # PATCH-WISE
-
+  
+    # PATCH-WISE MODE (FIXED)
     rows = idx_flat // W
     cols = idx_flat % W
     patch_rows = rows // patch_size
     patch_cols = cols // patch_size
 
     patch_ids = np.stack([patch_rows, patch_cols], axis=1)
-    patch_ids_unique, inverse = np.unique(patch_ids, axis=0, return_inverse=True)
+    patch_ids_unique, inverse = np.unique(
+        patch_ids, axis=0, return_inverse=True
+    )
 
-    # FG pixel count per patch
-    patch_fg_counts = np.bincount(inverse)
+    # Precompute patch_index 
+    patch_to_pixels = [[] for _ in range(len(patch_ids_unique))]
+    for flat_i, p_i in zip(idx_flat, inverse):
+        patch_to_pixels[p_i].append(flat_i)
 
-    # Random but reproducible order
+    # Random but reproducible patch order
     order = np.arange(len(patch_ids_unique))
     rng.shuffle(order)
 
@@ -181,32 +190,29 @@ def recolor_region(
 
     for patch_index in order:
 
-        pr, pc = patch_ids_unique[patch_index]
-        patch_fg = patch_fg_counts[patch_index]
-
-        # If adding this patch exceeds target:
-        # still recolor full patch
-        # but this must be the final patch
         if recolored >= need:
             break
 
-        # Collect FG pixels in this patch
-        in_patch = (inverse == patch_index)
-        patch_pixels = idx_flat[in_patch]
+        patch_pixels = patch_to_pixels[patch_index]
 
-        # Exclude already colored pixels
-        patch_pixels = patch_pixels[~colored_mask[patch_pixels]]
-        if len(patch_pixels) == 0:
+        # Exclude already-colored pixels
+        patch_pixels = [
+            fi for fi in patch_pixels if not colored_mask[fi]
+        ]
+
+        if not patch_pixels:
             continue
 
-        # Recolor ALL FG pixels in this patch (never partial)
+        # Recolor ALL FG pixels in this patch
         for fi in patch_pixels:
             r, g, b = flat[fi]
-            flat[fi] = color_remap((int(r), int(g), int(b)), target_color)
+            flat[fi] = color_remap(
+                (int(r), int(g), int(b)), target_color
+            )
             colored_mask[fi] = True
             recolored += 1
 
-        # stop after finishing this full patch
+        # Stop after finishing this full patch
         if recolored >= need:
             break
 
@@ -273,7 +279,7 @@ def generate_variants(
         colored_fg = np.zeros(H * W, dtype=bool)
     else:
         colored_fg = None  # not used
-
+        
     for pct in pct_list:
 
         if mode == "independent":
@@ -339,7 +345,6 @@ def generate_variants(
 
         if mode == "sequential":
             arr_seq = arr
-
         
         out_path = color_dir / f"BG_{pct:03d}_{suffix}.png"
         Image.fromarray(arr).save(out_path)

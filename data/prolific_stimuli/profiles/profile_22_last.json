@@ -464,15 +464,15 @@
       "image_path": "shapes/shape_colored/square_v4_yellow/BG_060_seq.png"
     },
     {
-      "object": "bluejay",
+      "object": "rocket",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/bluejay_3_21fbbc11_resized_blue/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/rocket_3_1f9b123d_resized_red/FG_055_seq.png"
     },
     {
       "object": "hexagon",
@@ -720,15 +720,15 @@
       "correct_response": "Strongly Disagree"
     },
     {
-      "object": "brick",
+      "object": "acorn",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "grey",
-      "target_color": "grey",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/brick_4_b7633a9d_resized_grey/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/acorn_1_7af9cac8_resized_brown/FG_055_seq.png"
     },
     {
       "object": "carrot",
@@ -1096,26 +1096,26 @@
       "image_path": "color_images/gpt-4o/image_priors/dolphin_5_d7fefaa3_resized_grey/BG_020_seq.png"
     },
     {
-      "object": "lawn mower",
+      "object": "kangaroo",
       "stimulus_type": "counterfact",
-      "manipulation_color": "purple",
-      "target_color": "purple",
+      "manipulation_color": "green",
+      "target_color": "green",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/lawn_mower_5_d5f853d5_resized_purple/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/kangaroo_1_ea795cb8_resized_green/FG_055_seq.png"
     },
     {
-      "object": "ant",
+      "object": "spoonbill",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "red",
-      "target_color": "red",
+      "manipulation_color": "grey",
+      "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/ant_4_96b67bf0_resized_red/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/spoonbill_2_c0c043d5_resized_grey/FG_055_seq.png"
     },
     {
       "object": "broccoli",

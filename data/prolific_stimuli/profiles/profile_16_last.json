@@ -409,15 +409,15 @@
       "image_path": "color_images/gpt-4o/image_priors/oak_3_6df01d6f_resized_green/FG_010_seq.png"
     },
     {
-      "object": "camel",
+      "object": "blackbird",
       "stimulus_type": "counterfact",
-      "manipulation_color": "red",
-      "target_color": "red",
+      "manipulation_color": "orange",
+      "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/camel_1_d4d473fe_resized_red/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/blackbird_1_4a3c037e_resized_orange/FG_055_seq.png"
     },
     {
       "object": "triangle",
@@ -608,15 +608,15 @@
       "image_path": "color_images/gpt-4o/image_priors/strainer_4_c5445557_resized_blue/FG_000_seq.png"
     },
     {
-      "object": "rubber eraser",
+      "object": "piano",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "pink",
-      "target_color": "pink",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/rubber_eraser_4_d9f7256e_resized_pink/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/piano_4_cec4205a_resized_brown/FG_055_seq.png"
     },
     {
       "object": "boat",
@@ -830,15 +830,15 @@
       "image_path": "shapes/shape_colored/hexagon_v3_yellow/FG_005_seq.png"
     },
     {
-      "object": "dandelion",
+      "object": "fox",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "orange",
+      "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/dandelion_1_7f3c1397_resized_green/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/fox_2_52cadfa8_resized_orange/FG_055_seq.png"
     },
     {
       "object": "monarch",
@@ -1052,7 +1052,7 @@
       "image_path": "shapes/shape_colored/circle_v2_brown/FG_040_seq.png"
     },
     {
-      "object": "tick",
+      "object": "giraffe",
       "stimulus_type": "correct_prior",
       "manipulation_color": "brown",
       "target_color": "brown",
@@ -1060,7 +1060,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/tick_1_6846a63c_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/giraffe_1_785f537c_resized_brown/FG_055_seq.png"
     },
     {
       "object": "hexagon",

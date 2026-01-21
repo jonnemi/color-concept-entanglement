@@ -72,15 +72,15 @@
       "image_path": "color_images/gpt-4o/image_priors/tomato_2_41acc4b2_resized_red/FG_000_seq.png"
     },
     {
-      "object": "golf ball",
+      "object": "apple",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/golf_ball_5_12adffd1_resized_yellow/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/apple_1_4c576907_resized_red/FG_055_seq.png"
     },
     {
       "object": "tiger",
@@ -277,15 +277,15 @@
       "correct_response": "BLUE"
     },
     {
-      "object": "tiger",
+      "object": "fox",
       "stimulus_type": "counterfact",
-      "manipulation_color": "purple",
-      "target_color": "purple",
+      "manipulation_color": "yellow",
+      "target_color": "yellow",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/tiger_5_875b6e5b_resized_purple/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/fox_2_52cadfa8_resized_yellow/FG_055_seq.png"
     },
     {
       "object": "beets",
@@ -365,15 +365,15 @@
       "image_path": "color_images/gpt-4o/image_priors/green_snake_4_1413661e_resized_green/FG_005_seq.png"
     },
     {
-      "object": "bullfrog",
+      "object": "gun",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/bullfrog_4_55480f4e_resized_green/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/gun_2_c10308e4_resized_brown/FG_055_seq.png"
     },
     {
       "object": "pentagon",
@@ -597,15 +597,15 @@
       "image_path": "color_images/gpt-4o/image_priors/lycaenid_2_e1c5f46f_resized_brown/FG_030_seq.png"
     },
     {
-      "object": "boat",
+      "object": "trailer truck",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/boat_2_a24f9044_resized_blue/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/trailer_truck_3_44d969b6_resized_red/FG_055_seq.png"
     },
     {
       "object": "square",
@@ -731,7 +731,7 @@
       "image_path": "color_images/gpt-4o/image_priors/hartebeest_3_57d59c1c_resized_brown/FG_080_seq.png"
     },
     {
-      "object": "joystick",
+      "object": "game controller",
       "stimulus_type": "correct_prior",
       "manipulation_color": "blue",
       "target_color": "blue",
@@ -1118,15 +1118,15 @@
       "image_path": "color_images/gpt-4o/image_priors/Norwegian_elkhound_5_5d37b261_resized_grey/FG_070_seq.png"
     },
     {
-      "object": "lycaenid",
+      "object": "mantis",
       "stimulus_type": "counterfact",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "purple",
+      "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 60,
       "mode": "seq",
       "variant_label": "FG 60% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/lycaenid_2_e1c5f46f_resized_green/FG_060_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/mantis_1_5a1b065a_resized_purple/FG_060_seq.png"
     },
     {
       "object": "acorn",

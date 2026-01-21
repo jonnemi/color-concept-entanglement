@@ -155,7 +155,7 @@
       "image_path": "shapes/shape_colored/pentagon_v4_orange/FG_020_seq.png"
     },
     {
-      "object": "cheese",
+      "object": "wombat",
       "stimulus_type": "counterfact",
       "manipulation_color": "green",
       "target_color": "green",
@@ -163,7 +163,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/cheese_1_78f6ea0b_resized_green/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/wombat_3_9263a7ff_resized_green/FG_055_seq.png"
     },
     {
       "object": "wheelbarrow",
@@ -415,7 +415,7 @@
       "image_path": "color_images/gpt-4o/counterfact/bluejay_3_21fbbc11_resized_orange/FG_005_seq.png"
     },
     {
-      "object": "keyboard",
+      "object": "lycaenid",
       "stimulus_type": "correct_prior",
       "manipulation_color": "brown",
       "target_color": "brown",
@@ -423,29 +423,29 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/keyboard_(musical)_3_f53f5791_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/lycaenid_2_e1c5f46f_resized_brown/FG_055_seq.png"
     },
     {
-      "object": "picket fence",
+      "object": "basketball",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "orange",
+      "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/picket_fence_2_61569d00_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/basketball_3_e20e77ec_resized_orange/FG_055_seq.png"
     },
     {
-      "object": "tuba",
+      "object": "trumpet",
       "stimulus_type": "counterfact",
-      "manipulation_color": "red",
-      "target_color": "red",
+      "manipulation_color": "blue",
+      "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 100,
       "mode": "seq",
       "variant_label": "FG 100% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/tuba_2_35148fb8_resized_red/FG_100_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/trumpet_2_a3181014_resized_blue/FG_100_seq.png"
     },
     {
       "object": "hexagon",
@@ -625,7 +625,7 @@
       "image_path": "shapes/shape_colored/square_v4_blue/FG_005_seq.png"
     },
     {
-      "object": "envelope",
+      "object": "elephant",
       "stimulus_type": "counterfact",
       "manipulation_color": "orange",
       "target_color": "orange",
@@ -633,7 +633,7 @@
       "percent_colored": 90,
       "mode": "seq",
       "variant_label": "FG 90% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/envelope_1_36c3c6c1_resized_orange/FG_090_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/elephant_2_d9a9678b_resized_orange/FG_090_seq.png"
     },
     {
       "object": "dove",
@@ -669,15 +669,15 @@
       "image_path": "color_images/gpt-4o/image_priors/waffle_iron_1_2f147e81_resized_red/FG_005_seq.png"
     },
     {
-      "object": "penguin",
+      "object": "paper towel",
       "stimulus_type": "counterfact",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "pink",
+      "target_color": "pink",
       "variant_region": "FG",
       "percent_colored": 80,
       "mode": "seq",
       "variant_label": "FG 80% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/penguin_4_ae245348_resized_green/FG_080_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/paper_towel_1_e4527c1a_resized_pink/FG_080_seq.png"
     },
     {
       "object": "dial telephone",
@@ -803,15 +803,15 @@
       "image_path": "color_images/gpt-4o/image_priors/Old_English_sheepdog_4_51cd66d5_resized_grey/FG_100_seq.png"
     },
     {
-      "object": "tow truck",
+      "object": "tomato",
       "stimulus_type": "counterfact",
-      "manipulation_color": "purple",
-      "target_color": "purple",
+      "manipulation_color": "blue",
+      "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 70,
       "mode": "seq",
       "variant_label": "FG 70% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/tow_truck_3_3fb95fa0_resized_purple/FG_070_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/tomato_2_41acc4b2_resized_blue/FG_070_seq.png"
     },
     {
       "object": "square",
@@ -1025,15 +1025,15 @@
       "image_path": "shapes/shape_colored/circle_v3_orange/FG_070_seq.png"
     },
     {
-      "object": "lawn mower",
+      "object": "keyboard",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/lawn_mower_5_d5f853d5_resized_green/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/keyboard_(musical)_3_f53f5791_resized_brown/FG_055_seq.png"
     },
     {
       "object": "square",
@@ -1124,7 +1124,7 @@
       "image_path": "color_images/gpt-4o/image_priors/wheelbarrow_2_dccdaa56_resized_green/FG_000_seq.png"
     },
     {
-      "object": "joystick",
+      "object": "game controller",
       "stimulus_type": "correct_prior",
       "manipulation_color": "blue",
       "target_color": "blue",

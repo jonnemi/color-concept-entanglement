@@ -144,15 +144,15 @@
       "image_path": "color_images/gpt-4o/image_priors/screw_2_f5051efb_resized_grey/BG_040_seq.png"
     },
     {
-      "object": "hornet",
+      "object": "tile roof",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/hornet_1_728eaad6_resized_yellow/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/tile_roof_2_f5edd85c_resized_red/FG_055_seq.png"
     },
     {
       "object": "cheeseburger",
@@ -243,15 +243,15 @@
       "image_path": "color_images/gpt-4o/counterfact/pill_bottle_1_9d40f238_resized_purple/FG_020_seq.png"
     },
     {
-      "object": "golf ball",
+      "object": "cello",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/golf_ball_5_12adffd1_resized_yellow/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/cello_1_b59efadb_resized_brown/FG_055_seq.png"
     },
     {
       "object": "vulture",
@@ -803,15 +803,15 @@
       "image_path": "color_images/gpt-4o/image_priors/piano_4_cec4205a_resized_brown/FG_005_seq.png"
     },
     {
-      "object": "mantis",
+      "object": "jaguar",
       "stimulus_type": "counterfact",
-      "manipulation_color": "purple",
-      "target_color": "purple",
+      "manipulation_color": "blue",
+      "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/mantis_1_5a1b065a_resized_purple/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/jaguar_4_a2624ff9_resized_blue/FG_055_seq.png"
     },
     {
       "object": "circle",
@@ -948,15 +948,15 @@
       "correct_response": "Neither Agree nor Disagree"
     },
     {
-      "object": "wombat",
+      "object": "tiger",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "orange",
+      "target_color": "orange",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/wombat_3_9263a7ff_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/tiger_5_875b6e5b_resized_orange/FG_055_seq.png"
     },
     {
       "object": "celery",

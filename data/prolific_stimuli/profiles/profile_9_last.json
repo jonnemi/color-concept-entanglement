@@ -37,15 +37,15 @@
       "image_path": "color_images/gpt-4o/counterfact/axolotl_4_154164db_resized_yellow/FG_010_seq.png"
     },
     {
-      "object": "spotted salamander",
+      "object": "tricycle",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/spotted_salamander_3_9fbddb37_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/tricycle_5_ff4a892c_resized_red/FG_055_seq.png"
     },
     {
       "question_type": "sanity",
@@ -365,15 +365,15 @@
       "image_path": "shapes/shape_colored/square_v4_blue/FG_000_seq.png"
     },
     {
-      "object": "binoculars",
+      "object": "gasmask",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "grey",
+      "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/binoculars_4_13f723de_resized_green/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/gasmask_2_6f8dba75_resized_grey/FG_055_seq.png"
     },
     {
       "object": "hexagon",
@@ -387,15 +387,15 @@
       "image_path": "shapes/shape_colored/hexagon_v3_green/FG_000_seq.png"
     },
     {
-      "object": "ptarmigan",
+      "object": "garlic",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "purple",
+      "target_color": "purple",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/ptarmigan_2_98df7bf1_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/garlic_1_f21e0c13_resized_purple/FG_055_seq.png"
     },
     {
       "object": "square",
@@ -1074,15 +1074,15 @@
       "image_path": "color_images/gpt-4o/image_priors/vulture_1_2086d1c1_resized_brown/FG_090_seq.png"
     },
     {
-      "object": "paper towel",
+      "object": "cabbage butterfly",
       "stimulus_type": "counterfact",
-      "manipulation_color": "pink",
-      "target_color": "pink",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/paper_towel_1_e4527c1a_resized_pink/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/cabbage_butterfly_1_52c830b7_resized_red/FG_055_seq.png"
     },
     {
       "object": "seaweed",

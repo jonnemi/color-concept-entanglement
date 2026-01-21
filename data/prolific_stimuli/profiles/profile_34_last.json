@@ -365,15 +365,15 @@
       "image_path": "color_images/gpt-4o/counterfact/little_blue_heron_4_775a9164_resized_yellow/FG_070_seq.png"
     },
     {
-      "object": "hartebeest",
+      "object": "rooster",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "brown",
-      "target_color": "brown",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/hartebeest_3_57d59c1c_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/rooster_3_c624c8db_resized_red/FG_055_seq.png"
     },
     {
       "object": "pentagon",
@@ -453,15 +453,15 @@
       "image_path": "color_images/gpt-4o/counterfact/cabbage_butterfly_1_52c830b7_resized_red/FG_040_seq.png"
     },
     {
-      "object": "grapefruit",
+      "object": "picket fence",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "orange",
-      "target_color": "orange",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/grapefruit_2_40b2df77_resized_orange/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/picket_fence_2_61569d00_resized_brown/FG_055_seq.png"
     },
     {
       "object": "sealyham terrier",
@@ -1030,15 +1030,15 @@
       "image_path": "color_images/gpt-4o/image_priors/armadillo_3_76675318_resized_brown/FG_080_seq.png"
     },
     {
-      "object": "pomeranian",
+      "object": "rottweiler",
       "stimulus_type": "counterfact",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "pink",
+      "target_color": "pink",
       "variant_region": "FG",
       "percent_colored": 90,
       "mode": "seq",
       "variant_label": "FG 90% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/Pomeranian_1_be789852_resized_blue/FG_090_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/Rottweiler_4_131e8b4b_resized_pink/FG_090_seq.png"
     },
     {
       "object": "triangle",
@@ -1052,15 +1052,15 @@
       "image_path": "shapes/shape_colored/triangle_v3_blue/FG_030_seq.png"
     },
     {
-      "object": "grapefruit",
+      "object": "french horn",
       "stimulus_type": "counterfact",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "red",
+      "target_color": "red",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/grapefruit_2_40b2df77_resized_blue/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/French_horn_1_961d420b_resized_red/FG_055_seq.png"
     },
     {
       "object": "square",
@@ -1096,15 +1096,15 @@
       "image_path": "shapes/shape_colored/triangle_v0_green/FG_055_seq.png"
     },
     {
-      "object": "cheese",
+      "object": "dalmatian",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "grey",
+      "target_color": "grey",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/cheese_1_78f6ea0b_resized_yellow/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/dalmatian_2_266c20b5_resized_grey/FG_055_seq.png"
     },
     {
       "object": "circle",

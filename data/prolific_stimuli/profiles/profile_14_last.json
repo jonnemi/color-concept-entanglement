@@ -61,15 +61,15 @@
       "correct_response": "Strongly Disagree"
     },
     {
-      "object": "gopher",
+      "object": "golf ball",
       "stimulus_type": "counterfact",
-      "manipulation_color": "yellow",
-      "target_color": "yellow",
+      "manipulation_color": "pink",
+      "target_color": "pink",
       "variant_region": "FG",
       "percent_colored": 90,
       "mode": "seq",
       "variant_label": "FG 90% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/gopher_1_84a9cd8b_resized_yellow/FG_090_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/golf_ball_5_12adffd1_resized_pink/FG_090_seq.png"
     },
     {
       "object": "circle",
@@ -138,15 +138,15 @@
       "image_path": "shapes/shape_colored/hexagon_v2_blue/FG_100_seq.png"
     },
     {
-      "object": "canary",
+      "object": "snail",
       "stimulus_type": "counterfact",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "pink",
+      "target_color": "pink",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/canary_3_aef458ff_resized_green/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/snail_1_0e2ab1c2_resized_pink/FG_055_seq.png"
     },
     {
       "object": "old english sheepdog",
@@ -226,15 +226,15 @@
       "image_path": "shapes/shape_colored/pentagon_v4_purple/FG_040_seq.png"
     },
     {
-      "object": "corn",
+      "object": "ostrich",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "brown",
+      "target_color": "brown",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/corn_2_9ff217f3_resized_green/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/ostrich_5_c53562f4_resized_brown/FG_055_seq.png"
     },
     {
       "object": "pentagon",
@@ -332,7 +332,7 @@
       "image_path": "shapes/shape_colored/hexagon_v3_brown/FG_080_seq.png"
     },
     {
-      "object": "joystick",
+      "object": "game controller",
       "stimulus_type": "correct_prior",
       "manipulation_color": "blue",
       "target_color": "blue",
@@ -354,15 +354,15 @@
       "image_path": "color_images/gpt-4o/image_priors/frog_4_ad92e1a9_resized_green/FG_010_seq.png"
     },
     {
-      "object": "gorilla",
+      "object": "plastic bag",
       "stimulus_type": "correct_prior",
-      "manipulation_color": "grey",
-      "target_color": "grey",
+      "manipulation_color": "blue",
+      "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/gorilla_3_bcd1ec66_resized_grey/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/plastic_bag_1_60b6235f_resized_blue/FG_055_seq.png"
     },
     {
       "object": "orangutan",
@@ -509,15 +509,15 @@
       "image_path": "shapes/shape_colored/pentagon_v1_blue/FG_005_seq.png"
     },
     {
-      "object": "dalmatian",
+      "object": "daisy",
       "stimulus_type": "counterfact",
-      "manipulation_color": "green",
-      "target_color": "green",
+      "manipulation_color": "blue",
+      "target_color": "blue",
       "variant_region": "FG",
       "percent_colored": 80,
       "mode": "seq",
       "variant_label": "FG 80% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/dalmatian_2_266c20b5_resized_green/FG_080_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/daisy_2_9f5fd00f_resized_blue/FG_080_seq.png"
     },
     {
       "object": "pentagon",
@@ -942,7 +942,7 @@
       "correct_response": "Neither Agree nor Disagree"
     },
     {
-      "object": "picket fence",
+      "object": "pretzel",
       "stimulus_type": "correct_prior",
       "manipulation_color": "brown",
       "target_color": "brown",
@@ -950,7 +950,7 @@
       "percent_colored": 55,
       "mode": "seq",
       "variant_label": "FG 55% (seq)",
-      "image_path": "color_images/gpt-4o/image_priors/picket_fence_2_61569d00_resized_brown/FG_055_seq.png"
+      "image_path": "color_images/gpt-4o/image_priors/pretzel_2_f0d079a5_resized_brown/FG_055_seq.png"
     },
     {
       "object": "screw",
@@ -1074,15 +1074,15 @@
       "image_path": "shapes/shape_colored/circle_v1_orange/FG_050_seq.png"
     },
     {
-      "object": "dingo",
+      "object": "digital watch",
       "stimulus_type": "counterfact",
-      "manipulation_color": "blue",
-      "target_color": "blue",
+      "manipulation_color": "pink",
+      "target_color": "pink",
       "variant_region": "FG",
       "percent_colored": 60,
       "mode": "seq",
       "variant_label": "FG 60% (seq)",
-      "image_path": "color_images/gpt-4o/counterfact/dingo_2_26a21c78_resized_blue/FG_060_seq.png"
+      "image_path": "color_images/gpt-4o/counterfact/digital_watch_3_015799f8_resized_pink/FG_060_seq.png"
     },
     {
       "object": "moth",
