@@ -1,7 +1,6 @@
 /**************************************************************************
  * INITIALIZATION
  **************************************************************************/
-
 const TEST_MODE = true;
 const GOOGLE_FEEDBACK_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSeo9oxXp7fjrct1EQYdvnWMRFo8AahNQFZGtMyjYWnOfkNPhg/viewform?usp=header";
@@ -59,10 +58,17 @@ jsPsych.data.addProperties({
 // ---------------------------------------------------------------------
 
 let timeline = [];
+TOTAL_QUESTIONS = 106;
 
 /**************************************************************************
  * FETCH PROFILE FROM SERVER
  **************************************************************************/
+
+function advanceProgress() {
+  const cur = jsPsych.getProgressBarCompleted();
+  jsPsych.setProgressBar(cur + 1 / TOTAL_QUESTIONS);
+}
+
 
 function getOrCreateTestPID() {
   const key = "TEST_PROLIFIC_PID";
@@ -240,20 +246,24 @@ function renderColorJudgment(q) {
 
         <div id="certainty-container" style="display:none; margin-top:24px;">
 
-          <div style="margin-bottom:6px; font-size:14px;">
+          <div style="margin-bottom:8px; font-size:14px;">
             How certain are you in your assessment?
           </div>
 
+          <!-- semantic anchors -->
           <div style="
-            display:flex;
-            justify-content:space-between;
+            position:relative;
             max-width:420px;
-            margin:0 auto 6px auto;
+            margin:0 auto 8px auto;
             font-size:12px;
             color:#666;
+            height:16px;
           ">
-            <span>Very uncertain</span>
-            <span>Very certain</span>
+            <span style="position:absolute; left:0;">Very uncertain</span>
+            <span style="position:absolute; left:50%; transform:translateX(-50%);">
+              Unsure
+            </span>
+            <span style="position:absolute; right:0;">Very certain</span>
           </div>
 
           <div id="certainty-dots"
@@ -344,12 +354,13 @@ function renderColorJudgment(q) {
 
           document.querySelectorAll(".certainty-dot").forEach(d => {
             d.style.background = "transparent";
+            d.style.borderColor = "#999";
           });
 
           dot.style.background = "#1976d2";
           dot.style.borderColor = "#1976d2";
 
-          // start preloading next image EARLY
+          // preload next image early
           if (q._next_image_path) {
             preloadImage(SUPABASE_IMAGE_BASE + q._next_image_path);
           }
@@ -371,13 +382,12 @@ function renderColorJudgment(q) {
           distractorErrors += 1;
           jsPsych.data.addProperties({ distractor_errors: distractorErrors });
 
-          // 🚨 TERMINATE IMMEDIATELY on second error
           if (distractorErrors >= 2) {
             safeEndExperiment(
               "You selected unreasonable colors two times.",
               "failed_distractor"
             );
-            return; // ⬅️ critical: stop here
+            return;
           }
         }
 
@@ -389,12 +399,12 @@ function renderColorJudgment(q) {
       };
     },
 
-    on_finish: function (data) {
-      const cur = jsPsych.getProgressBarCompleted();
-      jsPsych.setProgressBar(cur + 1 / 106);
+    on_finish: function () {
+      advanceProgress();
     },
   };
 }
+
 
 
 function renderSanity(q) {
@@ -434,6 +444,8 @@ function renderSanity(q) {
             response_label: response,
             passed: true,
           });
+
+          advanceProgress();
         });
       },
     };
@@ -472,6 +484,8 @@ function renderSanity(q) {
         );
         return;
       }
+
+      advanceProgress();
     },
   };
 }
@@ -509,6 +523,10 @@ function renderIntrospection(q) {
 
     data: {
       task_type: "introspection",
+    },
+
+    on_finish: function () {
+      advanceProgress();
     },
   };
 }
