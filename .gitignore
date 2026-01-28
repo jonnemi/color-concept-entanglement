@@ -11,6 +11,9 @@ data/*
 data/prolific_stimuli/stimulus_table_counterfact.csv
 data/prolific_stimuli/stimulus_table_image_priors.csv
 data/prolific_stimuli/stimulus_table_shapes.csv
+data/prolific_stimuli/stimulus_table_counterfact_prolific.csv
+data/prolific_stimuli/stimulus_table_image_priors_prolific.csv
+data/prolific_stimuli/stimulus_table_shapes_prolific.csv
 data/prolific_stimuli/stimulus_table.parquet
 
 segment-anything-2/

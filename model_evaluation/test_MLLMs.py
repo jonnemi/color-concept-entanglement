@@ -307,7 +307,7 @@ def run_vlm_evaluation(
 
     # Choose GPT or open-weight MLLM caller
     if use_gpt:
-        gpt_model_name = "gpt-4o"
+        gpt_model_name = "gpt-5o"
         caller = lambda batch, prompt: prompt_gpt_sync(
             batch, prompt, model_name=gpt_model_name, dummy=dummy
         )
