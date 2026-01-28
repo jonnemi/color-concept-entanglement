@@ -43,43 +43,25 @@
 <body>
   <div class="container">
     <h2>Study Ended</h2>
+
     <p id="message"></p>
 
     <p>Please click the button below to return to Prolific.</p>
 
-    <button onclick="window.location.href='https://app.prolific.com/submissions/complete?cc=RETURN'">
+    <button id="return-btn">
       Return Study on Prolific
     </button>
-
-    <div id="google-feedback" style="display:none; margin-top:30px;">
-      <hr style="margin:30px 0;">
-      <p style="font-size:16px;">
-        <b>Testing run?</b><br>
-        <br>
-        We would appreciate your feedback:
-    </p>
-
-    <button
-      style="background-color:#4caf50"
-      onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSeo9oxXp7fjrct1EQYdvnWMRFo8AahNQFZGtMyjYWnOfkNPhg/viewform?usp=header', '_blank')">
-      Give Feedback (Google Form)
-    </button>
   </div>
-
 
   <script>
     const msg = sessionStorage.getItem("exit_message");
     if (msg) {
       document.getElementById("message").innerText = msg;
     }
-  </script>
 
-  <script>
-    // Enable Google Form link only in test mode
-    if (sessionStorage.getItem("test_mode") === "true") {
-      document.getElementById("google-feedback").style.display = "block";
-    }
+    document.getElementById("return-btn").onclick = () => {
+      window.location.href = "https://app.prolific.com/submissions/return";
+    };
   </script>
-
 </body>
 </html>

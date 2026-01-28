@@ -1,7 +1,7 @@
 /**************************************************************************
  * INITIALIZATION
  **************************************************************************/
-const TEST_MODE = true;
+const TEST_MODE = false;
 const GOOGLE_FEEDBACK_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLSeo9oxXp7fjrct1EQYdvnWMRFo8AahNQFZGtMyjYWnOfkNPhg/viewform?usp=header";
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Experiment Complete</title>
+  <title>Study Complete</title>
   <link rel="icon" href="data:,">
 
   <style>
@@ -55,36 +55,13 @@
     <button id="prolific-btn">
       Return Study on Prolific
     </button>
-
-    <div id="google-feedback" style="display:none; margin-top:30px;">
-      <hr style="margin:30px 0;">
-      <p style="font-size:16px;">
-        <b>Testing run?</b><br><br>
-        We would appreciate your feedback:
-      </p>
-
-      <button
-        style="background-color:#4caf50"
-        onclick="window.open(
-          'https://docs.google.com/forms/d/e/1FAIpQLSeo9oxXp7fjrct1EQYdvnWMRFo8AahNQFZGtMyjYWnOfkNPhg/viewform?usp=header',
-          '_blank'
-        )">
-        Give Feedback (Google Form)
-      </button>
-    </div>
   </div>
 
   <script>
-    // Prolific completion
     document.getElementById("prolific-btn").onclick = () => {
       window.location.href =
-        "https://app.prolific.com/submissions/complete?cc=ABCD1234";
+        "https://app.prolific.com/submissions/complete?cc=CB41GAIW";
     };
-
-    // Enable Google Form only in test mode
-    if (sessionStorage.getItem("test_mode") === "true") {
-      document.getElementById("google-feedback").style.display = "block";
-    }
   </script>
 </body>
 </html>
