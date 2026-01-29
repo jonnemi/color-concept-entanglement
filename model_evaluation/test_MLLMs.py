@@ -267,9 +267,123 @@ def prompt_gpt_sync(df, prompt, model_name="gpt-4o", dummy=False):
     return run_async(prompt_gpt_async(df, prompt, model_name=model_name, dummy=dummy))
 
 
-
-
 def run_vlm_evaluation(
+    df,
+    processor=None,
+    model=None,
+    device=None,
+    batch_size=1,
+    mode="this",  # "this", "most", or "both"
+    dummy=False,
+    return_probs=False,
+    backend="llava",        # "llava" | "gpt" | "qwen"
+    model_name=None,
+):
+    """
+    Generic evaluation loop for Vision-Language Models.
+
+    backend:
+        - "llava": open-weight torch VLMs (LLaVA, etc.)
+        - "gpt":   OpenAI GPT models (default: gpt-5o)
+        - "qwen":  Qwen-VL models (HF)
+    """
+
+    assert mode in ["this", "most", "both"]
+    assert backend in ["llava", "gpt", "qwen"]
+
+    results = []
+
+    # Select backend caller
+    if backend == "gpt":
+        gpt_model = model_name or "gpt-5o"
+
+        def caller(batch, prompt):
+            return prompt_gpt_sync(
+                batch,
+                prompt,
+                model_name=gpt_model,
+                dummy=dummy,
+            )
+
+    elif backend == "qwen":
+        # Qwen behaves like other torch VLMs
+        def caller(batch, prompt):
+            return prompt_mllm(
+                batch,
+                processor=processor,
+                model=model,
+                device=device,
+                prompt=prompt,
+                dummy=dummy,
+                return_probs=return_probs,
+            )
+
+    else:  # "llava"
+        def caller(batch, prompt):
+            return prompt_mllm(
+                batch,
+                processor=processor,
+                model=model,
+                device=device,
+                prompt=prompt,
+                dummy=dummy,
+                return_probs=return_probs,
+            )
+
+    # Main loop
+    for i in tqdm(
+        range(0, len(df), batch_size),
+        desc=f"Running VLM ({backend})",
+        position=1,
+        leave=False,
+    ):
+        batch_df = df.iloc[i : i + batch_size].copy()
+
+        if mode in ["most", "both"]:
+            prompt = create_eval_prompt(batch_df["object"], most="True")
+            df_most = caller(batch_df, prompt)
+            df_most = df_most.rename(columns={
+                "predicted_color": "pred_color_most",
+                "prob_correct": "prob_correct_most" if return_probs else None,
+            })
+        else:
+            df_most = None
+
+        if mode in ["this", "both"]:
+            prompt = create_eval_prompt(batch_df["object"], most="False")
+            df_this = caller(batch_df, prompt)
+            df_this = df_this.rename(columns={
+                "predicted_color": "pred_color_this",
+                "prob_correct": "prob_correct_this" if return_probs else None,
+            })
+        else:
+            df_this = None
+
+        if mode == "both":
+            result_df = pd.merge(
+                df_most,
+                df_this,
+                on=["image_path", "object", "correct_answer"],
+                how="inner",
+            )
+        elif mode == "most":
+            result_df = df_most
+        else:
+            result_df = df_this
+
+        results.append(result_df)
+
+        # memory hygiene
+        del result_df
+        torch.cuda.empty_cache()
+        torch.cuda.ipc_collect()
+        gc.collect()
+
+    return pd.concat(results, ignore_index=True)
+
+
+
+def run_vlm_evaluation_old(
     df,
     processor=None,
     model=None,
@@ -307,7 +421,7 @@ def run_vlm_evaluation(
 
     # Choose GPT or open-weight MLLM caller
     if use_gpt:
-        gpt_model_name = "gpt-5o"
+        gpt_model_name = "gpt-4o"
         caller = lambda batch, prompt: prompt_gpt_sync(
             batch, prompt, model_name=gpt_model_name, dummy=dummy
         )

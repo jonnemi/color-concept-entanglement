@@ -207,6 +207,111 @@ def show_variants_grid(
     plt.show()
 
 
+def plot_vlm_prolific(
+    df: pd.DataFrame,
+    show_accuracy: bool = True,
+    show_probability: bool = True,
+    ci: bool = False,
+):
+    """
+    Plot VLM accuracy / probability vs recoloring percentage
+    using merged Prolific-style stimulus metadata.
+
+    Required columns:
+      - variant_region (FG / BG)
+      - percent_colored (int)
+      - pred_color_this
+      - target_color
+      - prob_correct_this (optional; GPT-safe)
+    """
+
+    df = df.copy()
+
+    # Normalize text columns
+    for col in ["pred_color_this", "target_color"]:
+        if col in df.columns:
+            df[col] = df[col].astype(str).str.lower()
+
+    # Accuracy computation (unified)
+    df["acc_this"] = (
+        df["pred_color_this"] == df["target_color"]
+    ).astype(float)
+
+    # Aggregation
+    grouped = df.groupby(["variant_region", "percent_colored"])
+
+    def summarize(col):
+        mean = grouped[col].mean()
+        std = grouped[col].std()
+        n = grouped[col].count()
+
+        if ci:
+            err = stats.t.ppf(0.975, n - 1) * (std / np.sqrt(n))
+        else:
+            err = std
+
+        return mean, err
+
+    metrics = []
+
+    if show_accuracy:
+        metrics.append("acc_this")
+
+    if show_probability and "prob_correct_this" in df.columns:
+        metrics.append("prob_correct_this")
+    else:
+        show_probability = False  # GPT-safe fallback
+
+    summary = {}
+
+    for col in metrics:
+        mean, err = summarize(col)
+        summary[f"{col}_mean"] = mean
+        summary[f"{col}_err"] = err
+
+    summary_df = pd.DataFrame(summary).reset_index()
+
+    # Plot
+    fig, ax = plt.subplots(figsize=(9, 6))
+
+    colors = {
+        ("acc_this", "FG"): "#1f77b4",
+        ("acc_this", "BG"): "#ff7f0e",
+        ("prob_correct_this", "FG"): "#2ca02c",
+        ("prob_correct_this", "BG"): "#d62728",
+    }
+
+    for region in ["FG", "BG"]:
+        sub = summary_df[summary_df["variant_region"] == region]
+        if sub.empty:
+            continue
+
+        for col in metrics:
+            mean_col = f"{col}_mean"
+            err_col = f"{col}_err"
+
+            ax.errorbar(
+                sub["percent_colored"],
+                sub[mean_col],
+                yerr=sub[err_col],
+                fmt="o-" if "prob" in col else "o--",
+                color=colors[(col, region)],
+                label=f"{col.replace('_this','')} {region}",
+                capsize=3 if ci else 0,
+            )
+
+    ax.set_xlabel("Colored pixel percentage (%)")
+    ax.set_ylabel("Accuracy / P(correct)" if show_probability else "Accuracy")
+    ax.set_ylim(0, 1.05)
+    ax.set_title("VLM performance vs recoloring fraction (sequential)")
+    ax.grid(True, linestyle="--", alpha=0.5)
+    ax.legend(loc="center left", bbox_to_anchor=(1.02, 0.5))
+
+    plt.tight_layout()
+    plt.show()
+
+
+
 def plot_vlm_performance(
     df,
     show_accuracy=True,

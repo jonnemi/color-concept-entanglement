@@ -84,19 +84,13 @@ def build_stimulus_table(
         for img in sorted(obj_dir.glob("*.png")):
             m = VARIANT_RE.match(img.name)
 
-            if m:
-                region, pct, mode = m.groups()
-                percent_colored = int(pct)
-                variant_region = region
-            else:
-                # base / white image
-                percent_colored = 0
-                variant_region = "white"
-                mode = "base"
+            region, pct, mode = m.groups()
+            percent_colored = int(pct)
+            variant_region = region
 
             manipulation_color = meta["manipulation_color"]
 
-            if percent_colored == 0:
+            if percent_colored == 0 or variant_region == "BG":
                 target_color = "white"
             else:
                 target_color = manipulation_color

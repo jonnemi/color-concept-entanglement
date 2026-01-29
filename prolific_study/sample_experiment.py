@@ -107,7 +107,6 @@ def sample_background_objects(df_bg, rng):
 def sample_prior_objects(df_priors, rng):
     rows = []
     df_priors = df_priors.copy()
-    
     df_priors["percent_colored"] = df_priors["percent_colored"].astype(int)
 
     for pct in PCTS_13:
