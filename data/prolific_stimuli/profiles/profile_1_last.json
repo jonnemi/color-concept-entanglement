@@ -709,15 +709,14 @@
     {
       "question_type": "sanity",
       "sanity_id": 4,
-      "prompt": "I have never used the internet.",
+      "prompt": "To show that you are paying attention, please disagree with the following statement.",
+      "statement": "I am currently not paying attention.",
       "options": [
-        "Strongly Disagree",
-        "Disagree",
-        "Neither Agree nor Disagree",
         "Agree",
-        "Strongly Agree"
+        "Neither agree nor disagree",
+        "Disagree"
       ],
-      "correct_response": "Strongly Disagree"
+      "correct_response": "Disagree"
     },
     {
       "object": "waffle iron",

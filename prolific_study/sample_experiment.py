@@ -204,17 +204,16 @@ SANITY_QUESTIONS = [
         "correct_response": "Option 3",
     },
     {
-        "question_type": "sanity",
-        "sanity_id": 4,
-        "prompt": "I have never used the internet.",
-        "options": [
-            "Strongly Disagree",
-            "Disagree",
-            "Neither Agree nor Disagree",
-            "Agree",
-            "Strongly Agree"         
-        ],
-        "correct_response": "Strongly Disagree",
+    "question_type": "sanity",
+    "sanity_id": 4,
+    "prompt": "To show that you are paying attention, please disagree with the following statement.",
+    "statement": "I am currently not paying attention.",
+    "options": [
+        "Agree",
+        "Neither agree nor disagree",
+        "Disagree"
+    ],
+    "correct_response": "Disagree"
     },
     {
         "question_type": "sanity",

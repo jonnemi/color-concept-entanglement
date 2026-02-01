@@ -381,26 +381,26 @@ function renderColorJudgment(q) {
         if (isDistractor) {
           distractorErrors += 1;
           jsPsych.data.addProperties({ distractor_errors: distractorErrors });
-
-          if (distractorErrors >= 2) {
-            safeEndExperiment(
-              "You selected unreasonable colors two times.",
-              "failed_distractor"
-            );
-            return;
-          }
         }
 
         jsPsych.finishTrial({
           response_label: selectedColor,
           certainty: certainty,
           is_distractor: isDistractor,
+          distractor_errors: distractorErrors,
         });
       };
     },
 
-    on_finish: function () {
+    on_finish: function (data) {
       advanceProgress();
+
+      if (data.is_distractor && distractorErrors >= 2) {
+        safeEndExperiment(
+          "You selected unreasonable colors two times.",
+          "failed_distractor"
+        );
+      }
     },
   };
 }
