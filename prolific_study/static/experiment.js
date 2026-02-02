@@ -196,11 +196,14 @@ function renderColorJudgment(q) {
   const imgId = `stim-img-${jsPsych.randomization.randomID(8)}`;
 
   let selectedColor = null;
-  let certainty = null;
+  let fistCertainty = null;
+  let secondCertainty = null;
+
   let trialStartTime = null;
   let colorTime = null;
   let firstCertaintyTime = null;
   let secondCertaintyTime = null;
+  let certainty_change_count = 0;
   let finishTime = null;
 
 
@@ -364,10 +367,13 @@ function renderColorJudgment(q) {
         dot.onclick = () => {
           if (firstCertaintyTime === null) {
               firstCertaintyTime = performance.now() - trialStartTime;
+              firstCertainty = Number(dot.dataset.value);
           } else {
               secondCertaintyTime = performance.now() - trialStartTime;
+              secondCertainty = Number(dot.dataset.value);
           }
-          certainty = Number(dot.dataset.value);
+          
+          certainty_change_count += 1;
 
           document.querySelectorAll(".certainty-dot").forEach(d => {
             d.style.background = "transparent";
@@ -411,7 +417,9 @@ function renderColorJudgment(q) {
           image_path: q.image_path,
 
           response_label: selectedColor,
-          certainty: certainty,
+          initial_certainty: firstCertainty,
+          final_certainty: secondCertainty,
+          certainty_change_count: certainty_change_count,
           is_distractor: isDistractor,
           distractor_errors: distractorErrors,
           color_time: colorTime,
