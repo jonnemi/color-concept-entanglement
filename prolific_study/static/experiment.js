@@ -385,6 +385,8 @@ function renderColorJudgment(q) {
           jsPsych.data.addProperties({ distractor_errors: distractorErrors });
         }
 
+        const rt = performance.now() - trialStartTime;
+
         jsPsych.finishTrial({
           response_label: selectedColor,
           certainty: certainty,
