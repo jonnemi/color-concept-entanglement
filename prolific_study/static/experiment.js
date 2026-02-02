@@ -199,7 +199,9 @@ function renderColorJudgment(q) {
   let certainty = null;
   let trialStartTime = null;
   let colorTime = null;
-  let certaintyTime = null;
+  let firstCertaintyTime = null;
+  let secondCertaintyTime = null;
+  let finishTime = null;
 
 
   return {
@@ -342,7 +344,7 @@ function renderColorJudgment(q) {
       // ---- color selection ----
       colorButtons.forEach(btn => {
         btn.onclick = () => {
-          colorTime = performance.now();
+          colorTime = performance.now() - trialStartTime;
           selectedColor = btn.dataset.color;
 
           colorButtons.forEach(b => {
@@ -360,7 +362,11 @@ function renderColorJudgment(q) {
       // ---- certainty selection ----
       document.querySelectorAll(".certainty-dot").forEach(dot => {
         dot.onclick = () => {
-          certaintyTime = performance.now();
+          if (firstCertaintyTime === null) {
+              firstCertaintyTime = performance.now() - trialStartTime;
+          } else {
+              secondCertaintyTime = performance.now() - trialStartTime;
+          }
           certainty = Number(dot.dataset.value);
 
           document.querySelectorAll(".certainty-dot").forEach(d => {
@@ -382,6 +388,7 @@ function renderColorJudgment(q) {
       });
 
       nextBtn.onclick = () => {
+        finishTime = performance.now() - trialStartTime;
         const allowed_answers =
           q.variant_region === "BG"
             ? ["white"]
@@ -407,7 +414,10 @@ function renderColorJudgment(q) {
           certainty: certainty,
           is_distractor: isDistractor,
           distractor_errors: distractorErrors,
-          rt: performance.now() - trialStartTime,
+          color_time: colorTime,
+          first_certainty_time: firstCertaintyTime,
+          second_certainty_time: secondCertaintyTime,
+          finish_time: finishTime,
         };
 
         if (isDistractor && distractorErrors >= 2) {
