@@ -194,6 +194,9 @@ function renderColorJudgment(q) {
   let selectedColor = null;
   let certainty = null;
   let trialStartTime = null;
+  let colorTime = null;
+  let certaintyTime = null;
+
 
   return {
     type: jsPsychHtmlButtonResponse,
@@ -335,6 +338,7 @@ function renderColorJudgment(q) {
       // ---- color selection ----
       colorButtons.forEach(btn => {
         btn.onclick = () => {
+          colorTime = performance.now();
           selectedColor = btn.dataset.color;
 
           colorButtons.forEach(b => {
@@ -352,6 +356,7 @@ function renderColorJudgment(q) {
       // ---- certainty selection ----
       document.querySelectorAll(".certainty-dot").forEach(dot => {
         dot.onclick = () => {
+          certaintyTime = performance.now();
           certainty = Number(dot.dataset.value);
 
           document.querySelectorAll(".certainty-dot").forEach(d => {
@@ -385,14 +390,14 @@ function renderColorJudgment(q) {
           jsPsych.data.addProperties({ distractor_errors: distractorErrors });
         }
 
-        const rt = performance.now() - trialStartTime;
-
         jsPsych.finishTrial({
           response_label: selectedColor,
           certainty: certainty,
           is_distractor: isDistractor,
           distractor_errors: distractorErrors,
-          rt: rt,
+          rt_color: colorTime - trialStartTime,
+          rt_certainty: certaintyTime - colorTime,
+          rt_total: performance.now() - trialStartTime,
         });
       };
     },
