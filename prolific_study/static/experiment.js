@@ -193,6 +193,7 @@ function renderColorJudgment(q) {
 
   let selectedColor = null;
   let certainty = null;
+  let trialStartTime = null;
 
   return {
     type: jsPsychHtmlButtonResponse,
@@ -322,6 +323,7 @@ function renderColorJudgment(q) {
     },
 
     on_load: function () {
+      trialStartTime = performance.now();
       const img = document.getElementById(imgId);
       const colorButtons = document.querySelectorAll(".color-btn");
       const nextBtn = document.getElementById("next-btn");
@@ -388,6 +390,7 @@ function renderColorJudgment(q) {
           certainty: certainty,
           is_distractor: isDistractor,
           distractor_errors: distractorErrors,
+          rt: rt,
         });
       };
     },
