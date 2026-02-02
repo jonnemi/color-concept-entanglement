@@ -129,18 +129,22 @@ async function saveResults(exit_reason) {
   }
 }
 
-async function safeEndExperiment(message, reason) {
+async function safeEndExperiment(message, reason, finalTrialData = null) {
   if (experimentEnded) return;
   experimentEnded = true;
 
+  if (finalTrialData) {
+    jsPsych.data.write(finalTrialData);
+  }
+
   await saveResults(reason);
 
-  // Store message so the exit page can display it
   sessionStorage.setItem("exit_message", message);
   sessionStorage.setItem("exit_reason", reason);
 
   window.location.href = "exit_return.html";
 }
+
 
 
 /**************************************************************************
@@ -390,31 +394,38 @@ function renderColorJudgment(q) {
           jsPsych.data.addProperties({ distractor_errors: distractorErrors });
         }
 
-        jsPsych.finishTrial({
+        const trialData = {
+          task_type: "color_judgment",
+          object: q.object,
+          stimulus_type: q.stimulus_type,
+          percent_colored: q.percent_colored,
+          variant_region: q.variant_region,
+          target_color: q.target_color,
+          image_path: q.image_path,
+
           response_label: selectedColor,
           certainty: certainty,
           is_distractor: isDistractor,
           distractor_errors: distractorErrors,
-          rt_color: colorTime - trialStartTime,
-          rt_certainty: certaintyTime - colorTime,
-          rt_total: performance.now() - trialStartTime,
-        });
+          rt: performance.now() - trialStartTime,
+        };
+
+        if (isDistractor && distractorErrors >= 2) {
+          safeEndExperiment(
+            "You selected unreasonable colors two times.",
+            "failed_distractor",
+            trialData
+          );
+          return;
+        }
+        jsPsych.finishTrial(trialData);
       };
     },
-
     on_finish: function (data) {
       advanceProgress();
-
-      if (data.is_distractor && distractorErrors >= 2) {
-        safeEndExperiment(
-          "You selected unreasonable colors two times.",
-          "failed_distractor"
-        );
-      }
     },
   };
 }
-
 
 
 function renderSanity(q) {
