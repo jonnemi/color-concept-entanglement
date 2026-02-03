@@ -481,6 +481,85 @@ def run_vlm_evaluation_old(
     df_results = pd.concat(results, ignore_index=True)
     return df_results
 
+# Helpers for introspection prompt
+INTROSPECTION_PROMPT = """For any object, x% of its pixels should be colored for it to be considered that color. 
+                        For example, imagine an image of a banana, where only part of the banana in the image is colored yellow.
+                        At what point would you personally say that the banana in the image is yellow?
+                        What value should x% be? Please answer with a single number between 0 and 100."""
+
+def parse_percentage(text: str | None) -> int | None:
+    if not text:
+        return None
+    match = re.search(r"\b(\d{1,3})\b", text)
+    if not match:
+        return None
+    value = int(match.group(1))
+    return value if 0 <= value <= 100 else None
+
+def ask_vlm_introspection_threshold(
+    *,
+    backend: str,                  # "llava" | "qwen" | "gpt"
+    processor=None,
+    model=None,
+    device=None,
+    model_name: str | None = None,  # for GPT
+) -> dict:
+    """
+    Ask a VLM for its global color-attribution threshold.
+    Returns a dict suitable for logging.
+    """
+
+    if backend in ["llava", "qwen"]:
+        # Torch VLMs: no image, text-only prompt
+        inputs = processor(
+            text=INTROSPECTION_PROMPT,
+            return_tensors="pt"
+        ).to(device)
+
+        with torch.inference_mode():
+            outputs = model.generate(
+                **inputs,
+                max_new_tokens=20,
+                do_sample=False,
+                num_beams=1,
+                pad_token_id=processor.tokenizer.eos_token_id,
+            )
+
+        raw = processor.tokenizer.decode(
+            outputs[0],
+            skip_special_tokens=True
+        )
+        raw = clean_instruction_tokens(raw).strip().lower()
+
+    elif backend == "gpt":
+        gpt_model = model_name or "gpt-5"
+
+        response = client.chat.completions.create(
+            model=gpt_model,
+            messages=[
+                {
+                    "role": "user",
+                    "content": INTROSPECTION_PROMPT,
+                }
+            ],
+            temperature=0.0,
+            max_tokens=20,
+        )
+        raw = response.choices[0].message.content.strip().lower()
+
+    else:
+        raise ValueError(f"Unknown backend: {backend}")
+
+    threshold = parse_percentage(raw)
+    threshold = raw
+
+    return {
+        "backend": backend,
+        "model_name": model_name,
+        "introspection_raw": raw,
+        "introspection_threshold": threshold,
+    }
+
 
 def main():
     parser = argparse.ArgumentParser(description="Run MLLMs on all tasks.")
