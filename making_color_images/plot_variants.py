@@ -490,3 +490,510 @@ def plot_vlm_performance(
 
     plt.tight_layout()
     plt.show()
+
+
+def summarize_response_frequencies(
+    df: pd.DataFrame,
+    *,
+    variant_region: str,
+    response_col: str,
+    target_col: str,
+    percent_colored_col: str,
+    variant_region_col: str = "variant_region",
+    ci: float = 0.95,
+):
+    df_region = df[df[variant_region_col] == variant_region].copy()
+
+    if df_region.empty:
+        raise ValueError(
+            f"No data found for {variant_region_col} == '{variant_region}'"
+        )
+
+    df_region["is_white"] = df_region[response_col] == "white"
+    df_region["is_target"] = (
+        df_region[response_col] == df_region[target_col]
+    )
+    if variant_region == "FG":
+        # FG: target color vs white
+        df_region["is_target"] = (
+            df_region[response_col] == df_region[target_col]
+        )
+
+    elif variant_region == "BG":
+        # BG: any non-white response is an error
+        df_region["is_target"] = ~df_region["is_white"]
+
+    grouped = df_region.groupby(percent_colored_col)
+
+    summary = grouped.agg(
+        p_white=("is_white", "mean"),
+        p_target=("is_target", "mean"),
+        n=("is_white", "count"),
+        std_white=("is_white", "std"),
+        std_target=("is_target", "std"),
+    ).reset_index()
+
+    alpha = 1 - ci
+    tval = stats.t.ppf(1 - alpha / 2, summary["n"] - 1)
+
+    summary["ci_white"] = tval * summary["std_white"] / np.sqrt(summary["n"])
+    summary["ci_target"] = tval * summary["std_target"] / np.sqrt(summary["n"])
+
+    return summary.sort_values(percent_colored_col)
+
+
+def plot_fg_response_frequencies_line(
+    df: pd.DataFrame,
+    *,
+    title: str,
+    variant_region: str = "FG",
+    response_col: str = "response_label",
+    target_col: str = "target_color",
+    percent_colored_col: str = "percent_colored",
+    variant_region_col: str = "variant_region",
+    ci: float = 0.95,
+    figsize=(9, 6),
+):
+    summary = summarize_response_frequencies(
+        df,
+        variant_region=variant_region,
+        response_col=response_col,
+        target_col=target_col,
+        percent_colored_col=percent_colored_col,
+        variant_region_col=variant_region_col,
+        ci=ci,
+    )
+    summary = summary[summary["percent_colored"] > 0]
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    ax.errorbar(
+        summary[percent_colored_col],
+        summary["p_white"],
+        yerr=summary["ci_white"],
+        fmt="o--",
+        label="White response",
+        color="#ff7f0e",
+        capsize=3,
+    )
+
+    ax.errorbar(
+        summary[percent_colored_col],
+        summary["p_target"],
+        yerr=summary["ci_target"],
+        fmt="o-",
+        label="Target-color response",
+        color="#1f77b4",
+        capsize=3,
+    )
+
+    ax.set_xlabel("Colored pixel percentage (%)")
+    ax.set_ylabel("Response frequency")
+    ax.set_ylim(0, 1.05)
+    ax.set_yticks([0.25, 0.5, 0.75, 1.0])
+    ax.set_title(title)
+    ax.grid(True, linestyle="--", alpha=0.5)
+    ax.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+    #return summary
+
+
+
+def plot_fg_response_frequencies_bar(
+    df: pd.DataFrame,
+    *,
+    title: str,
+    variant_region: str = "FG",
+    response_col: str = "response_label",
+    target_col: str = "target_color",
+    percent_colored_col: str = "percent_colored",
+    variant_region_col: str = "variant_region",
+    ci: float = 0.95,
+    figsize=(10, 6),
+    bar_width: float = 0.35,
+):
+    summary = summarize_response_frequencies(
+        df,
+        variant_region=variant_region,
+        response_col=response_col,
+        target_col=target_col,
+        percent_colored_col=percent_colored_col,
+        variant_region_col=variant_region_col,
+        ci=ci,
+    )
+
+    summary = summary[summary["percent_colored"] > 0]
+    x = np.arange(len(summary))
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    ax.bar(
+        x - bar_width / 2,
+        summary["p_white"],
+        bar_width,
+        yerr=summary["ci_white"],
+        label="White response",
+        color="#ff7f0e",
+        capsize=3,
+    )
+
+    ax.bar(
+        x + bar_width / 2,
+        summary["p_target"],
+        bar_width,
+        yerr=summary["ci_target"],
+        label="Target-color response",
+        color="#1f77b4",
+        capsize=3,
+    )
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(summary[percent_colored_col])
+    ax.set_xlabel("Colored pixel percentage (%)")
+    ax.set_ylabel("Response frequency")
+    ax.set_ylim(0, 1.05)
+    ax.set_yticks([0.25, 0.5, 0.75, 1.0])
+    ax.set_title(title)
+    ax.legend()
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+
+    plt.tight_layout()
+    plt.show()
+
+    #return summary
+
+
+def plot_bg_response_frequencies_line(
+    df: pd.DataFrame,
+    *,
+    title: str,
+    response_col: str,
+    target_col: str = "target_color",
+    percent_colored_col: str = "percent_colored",
+    variant_region: str = "BG",
+    variant_region_col: str = "variant_region",
+    ci: float = 0.95,
+    figsize=(9, 6),
+):
+    summary = summarize_response_frequencies(
+        df,
+        variant_region=variant_region,
+        response_col=response_col,
+        target_col=target_col,
+        percent_colored_col=percent_colored_col,
+        variant_region_col=variant_region_col,
+        ci=ci,
+    )
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    ax.errorbar(
+        summary[percent_colored_col],
+        summary["p_white"],
+        yerr=summary["ci_white"],
+        fmt="o-",
+        label="White response (correct)",
+        color="#2ca02c",
+        capsize=3,
+    )
+
+    ax.errorbar(
+        summary[percent_colored_col],
+        summary["p_target"],
+        yerr=summary["ci_target"],
+        fmt="o--",
+        label="Any color response (error)",
+        color="#d62728",
+        capsize=3,
+    )
+
+    ax.set_xlabel("Colored pixel percentage (%)")
+    ax.set_ylabel("Response frequency")
+    ax.set_ylim(0, 1.05)
+    ax.set_yticks([0.25, 0.5, 0.75, 1.0])
+    ax.set_title(title)
+    ax.grid(True, linestyle="--", alpha=0.5)
+    ax.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+    #return summary
+
+def plot_bg_response_frequencies_bar(
+    df: pd.DataFrame,
+    *,
+    title: str,
+    response_col: str,
+    target_col: str = "target_color",
+    percent_colored_col: str = "percent_colored",
+    variant_region: str = "BG",
+    variant_region_col: str = "variant_region",
+    ci: float = 0.95,
+    figsize=(10, 6),
+    bar_width: float = 0.35,
+):
+    summary = summarize_response_frequencies(
+        df,
+        variant_region=variant_region,
+        response_col=response_col,
+        target_col=target_col,
+        percent_colored_col=percent_colored_col,
+        variant_region_col=variant_region_col,
+        ci=ci,
+    )
+
+    x = np.arange(len(summary))
+
+    fig, ax = plt.subplots(figsize=figsize)
+
+    ax.bar(
+        x - bar_width / 2,
+        summary["p_white"],
+        bar_width,
+        yerr=summary["ci_white"],
+        label="White response (correct)",
+        color="#2ca02c",
+        capsize=3,
+    )
+
+    ax.bar(
+        x + bar_width / 2,
+        summary["p_target"],
+        bar_width,
+        yerr=summary["ci_target"],
+        label="Any color response (error)",
+        color="#d62728",
+        capsize=3,
+    )
+
+    ax.set_xticks(x)
+    ax.set_xticklabels(summary[percent_colored_col])
+    ax.set_xlabel("Colored pixel percentage (%)")
+    ax.set_ylabel("Response frequency")
+    ax.set_ylim(0, 1.05)
+    ax.set_yticks([0.25, 0.5, 0.75, 1.0])
+    ax.set_title(title)
+    ax.legend()
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+
+    plt.tight_layout()
+    plt.show()
+
+    #return summary
+
+
+def summarize_certainty(
+    df: pd.DataFrame,
+    *,
+    value_col: str,
+    variant_region_col: str,
+    percent_colored_col: str,
+    ci: float = 0.95,
+):
+    required = {value_col, variant_region_col, percent_colored_col}
+    missing = required - set(df.columns)
+    if missing:
+        raise ValueError(f"Missing columns for certainty summary: {missing}")
+
+    df_valid = df.dropna(subset=[value_col])
+    if df_valid.empty:
+        return None  # ← explicitly signal "nothing to plot"
+
+    grouped = df_valid.groupby([variant_region_col, percent_colored_col])
+
+    summary = grouped[value_col].agg(
+        mean="mean",
+        std="std",
+        n="count",
+    ).reset_index()
+
+    if summary.empty:
+        return None
+
+    alpha = 1 - ci
+    tval = stats.t.ppf(1 - alpha / 2, summary["n"] - 1)
+    summary["ci"] = tval * (summary["std"] / np.sqrt(summary["n"]))
+    summary["certainty_type"] = value_col
+
+    return summary
+
+
+    #return summary
+
+
+def plot_certainty(
+    df: pd.DataFrame,
+    *,
+    certainty_cols: list[str],
+    variant_region_col: str = "variant_region",
+    percent_colored_col: str = "percent_colored",
+    title: str = "Certainty vs recoloring fraction",
+    y_label: str = "Mean certainty",
+    y_lim: tuple[float, float] = (0, 10.5),
+    ci: float = 0.95,
+    colors: dict | None = None,
+    linestyles: dict | None = None,
+    labels: dict | None = None,
+):
+    """
+    Plot certainty (with CI) vs percent colored, split by FG/BG and certainty type.
+    """
+
+    if colors is None:
+        colors = {
+            "FG": "#1f77b4",
+            "BG": "#ff7f0e",
+        }
+
+    if linestyles is None:
+        linestyles = {
+            certainty_cols[0]: "--",
+            certainty_cols[-1]: "-",
+        }
+
+    summaries = []
+    for col in certainty_cols:
+        summaries.append(
+            summarize_certainty(
+                df,
+                value_col=col,
+                variant_region_col=variant_region_col,
+                percent_colored_col=percent_colored_col,
+                ci=ci,
+            )
+        )
+
+    cert_summary = pd.concat(summaries, ignore_index=True)
+
+    fig, ax = plt.subplots(figsize=(9, 6))
+
+    for region in cert_summary[variant_region_col].unique():
+        for cert_type in certainty_cols:
+            sub = cert_summary[
+                (cert_summary[variant_region_col] == region)
+                & (cert_summary["certainty_type"] == cert_type)
+            ]
+
+            if sub.empty:
+                continue
+
+            label = (
+                labels[(region, cert_type)]
+                if labels and (region, cert_type) in labels
+                else f"{region} – {cert_type.replace('_', ' ')}"
+            )
+
+            ax.errorbar(
+                sub[percent_colored_col],
+                sub["mean"],
+                yerr=sub["ci"],
+                fmt="o",
+                linestyle=linestyles.get(cert_type, "-"),
+                color=colors.get(region, "black"),
+                capsize=3,
+                label=label,
+            )
+
+    ax.set_xlabel("Colored pixel percentage (%)")
+    ax.set_ylabel(y_label)
+    ax.set_ylim(*y_lim)
+    ax.set_title(title)
+    ax.grid(True, linestyle="--", alpha=0.5)
+    ax.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+
+def summarize_model_confidence(
+    df: pd.DataFrame,
+    *,
+    prob_col: str = "prob_correct_this",
+    variant_region_col: str = "variant_region",
+    percent_colored_col: str = "percent_colored",
+    ci: float = 0.95,
+):
+    required = {prob_col, variant_region_col, percent_colored_col}
+    missing = required - set(df.columns)
+    if missing:
+        raise ValueError(f"Missing columns for model confidence summary: {missing}")
+
+    df_valid = df.dropna(subset=[prob_col])
+    if df_valid.empty:
+        raise ValueError("No non-NaN model confidence values to plot.")
+
+    grouped = df_valid.groupby([variant_region_col, percent_colored_col])
+
+    summary = grouped[prob_col].agg(
+        mean="mean",
+        std="std",
+        n="count",
+    ).reset_index()
+
+    alpha = 1 - ci
+    tval = stats.t.ppf(1 - alpha / 2, summary["n"] - 1)
+
+    summary["ci"] = tval * (summary["std"] / np.sqrt(summary["n"]))
+
+    return summary.sort_values(percent_colored_col)
+
+
+def plot_model_confidence(
+    df: pd.DataFrame,
+    *,
+    prob_col: str = "prob_correct_this",
+    variant_region_col: str = "variant_region",
+    percent_colored_col: str = "percent_colored",
+    title: str,
+    y_label: str = "Mean model confidence (P(correct))",
+    y_lim: tuple[float, float] = (0.0, 1.05),
+    ci: float = 0.95,
+    colors: dict | None = None,
+):
+    """
+    Plot VLM softmax confidence vs recoloring fraction (FG vs BG).
+    """
+
+    if colors is None:
+        colors = {
+            "FG": "#1f77b4",
+            "BG": "#ff7f0e",
+        }
+
+    summary = summarize_model_confidence(
+        df,
+        prob_col=prob_col,
+        variant_region_col=variant_region_col,
+        percent_colored_col=percent_colored_col,
+        ci=ci,
+    )
+
+    fig, ax = plt.subplots(figsize=(9, 6))
+
+    for region in summary[variant_region_col].unique():
+        sub = summary[summary[variant_region_col] == region]
+
+        ax.errorbar(
+            sub[percent_colored_col],
+            sub["mean"],
+            yerr=sub["ci"],
+            fmt="o-",
+            capsize=3,
+            color=colors.get(region, "black"),
+            label=f"{region} trials",
+        )
+
+    ax.set_xlabel("Colored pixel percentage (%)")
+    ax.set_ylabel(y_label)
+    ax.set_ylim(*y_lim)
+    ax.set_title(title)
+    ax.grid(True, linestyle="--", alpha=0.5)
+    ax.legend()
+
+    plt.tight_layout()
+    plt.show()
+

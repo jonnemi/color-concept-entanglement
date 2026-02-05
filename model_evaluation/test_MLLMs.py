@@ -29,19 +29,36 @@ def clean_instruction_tokens(text):
     return cleaned_text.strip()
 
 
-def create_eval_prompt(object_name, most="False"):
-    instruction_tokens = "[INST] <image>\n"
-    end_tokens = "[/INST]"
-    #question = f"What color is {'a' if most == 'True' else 'this'} {object_name}?"
-    if most == "True":
-        object_name_plural = object_name if object_name.endswith("s") else object_name + "s"
-        question = f"What color are most {object_name_plural}?"
+def create_eval_prompt(
+    object_name: str,
+    *,
+    most: bool = False,
+    calibration_value: int | None = None,
+):
+    """
+    Builds either a normal or calibrated prompt.
+    """
 
+    intro = ""
+    if calibration_value is not None:
+        intro = (
+            "Earlier, you answered the following question:"
+            "For any object, x% of its pixels should be colored for it to be "
+            "considered that color."
+            f"You answered: {calibration_value}%."
+            "Please keep this threshold in mind when answering the next question."
+        )
+
+    if most:
+        obj = object_name if object_name.endswith("s") else object_name + "s"
+        question = f"What color are most {obj}?"
     else:
         question = f"What color is this {object_name}?"
 
-    prompt = f"{instruction_tokens} Answer with one word. {question} {end_tokens}"
-
+    prompt = (
+        f"{intro}"
+        f"Answer with one word. {question}"
+    )
     return prompt
 
 
@@ -58,13 +75,13 @@ def prompt_mllm(df, processor, model, device, prompt, dummy=False, return_probs=
 
         for idx, row in df.iterrows():
             if dummy:
-                #dummy_image = Image.new("RGB", (256, 256), color="white")
+                #dummy_image = Image.new("RGB", (512, 512), color="white")
                 #image = None
                 inputs = processor(text=prompt, return_tensors='pt')
             else:
                 try:
                     image = Image.open(row['image_path']).convert("RGB")
-                    #image = image.resize((256, 256), Image.LANCZOS)
+                    #image = image.resize((512, 512), Image.LANCZOS)
                     inputs = processor(images=image, text=prompt, return_tensors='pt')
                 except FileNotFoundError:
                     print(f"Warning: Image not found for {row['object']}")
@@ -92,28 +109,73 @@ def prompt_mllm(df, processor, model, device, prompt, dummy=False, return_probs=
                 token_idx = 1 if "llava" in type(model).__name__.lower() else 0
 
                 try:
-                    prob_correct = max(
+                    prob_correct_this = max(
                         probs_softmax[correct_ids[token_idx]].item(),
                         probs_softmax[correct_ids_cap[token_idx]].item()
                     )
                 except Exception:
-                    prob_correct = None
+                    prob_correct_this = None
 
-                probs_correct.append(prob_correct)
+                probs_correct.append(prob_correct_this)
 
             # cleanup
             del inputs, outputs
             torch.cuda.empty_cache()
             gc.collect()
 
-        df['predicted_color'] = generated_texts
+        df['pred_color_this'] = generated_texts
         if return_probs:
-            df['prob_correct'] = probs_correct
+            df['prob_correct_this'] = probs_correct
 
         torch.cuda.empty_cache()
         torch.cuda.ipc_collect()
         gc.collect()
 
+    return df
+
+
+def prompt_qwen(df, processor, model, device, prompt):
+    preds = []
+
+    for _, row in df.iterrows():
+        image = Image.open(row["image_path"]).convert("RGB")
+
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image", "image": image},
+                    {"type": "text", "text": prompt},
+                ],
+            }
+        ]
+
+        chat_text = processor.apply_chat_template(
+            messages,
+            add_generation_prompt=True,
+        )
+
+        inputs = processor(
+            images=image,
+            text=chat_text,
+            return_tensors="pt",
+        ).to(device)
+
+        with torch.inference_mode():
+            outputs = model.generate(
+                **inputs,
+                max_new_tokens=10,
+                do_sample=False,
+            )
+
+        raw = processor.tokenizer.decode(
+            outputs[0], skip_special_tokens=True
+        ).lower()
+
+        preds.append(raw.replace("gray", "grey").split()[0])
+
+    df = df.copy()
+    df["pred_color_this"] = preds
     return df
 
 
@@ -128,8 +190,8 @@ def prompt_gpt(df, prompt, model_name="gpt-4o", dummy=False, return_probs=False)
     """
     GPT equivalent of prompt_mllm().
     Matches output format:
-        df['predicted_color']
-        df['prob_correct'] (always None, placeholder)
+        df['pred_color_this']
+        df['prob_correct_this'] (always None, placeholder)
     """
 
     preds = []
@@ -139,7 +201,7 @@ def prompt_gpt(df, prompt, model_name="gpt-4o", dummy=False, return_probs=False)
 
         # Build input image
         if dummy:
-            img = Image.new("RGB", (256, 256), "white")
+            img = Image.new("RGB", (512, 512), "white")
             buf = io.BytesIO()
             img.save(buf, format="PNG")
             img_b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
@@ -176,25 +238,116 @@ def prompt_gpt(df, prompt, model_name="gpt-4o", dummy=False, return_probs=False)
         preds.append(ans)
         probs.append(None)   # placeholder to match MLLM interface
 
-    df["predicted_color"] = preds
+    df["pred_color_this"] = preds
     if return_probs:
-        df["prob_correct"] = probs
+        df["prob_correct_this"] = probs
 
     return df
 
+
+def prompt_gpt52(
+    df,
+    prompt,
+    model_name="gpt-5.2",
+    dummy=False,
+    top_k=5,
+):
+    preds = []
+    logprob_preds = []
+    logprob_corrects = []
+    correct_in_topk = []
+
+    for _, row in df.iterrows():
+        # --- image handling ---
+        if dummy:
+            img = Image.new("RGB", (512, 512), "white")
+            buf = io.BytesIO()
+            img.save(buf, format="PNG")
+            img_b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+        else:
+            img_b64 = encode_image_to_b64(row["image_path"])
+
+        # --- GPT-5.2 request ---
+        response = client.responses.create(
+            model=model_name,
+            reasoning={"effort": "none"},
+            input=[
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "input_text", "text": prompt},
+                        {
+                            "type": "input_image",
+                            "image_url": f"data:image/png;base64,{img_b64}",
+                        },
+                    ],
+                }
+            ],
+            max_output_tokens=16,
+            temperature=0.0,
+            #logprobs=True,
+            top_logprobs=top_k,
+        )
+
+        # --- extract generation ---
+        # NOTE: structure may contain multiple segments; we assume first text token
+        out = response.output[0].content[0]
+
+        tokens = out.get("tokens", [])
+        logprobs = out.get("logprobs", [])
+        top_logprobs = out.get("top_logprobs", [])
+
+        if not tokens:
+            preds.append(None)
+            logprob_preds.append(None)
+            logprob_corrects.append(None)
+            correct_in_topk.append(False)
+            continue
+
+        print(tokens)
+
+        # --- predicted token ---
+        pred_token = tokens[0].lower().replace("gray", "grey")
+        preds.append(pred_token)
+
+        logprob_preds.append(logprobs[0] if logprobs else None)
+
+        # --- correct color handling ---
+        correct = str(row["correct_answer"]).lower()
+        found = False
+        lp_correct = None
+
+        if top_logprobs:
+            for cand in top_logprobs[0]:
+                tok = cand["token"].lower().replace("gray", "grey")
+                if tok == correct:
+                    found = True
+                    lp_correct = cand["logprob"]
+                    break
+
+        correct_in_topk.append(found)
+        logprob_corrects.append(lp_correct)
+
+    df = df.copy()
+    df["pred_color_this"] = preds
+    df["logprob_pred_token"] = logprob_preds
+    df["logprob_correct_token"] = logprob_corrects
+    df["correct_in_top_k"] = correct_in_topk
+
+    return df
 
 
 async def prompt_gpt_async(df, prompt, model_name="gpt-4o", dummy=False):
     """
     Async GPT equivalent of prompt_gpt().
-    Returns df with a new column: predicted_color.
+    Returns df with a new column: pred_color_this.
     All requests are sent concurrently.
     """
 
     async def query_single(row):
         # Build / encode image
         if dummy:
-            img = Image.new("RGB", (256, 256), "white")
+            img = Image.new("RGB", (512, 512), "white")
             buf = io.BytesIO()
             img.save(buf, format="PNG")
             img_b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
@@ -238,7 +391,7 @@ async def prompt_gpt_async(df, prompt, model_name="gpt-4o", dummy=False):
     preds = await asyncio.gather(*tasks)
 
     df = df.copy()
-    df["predicted_color"] = preds
+    df["pred_color_this"] = preds
     return df
 
 
@@ -269,15 +422,14 @@ def prompt_gpt_sync(df, prompt, model_name="gpt-4o", dummy=False):
 
 def run_vlm_evaluation(
     df,
+    *,
+    backend: str,                    # "llava" | "qwen" | "gpt4" | "gpt52"
     processor=None,
     model=None,
     device=None,
-    batch_size=1,
-    mode="this",  # "this", "most", or "both"
-    dummy=False,
-    return_probs=False,
-    backend="llava",        # "llava" | "gpt" | "qwen"
     model_name=None,
+    calibration_value: int | None = None,
+    mode="this",
 ):
     """
     Generic evaluation loop for Vision-Language Models.
@@ -287,214 +439,76 @@ def run_vlm_evaluation(
         - "gpt":   OpenAI GPT models (default: gpt-5o)
         - "qwen":  Qwen-VL models (HF)
     """
-
-    assert mode in ["this", "most", "both"]
-    assert backend in ["llava", "gpt", "qwen"]
-
+     
     results = []
 
-    # Select backend caller
-    if backend == "gpt":
-        gpt_model = model_name or "gpt-5o"
+    for _, row in df.iterrows():
+        prompt = create_eval_prompt(
+            row["object"],
+            most=(mode == "most"),
+            calibration_value=calibration_value,
+        )
 
-        def caller(batch, prompt):
-            return prompt_gpt_sync(
-                batch,
-                prompt,
-                model_name=gpt_model,
-                dummy=dummy,
+        if backend == "llava":
+            prompt = f"[INST] <image>\n{prompt}\n[/INST]"
+            out = prompt_mllm(
+                df, processor, model, device, prompt, return_probs=True
             )
 
-    elif backend == "qwen":
-        # Qwen behaves like other torch VLMs
-        def caller(batch, prompt):
-            return prompt_mllm(
-                batch,
-                processor=processor,
-                model=model,
-                device=device,
-                prompt=prompt,
-                dummy=dummy,
-                return_probs=return_probs,
+        elif backend == "qwen":
+            prompt = [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image"},
+                        {"type": "text", "text": prompt},
+                    ],
+                }
+            ]
+            out = prompt_qwen(
+                df, processor, model, device, prompt
             )
 
-    else:  # "llava"
-        def caller(batch, prompt):
-            return prompt_mllm(
-                batch,
-                processor=processor,
-                model=model,
-                device=device,
-                prompt=prompt,
-                dummy=dummy,
-                return_probs=return_probs,
+        elif backend == "gpt4":
+            out = prompt_gpt(
+                df, prompt, model_name="gpt-4o"
             )
 
-    # Main loop
-    for i in tqdm(
-        range(0, len(df), batch_size),
-        desc=f"Running VLM ({backend})",
-        position=1,
-        leave=False,
-    ):
-        batch_df = df.iloc[i : i + batch_size].copy()
+        elif backend == "gpt52":
+            out = prompt_gpt52(
+                df, prompt, model_name="gpt-5.2"
+            )
 
-        if mode in ["most", "both"]:
-            prompt = create_eval_prompt(batch_df["object"], most="True")
-            df_most = caller(batch_df, prompt)
-            df_most = df_most.rename(columns={
-                "predicted_color": "pred_color_most",
-                "prob_correct": "prob_correct_most" if return_probs else None,
-            })
         else:
-            df_most = None
+            raise ValueError(backend)
 
-        if mode in ["this", "both"]:
-            prompt = create_eval_prompt(batch_df["object"], most="False")
-            df_this = caller(batch_df, prompt)
-            df_this = df_this.rename(columns={
-                "predicted_color": "pred_color_this",
-                "prob_correct": "prob_correct_this" if return_probs else None,
-            })
-        else:
-            df_this = None
-
-        if mode == "both":
-            result_df = pd.merge(
-                df_most,
-                df_this,
-                on=["image_path", "object", "correct_answer"],
-                how="inner",
-            )
-        elif mode == "most":
-            result_df = df_most
-        else:
-            result_df = df_this
-
-        results.append(result_df)
-
-        # memory hygiene
-        del result_df
-        torch.cuda.empty_cache()
-        torch.cuda.ipc_collect()
-        gc.collect()
+        out["calibration"] = calibration_value
+        results.append(out)
 
     return pd.concat(results, ignore_index=True)
 
 
-
-def run_vlm_evaluation_old(
-    df,
-    processor=None,
-    model=None,
-    device=None,
-    batch_size=1,
-    mode="both",  # "this", "most", or "both"
-    dummy=False,
-    return_probs=False,
-    use_gpt=False,
-):
-    """
-    Generic evaluation loop for Vision-Language Models.
-
-    Runs mllm_testing over a dataset for either:
-      - "this" question type (What color is this object?)
-      - "most" question type (What color are most objects?)
-      - or "both" (runs both and merges results)
-
-    Args:
-        df: DataFrame with at least ['image_path', 'object', 'image_type']
-        processor: model processor (e.g., LlavaNextProcessor)
-        model: VLM model
-        batch_size: how many rows per iteration
-        mode: "this", "most", or "both"
-        dummy_image: pass-through flag for special testing
-        return_probs: whether to compute P(correct_answer) from logits
-
-    Returns:
-        DataFrame with added predicted color columns
-    """
-
-    assert mode in ["this", "most", "both"], "mode must be one of ['this', 'most', 'both']"
-
-    results = []
-
-    # Choose GPT or open-weight MLLM caller
-    if use_gpt:
-        gpt_model_name = "gpt-4o"
-        caller = lambda batch, prompt: prompt_gpt_sync(
-            batch, prompt, model_name=gpt_model_name, dummy=dummy
-        )
-
-    else:
-        caller = lambda batch, prompt: prompt_mllm(
-            batch, processor, model, device,
-            prompt=prompt, dummy=dummy, return_probs=return_probs
-        )
-
-    for i in tqdm(range(0, len(df), batch_size), desc=f"Running VLM ({'GPT' if use_gpt else 'Torch'})", position=1, leave=False):
-        batch_df = df.iloc[i : i + batch_size].copy()
-
-        with torch.inference_mode():
-            if mode in ["most", "both"]:
-                prompt = create_eval_prompt(batch_df["object"], most="True")
-                df_most = caller(batch_df, prompt=prompt)
-                df_most = df_most.rename(columns={
-                    "predicted_color": "pred_color_most",
-                    "prob_correct": "prob_correct_most" if return_probs else None
-                })
-            else:
-                df_most = None
-
-            if mode in ["this", "both"]:
-                prompt = create_eval_prompt(batch_df["object"], most="False")
-                df_this = caller(batch_df, prompt=prompt)
-                df_this = df_this.rename(columns={
-                    "predicted_color": "pred_color_this",
-                    "prob_correct": "prob_correct_this" if return_probs else None
-                })
-            else:
-                df_this = None
-            
-            
-            # Merge results
-            if mode == "both":
-                result_df = pd.merge(
-                    df_most,
-                    df_this,
-                    on=["image_path", "object", "image_variant", "correct_answer"],
-                    how="inner"
-                )
-            elif mode == "most":
-                result_df = df_most
-            else:
-                result_df = df_this
-
-        results.append(result_df)
-
-        # memory hygiene
-        del result_df
-        torch.cuda.empty_cache()
-        torch.cuda.ipc_collect()
-        gc.collect()
-
-    df_results = pd.concat(results, ignore_index=True)
-    return df_results
-
 # Helpers for introspection prompt
-INTROSPECTION_PROMPT = """For any object, x% of its pixels should be colored for it to be considered that color. 
-                        For example, imagine an image of a banana, where only part of the banana in the image is colored yellow.
-                        At what point would you personally say that the banana in the image is yellow?
-                        What value should x% be? Please answer with a single number between 0 and 100."""
+INTROSPECTION_PROMPT = """For any object, x% of its pixels should be colored for it to be considered that color.
+For example, imagine an image of a banana, where only part of the banana in the image is colored yellow.
+At what point would you personally say that the banana in the image is yellow?
+What value should x% be?
+Please only answer with a single number between 0 and 100."""
+
+
 
 def parse_percentage(text: str | None) -> int | None:
     if not text:
         return None
-    match = re.search(r"\b(\d{1,3})\b", text)
-    if not match:
+    matches = re.findall(r"\b(\d{1,3})\b", text)
+    if not matches:
         return None
-    value = int(match.group(1))
+    value = int(matches[-1])   # ← take LAST number
     return value if 0 <= value <= 100 else None
+
+
+
+DUMMY_IMAGE = Image.new("RGB", (512, 512), "white")
 
 def ask_vlm_introspection_threshold(
     *,
@@ -502,24 +516,22 @@ def ask_vlm_introspection_threshold(
     processor=None,
     model=None,
     device=None,
-    model_name: str | None = None,  # for GPT
+    model_name: str | None = None,
 ) -> dict:
-    """
-    Ask a VLM for its global color-attribution threshold.
-    Returns a dict suitable for logging.
-    """
 
-    if backend in ["llava", "qwen"]:
-        # Torch VLMs: no image, text-only prompt
+    if backend == "llava":
+        prompt = f"[INST] <image>\n{INTROSPECTION_PROMPT}\n[/INST]"
+
         inputs = processor(
-            text=INTROSPECTION_PROMPT,
-            return_tensors="pt"
+            #images=DUMMY_IMAGE,
+            text=prompt,
+            return_tensors="pt",
         ).to(device)
 
         with torch.inference_mode():
             outputs = model.generate(
                 **inputs,
-                max_new_tokens=20,
+                max_new_tokens=50,
                 do_sample=False,
                 num_beams=1,
                 pad_token_id=processor.tokenizer.eos_token_id,
@@ -529,7 +541,45 @@ def ask_vlm_introspection_threshold(
             outputs[0],
             skip_special_tokens=True
         )
+
+        print(raw)
         raw = clean_instruction_tokens(raw).strip().lower()
+
+    elif backend == "qwen":
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": INTROSPECTION_PROMPT},
+                ],
+            }
+        ]
+
+        # build the chat-formatted text 
+        chat_text = processor.apply_chat_template(
+            messages,
+            add_generation_prompt=True,
+        )
+
+        # Stokenize / preprocess into tensors
+        inputs = processor(
+            #images=DUMMY_IMAGE,
+            text=chat_text,
+            return_tensors="pt",
+        ).to(device)
+
+        with torch.inference_mode():
+            outputs = model.generate(
+                **inputs,
+                max_new_tokens=50,
+                do_sample=False,
+            )
+
+        raw = processor.tokenizer.decode(
+            outputs[0],
+            skip_special_tokens=True
+        ).strip().lower()
+
 
     elif backend == "gpt":
         gpt_model = model_name or "gpt-5"
@@ -543,15 +593,13 @@ def ask_vlm_introspection_threshold(
                 }
             ],
             temperature=0.0,
-            max_tokens=20,
+            max_completion_tokens=50,
         )
         raw = response.choices[0].message.content.strip().lower()
-
     else:
         raise ValueError(f"Unknown backend: {backend}")
 
     threshold = parse_percentage(raw)
-    threshold = raw
 
     return {
         "backend": backend,
