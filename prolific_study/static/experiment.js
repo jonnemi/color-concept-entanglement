@@ -621,7 +621,7 @@ function buildTimeline(questions) {
         <ul>
           <li>You will be removed if you select a total of two unreasonable colors.</li>
           <li>You will be removed if you fail an attention check question.</li>
-          <li>The study should take you approximately <b>20 minutes</b>.</li>
+          <li>The study should take you approximately <b>15 minutes</b>.</li>
         </ul>
 
         <p>Click <b>Next</b> to begin.</p>

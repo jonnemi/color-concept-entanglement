@@ -38,3 +38,4 @@ prolific_study/data/
 prolific_study/results/
 
 corrupt_images.txt
+env_before_openai_upgrade.yml

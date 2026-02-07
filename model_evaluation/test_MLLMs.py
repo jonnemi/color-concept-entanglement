@@ -42,10 +42,8 @@ def create_eval_prompt(
     intro = ""
     if calibration_value is not None:
         intro = (
-            "Earlier, you answered the following question:"
-            "For any object, x% of its pixels should be colored for it to be "
+            f"For any object, {calibration_value}% of its pixels should be colored for it to be "
             "considered that color."
-            f"You answered: {calibration_value}%."
             "Please keep this threshold in mind when answering the next question."
         )
 
@@ -109,23 +107,23 @@ def prompt_mllm(df, processor, model, device, prompt, dummy=False, return_probs=
                 token_idx = 1 if "llava" in type(model).__name__.lower() else 0
 
                 try:
-                    prob_correct_this = max(
+                    probs_softmax = max(
                         probs_softmax[correct_ids[token_idx]].item(),
                         probs_softmax[correct_ids_cap[token_idx]].item()
                     )
                 except Exception:
-                    prob_correct_this = None
+                    probs_softmax = None
 
-                probs_correct.append(prob_correct_this)
+                probs_correct.append(probs_softmax)
 
             # cleanup
             del inputs, outputs
             torch.cuda.empty_cache()
             gc.collect()
 
-        df['pred_color_this'] = generated_texts
+        df['predicted_color'] = generated_texts
         if return_probs:
-            df['prob_correct_this'] = probs_correct
+            df['prob_correct'] = probs_correct
 
         torch.cuda.empty_cache()
         torch.cuda.ipc_collect()
@@ -258,6 +256,7 @@ def prompt_gpt52(
     correct_in_topk = []
 
     for _, row in df.iterrows():
+
         # --- image handling ---
         if dummy:
             img = Image.new("RGB", (512, 512), "white")
@@ -285,17 +284,31 @@ def prompt_gpt52(
             ],
             max_output_tokens=16,
             temperature=0.0,
-            #logprobs=True,
-            top_logprobs=top_k,
+            output=[
+                {
+                    "type": "output_text",
+                    "logprobs": {
+                        "top_k": top_k
+                    },
+                }
+            ],
         )
 
-        # --- extract generation ---
-        # NOTE: structure may contain multiple segments; we assume first text token
-        out = response.output[0].content[0]
+        # --- extract output_text ---
+        text_items = [
+            item for item in response.output
+            if item["type"] == "output_text"
+        ]
 
+        if not text_items:
+            preds.append(None)
+            logprob_preds.append(None)
+            logprob_corrects.append(None)
+            correct_in_topk.append(False)
+            continue
+
+        out = text_items[0]
         tokens = out.get("tokens", [])
-        logprobs = out.get("logprobs", [])
-        top_logprobs = out.get("top_logprobs", [])
 
         if not tokens:
             preds.append(None)
@@ -304,32 +317,33 @@ def prompt_gpt52(
             correct_in_topk.append(False)
             continue
 
-        print(tokens)
-
         # --- predicted token ---
-        pred_token = tokens[0].lower().replace("gray", "grey")
+        pred_token = (
+            tokens[0]["token"]
+            .lower()
+            .replace("gray", "grey")
+        )
         preds.append(pred_token)
 
-        logprob_preds.append(logprobs[0] if logprobs else None)
+        logprob_preds.append(tokens[0]["logprob"])
 
         # --- correct color handling ---
         correct = str(row["correct_answer"]).lower()
         found = False
         lp_correct = None
 
-        if top_logprobs:
-            for cand in top_logprobs[0]:
-                tok = cand["token"].lower().replace("gray", "grey")
-                if tok == correct:
-                    found = True
-                    lp_correct = cand["logprob"]
-                    break
+        for cand in tokens[0].get("top_logprobs", []):
+            tok = cand["token"].lower().replace("gray", "grey")
+            if tok == correct:
+                found = True
+                lp_correct = cand["logprob"]
+                break
 
         correct_in_topk.append(found)
         logprob_corrects.append(lp_correct)
 
     df = df.copy()
-    df["pred_color_this"] = preds
+    df["predicted_color"] = preds
     df["logprob_pred_token"] = logprob_preds
     df["logprob_correct_token"] = logprob_corrects
     df["correct_in_top_k"] = correct_in_topk
@@ -582,7 +596,7 @@ def ask_vlm_introspection_threshold(
 
 
     elif backend == "gpt":
-        gpt_model = model_name or "gpt-5"
+        gpt_model = model_name or "gpt-5.2"
 
         response = client.chat.completions.create(
             model=gpt_model,

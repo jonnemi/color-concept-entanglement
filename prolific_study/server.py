@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory
 from pathlib import Path
 import json
-import hashlib
-import uuid
 import os
 from supabase import create_client, Client
 
@@ -40,29 +38,66 @@ PROFILE_DIR = (
     / "profiles"
 )
 
-# Production profiles
-PROFILE_FILES = sorted(
-    p for p in PROFILE_DIR.glob("profile_*.json")
+PROFILE_FILES = {
+    p.stem: p
+    for p in PROFILE_DIR.glob("profile_*.json")
     if not p.name.startswith("debug")
-)
+}
 
-N_PROFILES = len(PROFILE_FILES)
-assert N_PROFILES == 74, f"Expected 74 profiles, found {N_PROFILES}"
+assert len(PROFILE_FILES) == 74, f"Expected 74 profiles, found {len(PROFILE_FILES)}"
 
-# Debug profile (explicit, never part of assignment)
+# Debug profile (never assigned)
 DEBUG_PROFILE_PATH = PROFILE_DIR / "debug_profile.json"
 assert DEBUG_PROFILE_PATH.exists(), "debug_profile.json not found"
 
 # ---------------------------------------------------------------------
-# Deterministic profile assignment
+# Profile assignment helpers
 # ---------------------------------------------------------------------
 
-def assign_profile_index(prolific_pid: str) -> int:
+def claim_profile(prolific_pid: str):
     """
-    Deterministically assign a participant to one of the production profiles.
+    Claim one uncompleted, unassigned profile.
     """
-    h = hashlib.sha256(prolific_pid.encode()).hexdigest()
-    return int(h, 16) % N_PROFILES
+    resp = (
+        supabase
+        .table("profile_assignments")
+        .select("*")
+        .is_("assigned_to", None)
+        .eq("completed", False)
+        .limit(1)
+        .execute()
+    )
+
+    if not resp.data:
+        return None
+
+    profile = resp.data[0]
+
+    supabase.table("profile_assignments").update({
+        "assigned_to": prolific_pid,
+        "assigned_at": "now()"
+    }).eq("profile_id", profile["profile_id"]).execute()
+
+    return profile
+
+
+def release_profile(profile_id: str):
+    """
+    Release a profile after dropout.
+    """
+    supabase.table("profile_assignments").update({
+        "assigned_to": None,
+        "assigned_at": None
+    }).eq("profile_id", profile_id).execute()
+
+
+def complete_profile(profile_id: str):
+    """
+    Mark a profile as completed.
+    """
+    supabase.table("profile_assignments").update({
+        "completed": True
+    }).eq("profile_id", profile_id).execute()
 
 # ---------------------------------------------------------------------
 # Routes
@@ -80,12 +115,10 @@ def get_profile():
     if not prolific_pid:
         return jsonify({"error": "Missing PROLIFIC_PID"}), 400
 
-    #TEST MODE: allow unlimited re-entry
-    ALLOW_TEST_RERUNS = True
-
     is_test = prolific_pid.startswith("TEST_") or prolific_pid == "DEBUG"
 
-    if not is_test or (is_test and not ALLOW_TEST_RERUNS):
+    # Block re-entry for real participants
+    if not is_test:
         existing = (
             supabase
             .table("results")
@@ -101,19 +134,27 @@ def get_profile():
                 "reason": existing.data[0]["exit_reason"]
             }), 403
 
-    # normal profile assignment
-    profile_idx = assign_profile_index(prolific_pid)
-    profile_path = PROFILE_FILES[profile_idx]
+    # Claim a profile
+    profile = claim_profile(prolific_pid)
 
-    with open(profile_path, "r") as f:
-        profile = json.load(f)
+    if profile is None:
+        return jsonify({
+            "status": "no_profiles_left"
+        }), 410
+
+    profile_id = profile["profile_id"]
+
+    if profile_id not in PROFILE_FILES:
+        return jsonify({"error": "Profile file not found"}), 500
+
+    with open(PROFILE_FILES[profile_id], "r") as f:
+        profile_data = json.load(f)
 
     return jsonify({
-        "profile_id": profile_path.stem,
-        "profile_index": profile_idx,
-        "questions": profile["questions"],
+        "profile_id": profile_id,
+        "profile_index": profile["profile_index"],
+        "questions": profile_data["questions"],
     })
-
 
 
 @app.route("/save_results", methods=["POST"])
@@ -123,20 +164,29 @@ def save_results():
     prolific_pid = payload.get("PROLIFIC_PID", "UNKNOWN")
     data = payload.get("data", [])
 
-    # Pull metadata from jsPsych properties (first trial)
     meta = data[0] if data else {}
+
+    profile_id = meta.get("profile_id")
+    exit_reason = meta.get("exit_reason", "completed")
 
     row = {
         "prolific_pid": prolific_pid,
-        "profile_id": meta.get("profile_id"),
+        "profile_id": profile_id,
         "profile_index": meta.get("profile_index"),
-        "exit_reason": meta.get("exit_reason", "completed"),
+        "exit_reason": exit_reason,
         "experiment_start_time": meta.get("experiment_start_time"),
         "exit_time": meta.get("exit_time"),
         "data": data,
     }
 
     supabase.table("results").insert(row).execute()
+
+    # Update profile state
+    if profile_id:
+        if exit_reason == "completed":
+            complete_profile(profile_id)
+        else:
+            release_profile(profile_id)
 
     return jsonify({"status": "ok"}), 200
 
@@ -149,7 +199,6 @@ def finish():
 @app.route("/decline.html")
 def decline():
     return send_from_directory("static", "decline.html")
-
 
 # ---------------------------------------------------------------------
 # Main
