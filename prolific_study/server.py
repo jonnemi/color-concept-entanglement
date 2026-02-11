@@ -60,7 +60,6 @@ def claim_profile(prolific_pid: str):
         .table("profile_assignments")
         .select("*")
         .eq("completed", False)
-        .filter("assigned_to", "is", "null")
         .limit(1)
         .execute()
     )
