@@ -56,7 +56,7 @@ assert DEBUG_PROFILE_PATH.exists(), "debug_profile.json not found"
 # ---------------------------------------------------------------------
 
 def claim_profile(prolific_pid: str):
-    """    resp = (
+    resp = (
         supabase
         .table("profile_assignments")
         .select("*")
@@ -73,8 +73,8 @@ def claim_profile(prolific_pid: str):
     supabase.table("profile_assignments").update({
         "assigned_to": prolific_pid,
         "assigned_at": "now()"
-    }).eq("profile_id", profile["profile_id"]).execute()"""
-    profile = "profile_25_last"
+    }).eq("profile_id", profile["profile_id"]).execute()
+    
     return  profile
 
 
