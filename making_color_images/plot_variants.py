@@ -945,7 +945,7 @@ def summarize_model_confidence(
 def plot_model_confidence(
     df: pd.DataFrame,
     *,
-    prob_col: str = "prob_correct_this",
+    prob_col: str = "prob_correct",
     variant_region_col: str = "variant_region",
     percent_colored_col: str = "percent_colored",
     title: str,

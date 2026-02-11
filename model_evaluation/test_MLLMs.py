@@ -121,9 +121,9 @@ def prompt_mllm(df, processor, model, device, prompt, dummy=False, return_probs=
             torch.cuda.empty_cache()
             gc.collect()
 
-        df['predicted_color'] = generated_texts
+        df['pred_color_this'] = generated_texts
         if return_probs:
-            df['prob_correct'] = probs_correct
+            df['prob_correct_this'] = probs_correct
 
         torch.cuda.empty_cache()
         torch.cuda.ipc_collect()
@@ -184,20 +184,22 @@ def encode_image_to_b64(path):
     
 
 
-def prompt_gpt(df, prompt, model_name="gpt-4o", dummy=False, return_probs=False):
-    """
-    GPT equivalent of prompt_mllm().
-    Matches output format:
-        df['pred_color_this']
-        df['prob_correct_this'] (always None, placeholder)
-    """
+def prompt_gpt(
+    df,
+    prompt,
+    model_name="gpt-4o",
+    dummy=False,
+    top_k=5,
+):
 
     preds = []
-    probs = []
+    logprob_preds = []
+    logprob_corrects = []
+    correct_in_topk = []
 
     for _, row in df.iterrows():
 
-        # Build input image
+        # Build image
         if dummy:
             img = Image.new("RGB", (512, 512), "white")
             buf = io.BytesIO()
@@ -208,7 +210,9 @@ def prompt_gpt(df, prompt, model_name="gpt-4o", dummy=False, return_probs=False)
                 img_b64 = encode_image_to_b64(row["image_path"])
             except FileNotFoundError:
                 preds.append(None)
-                probs.append(None)
+                logprob_preds.append(None)
+                logprob_corrects.append(None)
+                correct_in_topk.append(False)
                 continue
 
         # GPT query
@@ -225,22 +229,57 @@ def prompt_gpt(df, prompt, model_name="gpt-4o", dummy=False, return_probs=False)
                 }],
                 max_tokens=10,
                 temperature=0.0,
-                top_p=0,
+                logprobs=True,
+                top_logprobs=top_k,
             )
-            ans = response.choices[0].message.content.strip().lower()
+
+            choice = response.choices[0]
+            ans = choice.message.content.strip().lower()
             ans = ans.replace("gray", "grey").split()[0]
+
+            preds.append(ans)
+
+            # Extract logprobs
+            token_info = choice.logprobs.content
+
+            if token_info and len(token_info) > 0:
+                first_token = token_info[0]
+
+                logprob_preds.append(first_token["logprob"])
+
+                correct = str(row["correct_answer"]).lower()
+                found = False
+                lp_correct = None
+
+                for cand in first_token.get("top_logprobs", []):
+                    tok = cand["token"].lower().replace("gray", "grey")
+                    if tok == correct:
+                        found = True
+                        lp_correct = cand["logprob"]
+                        break
+
+                correct_in_topk.append(found)
+                logprob_corrects.append(lp_correct)
+            else:
+                logprob_preds.append(None)
+                logprob_corrects.append(None)
+                correct_in_topk.append(False)
+
         except Exception as e:
             print("GPT error:", e)
-            ans = None
+            preds.append(None)
+            logprob_preds.append(None)
+            logprob_corrects.append(None)
+            correct_in_topk.append(False)
 
-        preds.append(ans)
-        probs.append(None)   # placeholder to match MLLM interface
-
+    df = df.copy()
     df["pred_color_this"] = preds
-    if return_probs:
-        df["prob_correct_this"] = probs
+    df["logprob_pred_token"] = logprob_preds
+    df["logprob_correct_token"] = logprob_corrects
+    df["correct_in_top_k"] = correct_in_topk
 
     return df
+
 
 
 def prompt_gpt52(
@@ -343,7 +382,7 @@ def prompt_gpt52(
         logprob_corrects.append(lp_correct)
 
     df = df.copy()
-    df["predicted_color"] = preds
+    df["pred_color_this"] = preds
     df["logprob_pred_token"] = logprob_preds
     df["logprob_correct_token"] = logprob_corrects
     df["correct_in_top_k"] = correct_in_topk

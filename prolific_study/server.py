@@ -62,7 +62,6 @@ def claim_profile(prolific_pid: str):
         supabase
         .table("profile_assignments")
         .select("*")
-        .is_("assigned_to", None)
         .eq("completed", False)
         .limit(1)
         .execute()
