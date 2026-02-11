@@ -55,14 +55,12 @@ assert DEBUG_PROFILE_PATH.exists(), "debug_profile.json not found"
 # ---------------------------------------------------------------------
 
 def claim_profile(prolific_pid: str):
-    """
-    Claim one uncompleted, unassigned profile.
-    """
     resp = (
         supabase
         .table("profile_assignments")
         .select("*")
         .eq("completed", False)
+        .filter("assigned_to", "is", "null")
         .limit(1)
         .execute()
     )
