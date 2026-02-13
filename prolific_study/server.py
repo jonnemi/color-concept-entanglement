@@ -1,4 +1,3 @@
-import profile
 from flask import Flask, request, jsonify, send_from_directory
 from pathlib import Path
 import json
