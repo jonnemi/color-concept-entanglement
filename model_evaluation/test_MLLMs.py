@@ -60,121 +60,185 @@ def create_eval_prompt(
     return prompt
 
 
-def prompt_mllm(df, processor, model, device, prompt, dummy=False, return_probs=False):
-    """
-    Run inference for a batch of images and optionally compute P(correct_answer)
-    using the final layer logits.
-    """
+import torch.nn.functional as F
+
+def prompt_mllm(df, processor, model, device, prompt, dummy=False, top_k=5, return_probs=False):
+
+    df = df.copy()
+    df["pred_color_this"] = None
+    df["logprob_pred_token"] = None
+    df["logprob_correct_token"] = None
+    df["correct_in_top_k"] = False
+
     with torch.inference_mode():
-        torch.cuda.empty_cache()
-        gc.collect()
-        generated_texts = []
-        probs_correct = []
 
         for idx, row in df.iterrows():
+
             if dummy:
-                #dummy_image = Image.new("RGB", (512, 512), color="white")
-                #image = None
-                inputs = processor(text=prompt, return_tensors='pt')
+                inputs = processor(text=prompt, return_tensors="pt")
             else:
                 try:
-                    image = Image.open(row['image_path']).convert("RGB")
-                    #image = image.resize((512, 512), Image.LANCZOS)
-                    inputs = processor(images=image, text=prompt, return_tensors='pt')
-                except FileNotFoundError:
-                    print(f"Warning: Image not found for {row['object']}")
-                    generated_texts.append(None)
-                    probs_correct.append(None)
-                    continue  # Skip to the next row in the DataFrame
-            
-            
-            inputs = {k: v.to(device) for k, v in inputs.items()}
-            # Perform a forward pass with the model
-            outputs = model.generate(**inputs, max_new_tokens=10, num_beams=1, do_sample=False, pad_token_id=processor.tokenizer.eos_token_id)
-            predicted_answer = processor.tokenizer.decode(outputs[0], skip_special_tokens=True)
-            predicted_answer = clean_instruction_tokens(predicted_answer)
-            generated_texts.append(predicted_answer.lower().replace("gray", "grey"))
-
-            if return_probs:
-                with torch.inference_mode():
-                    outputs_logits = model(**inputs)
-                    logits = outputs_logits.logits[:, -1, :]  # final token logits
-                    probs_softmax = F.softmax(logits, dim=-1).squeeze(0).detach().cpu()
-
-                correct = str(row["correct_answer"]).strip().lower()
-                correct_ids = processor.tokenizer(correct).input_ids
-                correct_ids_cap = processor.tokenizer(correct.capitalize()).input_ids
-                token_idx = 1 if "llava" in type(model).__name__.lower() else 0
-
-                try:
-                    probs_softmax = max(
-                        probs_softmax[correct_ids[token_idx]].item(),
-                        probs_softmax[correct_ids_cap[token_idx]].item()
+                    image = Image.open(row["image_path"]).convert("RGB")
+                    inputs = processor(
+                        images=image,
+                        text=prompt,
+                        return_tensors="pt"
                     )
-                except Exception:
-                    probs_softmax = None
+                except FileNotFoundError:
+                    continue
 
-                probs_correct.append(probs_softmax)
+            inputs = {k: v.to(device) for k, v in inputs.items()}
+
+            outputs = model.generate(
+                **inputs,
+                max_new_tokens=5,
+                do_sample=False,
+                return_dict_in_generate=True,
+                output_scores=True,
+                pad_token_id=processor.tokenizer.eos_token_id,
+            )
+
+            # --- Remove prompt tokens ---
+            generated_ids = outputs.sequences[:, inputs["input_ids"].shape[1]:]
+
+            decoded = processor.tokenizer.decode(
+                generated_ids[0],
+                skip_special_tokens=True
+            ).strip().lower()
+
+            pred = decoded.replace("gray", "grey").split()[0]
+            df.at[idx, "pred_color_this"] = pred
+
+            # --- Logprob extraction ---
+            if len(outputs.scores) > 0:
+
+                first_step_logits = outputs.scores[0]  # (batch, vocab)
+                logprobs = F.log_softmax(first_step_logits, dim=-1)
+
+                pred_token_id = generated_ids[0, 0]
+                pred_logprob = logprobs[0, pred_token_id].item()
+
+                df.at[idx, "logprob_pred_token"] = pred_logprob
+
+                # --- Correct token logprob ---
+                correct = row["correct_answer"].lower()
+
+                correct_ids = processor.tokenizer(
+                    correct,
+                    add_special_tokens=False
+                )["input_ids"]
+
+                if len(correct_ids) == 1:
+                    correct_id = correct_ids[0]
+                    correct_lp = logprobs[0, correct_id].item()
+
+                    df.at[idx, "logprob_correct_token"] = correct_lp
+
+                    # --- Top-k inclusion ---
+                    topk_ids = torch.topk(
+                        logprobs[0], k=top_k
+                    ).indices.tolist()
+
+                    df.at[idx, "correct_in_top_k"] = (
+                        correct_id in topk_ids
+                    )
 
             # cleanup
             del inputs, outputs
             torch.cuda.empty_cache()
-            gc.collect()
 
-        df['pred_color_this'] = generated_texts
-        if return_probs:
-            df['prob_correct_this'] = probs_correct
-
-        torch.cuda.empty_cache()
-        torch.cuda.ipc_collect()
-        gc.collect()
+    torch.cuda.empty_cache()
+    torch.cuda.ipc_collect()
 
     return df
 
 
-def prompt_qwen(df, processor, model, device, prompt):
-    preds = []
 
-    for _, row in df.iterrows():
+import torch.nn.functional as F
+
+def prompt_qwen(df, processor, model, device, prompt, top_k=5):
+
+    df = df.copy()
+    df["pred_color_this"] = None
+    df["logprob_pred_token"] = None
+    df["logprob_correct_token"] = None
+    df["correct_in_top_k"] = False
+
+    for idx, row in df.iterrows():
+
         image = Image.open(row["image_path"]).convert("RGB")
 
         messages = [
             {
                 "role": "user",
                 "content": [
-                    {"type": "image", "image": image},
+                    {"type": "image"},
                     {"type": "text", "text": prompt},
                 ],
             }
         ]
 
-        chat_text = processor.apply_chat_template(
+        text = processor.apply_chat_template(
             messages,
+            tokenize=False,
             add_generation_prompt=True,
         )
 
         inputs = processor(
-            images=image,
-            text=chat_text,
+            text=text,
+            images=[image],
             return_tensors="pt",
         ).to(device)
 
         with torch.inference_mode():
             outputs = model.generate(
                 **inputs,
-                max_new_tokens=10,
+                max_new_tokens=5,
                 do_sample=False,
+                return_dict_in_generate=True,
+                output_scores=True,
             )
 
-        raw = processor.tokenizer.decode(
-            outputs[0], skip_special_tokens=True
-        ).lower()
+        # --- Remove prompt tokens ---
+        generated_ids = outputs.sequences[:, inputs["input_ids"].shape[1]:]
 
-        preds.append(raw.replace("gray", "grey").split()[0])
+        decoded = processor.batch_decode(
+            generated_ids,
+            skip_special_tokens=True
+        )[0].strip().lower()
 
-    df = df.copy()
-    df["pred_color_this"] = preds
+        pred = decoded.replace("gray", "grey").split()[0]
+        df.at[idx, "pred_color_this"] = pred
+
+        # --- Logprob extraction ---
+        if len(outputs.scores) > 0:
+            first_step_logits = outputs.scores[0]  # (batch, vocab)
+            logprobs = F.log_softmax(first_step_logits, dim=-1)
+
+            pred_token_id = generated_ids[0, 0]
+            pred_logprob = logprobs[0, pred_token_id].item()
+
+            df.at[idx, "logprob_pred_token"] = pred_logprob
+
+            # Check correct token
+            correct = row["correct_answer"].lower()
+
+            correct_ids = processor.tokenizer(
+                correct,
+                add_special_tokens=False
+            )["input_ids"]
+
+            if len(correct_ids) == 1:
+                correct_id = correct_ids[0]
+                correct_lp = logprobs[0, correct_id].item()
+                df.at[idx, "logprob_correct_token"] = correct_lp
+
+                # Top-k inclusion
+                topk_ids = torch.topk(logprobs[0], k=top_k).indices.tolist()
+                df.at[idx, "correct_in_top_k"] = correct_id in topk_ids
+
     return df
+
 
 
 def encode_image_to_b64(path):
@@ -191,13 +255,16 @@ def prompt_gpt(
     dummy=False,
     top_k=5,
 ):
+    df = df.copy()
 
-    preds = []
-    logprob_preds = []
-    logprob_corrects = []
-    correct_in_topk = []
+    # Pre-create output columns
+    df["pred_color_this"] = None
+    df["logprob_pred_token"] = None
+    df["logprob_correct_token"] = None
+    df["correct_in_top_k"] = False
+    df["prob_correct_this"] = None
 
-    for _, row in df.iterrows():
+    for idx, row in df.iterrows():
 
         # Build image
         if dummy:
@@ -209,13 +276,8 @@ def prompt_gpt(
             try:
                 img_b64 = encode_image_to_b64(row["image_path"])
             except FileNotFoundError:
-                preds.append(None)
-                logprob_preds.append(None)
-                logprob_corrects.append(None)
-                correct_in_topk.append(False)
-                continue
+                continue  # leave row as None
 
-        # GPT query
         try:
             response = client.chat.completions.create(
                 model=model_name,
@@ -234,52 +296,41 @@ def prompt_gpt(
             )
 
             choice = response.choices[0]
+
+            # Predicted text
             ans = choice.message.content.strip().lower()
             ans = ans.replace("gray", "grey").split()[0]
 
-            preds.append(ans)
+            df.at[idx, "pred_color_this"] = ans
 
-            # Extract logprobs
+            # Logprobs
             token_info = choice.logprobs.content
 
             if token_info and len(token_info) > 0:
                 first_token = token_info[0]
 
-                logprob_preds.append(first_token["logprob"])
+                df.at[idx, "logprob_pred_token"] = first_token.logprob
 
                 correct = str(row["correct_answer"]).lower()
                 found = False
                 lp_correct = None
 
-                for cand in first_token.get("top_logprobs", []):
-                    tok = cand["token"].lower().replace("gray", "grey")
+                for cand in first_token.top_logprobs:
+                    tok = cand.token.lower().replace("gray", "grey")
                     if tok == correct:
                         found = True
-                        lp_correct = cand["logprob"]
+                        lp_correct = cand.logprob
                         break
 
-                correct_in_topk.append(found)
-                logprob_corrects.append(lp_correct)
-            else:
-                logprob_preds.append(None)
-                logprob_corrects.append(None)
-                correct_in_topk.append(False)
+                df.at[idx, "correct_in_top_k"] = found
+                df.at[idx, "logprob_correct_token"] = lp_correct
+
 
         except Exception as e:
             print("GPT error:", e)
-            preds.append(None)
-            logprob_preds.append(None)
-            logprob_corrects.append(None)
-            correct_in_topk.append(False)
-
-    df = df.copy()
-    df["pred_color_this"] = preds
-    df["logprob_pred_token"] = logprob_preds
-    df["logprob_correct_token"] = logprob_corrects
-    df["correct_in_top_k"] = correct_in_topk
+            continue
 
     return df
-
 
 
 def prompt_gpt52(
@@ -296,7 +347,7 @@ def prompt_gpt52(
 
     for _, row in df.iterrows():
 
-        # --- image handling ---
+        # image handling
         if dummy:
             img = Image.new("RGB", (512, 512), "white")
             buf = io.BytesIO()
@@ -305,7 +356,7 @@ def prompt_gpt52(
         else:
             img_b64 = encode_image_to_b64(row["image_path"])
 
-        # --- GPT-5.2 request ---
+        # GPT-5.2 request
         response = client.responses.create(
             model=model_name,
             reasoning={"effort": "none"},
@@ -333,7 +384,7 @@ def prompt_gpt52(
             ],
         )
 
-        # --- extract output_text ---
+        # extract output_text
         text_items = [
             item for item in response.output
             if item["type"] == "output_text"
@@ -356,7 +407,7 @@ def prompt_gpt52(
             correct_in_topk.append(False)
             continue
 
-        # --- predicted token ---
+        # predicted token
         pred_token = (
             tokens[0]["token"]
             .lower()
@@ -366,7 +417,7 @@ def prompt_gpt52(
 
         logprob_preds.append(tokens[0]["logprob"])
 
-        # --- correct color handling ---
+        # correct color handling
         correct = str(row["correct_answer"]).lower()
         found = False
         lp_correct = None

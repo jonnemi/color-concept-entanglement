@@ -107,7 +107,8 @@ def index():
 
 @app.route("/get_profile")
 def get_profile():
-    prolific_pid = request.args.get("PROLIFIC_PID")
+
+    """prolific_pid = request.args.get("PROLIFIC_PID")
 
     if not prolific_pid:
         return jsonify({"error": "Missing PROLIFIC_PID"}), 400
@@ -133,6 +134,7 @@ def get_profile():
 
     # Claim a profile
     profile = claim_profile(prolific_pid)
+    print(profile)
 
     if profile is None:
         return jsonify({
@@ -151,6 +153,18 @@ def get_profile():
         "profile_id": profile_id,
         "profile_index": profile["profile_index"],
         "questions": profile_data["questions"],
+    })"""
+    # hard code last missing profile
+    profile_id = "profile_2_first"
+    profile_path = PROFILE_FILES[profile_id]
+
+    with open(profile_path, "r") as f:
+        profile = json.load(f)
+
+    return jsonify({
+        "profile_id": profile_id,
+        "profile_index": 70,  # known index
+        "questions": profile["questions"],
     })
 
 

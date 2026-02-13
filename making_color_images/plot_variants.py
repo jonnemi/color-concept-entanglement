@@ -997,3 +997,85 @@ def plot_model_confidence(
     plt.tight_layout()
     plt.show()
 
+
+def plot_model_logprobs(
+    df: pd.DataFrame,
+    *,
+    logprob_correct_col: str = "logprob_correct_token",
+    logprob_pred_col: str = "logprob_pred_token",
+    variant_region_col: str = "variant_region",
+    percent_colored_col: str = "percent_colored",
+    title: str,
+    ci: float = 0.95,
+    colors: dict | None = None,
+):
+    """
+    Plot mean log-probabilities vs recoloring fraction (FG vs BG).
+
+    Plots:
+    - logprob_correct_token (solid lines)
+    - logprob_pred_token (dashed lines)
+    """
+
+    if colors is None:
+        colors = {
+            "FG": "#1f77b4",
+            "BG": "#ff7f0e",
+        }
+
+    df = df.copy()
+    df = df[df[logprob_correct_col].notna()]
+
+    fig, ax = plt.subplots(figsize=(9, 6))
+
+    for region in df[variant_region_col].unique():
+        sub = df[df[variant_region_col] == region]
+
+        # --- Correct token logprob ---
+        summary_correct = summarize_model_confidence(
+            sub,
+            prob_col=logprob_correct_col,
+            variant_region_col=variant_region_col,
+            percent_colored_col=percent_colored_col,
+            ci=ci,
+        )
+
+        ax.errorbar(
+            summary_correct[percent_colored_col],
+            summary_correct["mean"],
+            yerr=summary_correct["ci"],
+            fmt="o-",
+            capsize=3,
+            color=colors.get(region, "black"),
+            label=f"{region} – canonical color",
+        )
+
+        # --- Predicted token logprob ---
+        summary_pred = summarize_model_confidence(
+            sub,
+            prob_col=logprob_pred_col,
+            variant_region_col=variant_region_col,
+            percent_colored_col=percent_colored_col,
+            ci=ci,
+        )
+
+        ax.errorbar(
+            summary_pred[percent_colored_col],
+            summary_pred["mean"],
+            yerr=summary_pred["ci"],
+            fmt="o--",
+            capsize=3,
+            color=colors.get(region, "black"),
+            label=f"{region} – predicted color",
+        )
+
+    ax.set_xlabel("Colored pixel percentage (%)")
+    ax.set_ylabel("Mean log P(token)")
+    ax.set_title(title)
+    ax.grid(True, linestyle="--", alpha=0.5)
+    ax.legend()
+
+    plt.tight_layout()
+    plt.show()
+
+
