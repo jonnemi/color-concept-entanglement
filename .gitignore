@@ -15,6 +15,7 @@ data/prolific_stimuli/stimulus_table_counterfact_prolific.csv
 data/prolific_stimuli/stimulus_table_image_priors_prolific.csv
 data/prolific_stimuli/stimulus_table_shapes_prolific.csv
 data/prolific_stimuli/stimulus_table.parquet
+!data/GPT_results/evaluation_gpt-4o_combined.csv
 
 segment-anything-2/
 checkpoints/
@@ -39,3 +40,4 @@ prolific_study/results/
 
 corrupt_images.txt
 env_before_openai_upgrade.yml
+prolific_study/color_threshold.png
