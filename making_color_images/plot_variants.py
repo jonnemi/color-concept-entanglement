@@ -1047,7 +1047,7 @@ def plot_model_logprobs(
             fmt="o-",
             capsize=3,
             color=colors.get(region, "black"),
-            label=f"{region} – canonical color",
+            label=f"{region} - {logprob_correct_col}",
         )
 
         # --- Predicted token logprob ---
@@ -1066,7 +1066,7 @@ def plot_model_logprobs(
             fmt="o--",
             capsize=3,
             color=colors.get(region, "black"),
-            label=f"{region} – predicted color",
+            label=f"{region} - {logprob_pred_col}",
         )
 
     ax.set_xlabel("Colored pixel percentage (%)")
