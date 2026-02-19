@@ -34,17 +34,18 @@ def create_eval_prompt(
     *,
     most: bool = False,
     calibration_value: int | None = None,
+    multiturn: bool = False,
 ):
     """
     Builds either a normal or calibrated prompt.
     """
 
     intro = ""
-    if calibration_value is not None:
+    if calibration_value is not None and not multiturn:
         intro = (
             f"For any object, {calibration_value}% of its pixels should be colored for it to be "
-            "considered that color."
-            "Please keep this threshold in mind when answering the next question."
+            "considered that color. "
+            "Please keep this threshold in mind when answering the next question. "
         )
 
     if most:
@@ -54,13 +55,25 @@ def create_eval_prompt(
         question = f"What color is this {object_name}?"
 
     prompt = (
-        f"{intro}"
-        f"Answer with one word. {question}"
+        f"{intro}Answer with one word. {question}"
     )
     return prompt
 
 
-import torch.nn.functional as F
+def create_multiturn_eval_prompt(
+    object_name: str,
+    *,
+    most: bool = False,
+):
+    if most:
+        obj = object_name if object_name.endswith("s") else object_name + "s"
+        question = f"What color are most {obj}?"
+    else:
+        question = f"What color is this {object_name}?"
+
+    return f"Answer with one word. {question}"
+
+
 
 def prompt_mllm(df, processor, model, device, prompt, dummy=False, top_k=5, return_probs=False):
 
@@ -152,9 +165,6 @@ def prompt_mllm(df, processor, model, device, prompt, dummy=False, top_k=5, retu
 
     return df
 
-
-
-import torch.nn.functional as F
 
 def prompt_qwen(df, processor, model, device, prompt, top_k=5):
 
@@ -325,6 +335,103 @@ def prompt_gpt(
                 df.at[idx, "correct_in_top_k"] = found
                 df.at[idx, "logprob_correct_token"] = lp_correct
 
+
+        except Exception as e:
+            print("GPT error:", e)
+            continue
+
+    return df
+
+
+def prompt_gpt_multiturn(
+    df,
+    prompt,
+    introspection_threshold,
+    model_name="gpt-4o",
+    dummy=False,
+    top_k=5,
+):
+    df = df.copy()
+
+    df["pred_color_this"] = None
+    df["logprob_pred_token"] = None
+    df["logprob_correct_token"] = None
+    df["correct_in_top_k"] = False
+
+    for idx, row in df.iterrows():
+
+        # Image
+        if dummy:
+            img = Image.new("RGB", (512, 512), "white")
+            buf = io.BytesIO()
+            img.save(buf, format="PNG")
+            img_b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
+        else:
+            try:
+                img_b64 = encode_image_to_b64(row["image_path"])
+            except FileNotFoundError:
+                continue
+
+        # Multi-turn message history
+        messages = [
+            {
+                "role": "user",
+                "content": INTROSPECTION_PROMPT,
+            },
+            {
+                "role": "assistant",
+                "content": str(introspection_threshold),
+            },
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": prompt},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:image/png;base64,{img_b64}"
+                        },
+                    },
+                ],
+            },
+        ]
+
+        try:
+            response = client.chat.completions.create(
+                model=model_name,
+                messages=messages,
+                max_tokens=10,
+                temperature=0.0,
+                logprobs=True,
+                top_logprobs=top_k,
+            )
+
+            choice = response.choices[0]
+
+            ans = choice.message.content.strip().lower()
+            ans = ans.replace("gray", "grey").split()[0]
+
+            df.at[idx, "pred_color_this"] = ans
+
+            token_info = choice.logprobs.content
+
+            if token_info and len(token_info) > 0:
+                first_token = token_info[0]
+                df.at[idx, "logprob_pred_token"] = first_token.logprob
+
+                correct = str(row["correct_answer"]).lower()
+                found = False
+                lp_correct = None
+
+                for cand in first_token.top_logprobs:
+                    tok = cand.token.lower().replace("gray", "grey")
+                    if tok == correct:
+                        found = True
+                        lp_correct = cand.logprob
+                        break
+
+                df.at[idx, "correct_in_top_k"] = found
+                df.at[idx, "logprob_correct_token"] = lp_correct
 
         except Exception as e:
             print("GPT error:", e)
@@ -534,6 +641,7 @@ def run_vlm_evaluation(
     model_name=None,
     calibration_value: int | None = None,
     mode="this",
+    multiturn_introspection=False,
 ):
     """
     Generic evaluation loop for Vision-Language Models.
@@ -551,6 +659,7 @@ def run_vlm_evaluation(
             row["object"],
             most=(mode == "most"),
             calibration_value=calibration_value,
+            multiturn=multiturn_introspection,
         )
 
         if backend == "llava":
@@ -574,9 +683,20 @@ def run_vlm_evaluation(
             )
 
         elif backend == "gpt4":
-            out = prompt_gpt(
-                df, prompt, model_name="gpt-4o"
-            )
+            if multiturn_introspection and calibration_value is not None:
+                out = prompt_gpt_multiturn(
+                    df,
+                    prompt,
+                    introspection_threshold=calibration_value,
+                    model_name="gpt-4o",
+                )
+            else:
+                print("single-turn")
+                out = prompt_gpt(
+                    df,
+                    prompt,
+                    model_name="gpt-4o",
+                )
 
         elif backend == "gpt52":
             out = prompt_gpt52(

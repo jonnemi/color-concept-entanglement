@@ -8,7 +8,6 @@ data/*
 !data/prolific_stimuli/**
 !data/prolific_stimuli/profiles/
 !data/prolific_stimuli/profiles/**
-!data/GPT_results/evaluation_gpt-4o_combined.csv
 data/prolific_stimuli/stimulus_table_counterfact.csv
 data/prolific_stimuli/stimulus_table_image_priors.csv
 data/prolific_stimuli/stimulus_table_shapes.csv
@@ -17,6 +16,17 @@ data/prolific_stimuli/stimulus_table_image_priors_prolific.csv
 data/prolific_stimuli/stimulus_table_shapes_prolific.csv
 data/prolific_stimuli/stimulus_table.parquet
 
+!data/GPT_results/
+data/GPT_results/*
+!data/GPT_results/evaluation_gpt-4o_combined.csv
+
+!data/LLaVA-NeXT_results/
+data/LLaVA-NeXT_results/*
+!data/LLaVA-NeXT_results/evaluation_llava-v1.6-mistral-7b-hf_combined.csv
+
+!data/Qwen3_results/
+data/Qwen3_results/*
+!data/Qwen3_results/evaluation_Qwen3-VL-8B-Instruct_combined.csv
 
 segment-anything-2/
 checkpoints/
