@@ -3,6 +3,8 @@
 .ipynb_checkpoints/
 
 # Data & models (keep out of Git)
+hf_dataset_export/*
+
 data/*
 !data/prolific_stimuli/
 !data/prolific_stimuli/**
