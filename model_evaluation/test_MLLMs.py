@@ -348,7 +348,6 @@ def prompt_gpt_multiturn(
     prompt,
     introspection_threshold,
     model_name="gpt-4o",
-    dummy=False,
     top_k=5,
 ):
     df = df.copy()
@@ -361,16 +360,10 @@ def prompt_gpt_multiturn(
     for idx, row in df.iterrows():
 
         # Image
-        if dummy:
-            img = Image.new("RGB", (512, 512), "white")
-            buf = io.BytesIO()
-            img.save(buf, format="PNG")
-            img_b64 = base64.b64encode(buf.getvalue()).decode("utf-8")
-        else:
-            try:
-                img_b64 = encode_image_to_b64(row["image_path"])
-            except FileNotFoundError:
-                continue
+        try:
+            img_b64 = encode_image_to_b64(row["image_path"])
+        except FileNotFoundError:
+            continue
 
         # Multi-turn message history
         messages = [
@@ -684,6 +677,8 @@ def run_vlm_evaluation(
 
         elif backend == "gpt4":
             if multiturn_introspection and calibration_value is not None:
+                #print(f"INTROSPECTION_PROMPT: {INTROSPECTION_PROMPT}")
+                #print(f"prompt: {prompt}")
                 out = prompt_gpt_multiturn(
                     df,
                     prompt,

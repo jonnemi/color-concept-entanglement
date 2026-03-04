@@ -16,6 +16,12 @@ data/prolific_stimuli/stimulus_table_shapes.csv
 data/prolific_stimuli/stimulus_table_counterfact_prolific.csv
 data/prolific_stimuli/stimulus_table_image_priors_prolific.csv
 data/prolific_stimuli/stimulus_table_shapes_prolific.csv
+data/prolific_stimuli/stimulus_table_counterfact_fractions.csv
+data/prolific_stimuli/stimulus_table_image_priors_fractions.csv
+data/prolific_stimuli/stimulus_table_shapes_fractions.csv
+data/prolific_stimuli/stimulus_table_counterfact_prolific_fractions.csv
+data/prolific_stimuli/stimulus_table_image_priors_prolific_fractions.csv
+data/prolific_stimuli/stimulus_table_shapes_prolific_fractions.csv
 data/prolific_stimuli/stimulus_table.parquet
 
 !data/GPT_results/
