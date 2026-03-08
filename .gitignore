@@ -60,3 +60,4 @@ prolific_study/results/
 corrupt_images.txt
 env_before_openai_upgrade.yml
 prolific_study/color_threshold.png
+thesis_plots/*
