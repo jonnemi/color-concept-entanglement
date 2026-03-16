@@ -38,6 +38,7 @@ data/Qwen3_results/*
 
 segment-anything-2/
 checkpoints/
+.vscode/*
 __pycache__/
 making_color_images/__pycache__/
 *.pt
