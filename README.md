@@ -5,7 +5,7 @@ This repository contains the code and stimulus generation pipeline for my master
 ## Dataset
 
 The **Graded Color Attribution (GCA) dataset** is publicly available on HuggingFace:
-👉 [mgolov/graded-color-attribution](https://huggingface.co/datasets/mgolov/graded-color-attribution)
+[mgolov/graded-color-attribution](https://huggingface.co/datasets/mgolov/graded-color-attribution)
 
 The dataset consists of black-and-white outline drawings in which the proportion of foreground pixels assigned a target color (τ) is systematically varied from 0% to 100% across 13 threshold levels. This allows precise measurement of the threshold at which models and humans report that an object "is" a given color. Three stimulus conditions are included: canonical color priors, counterfactual color priors, and geometric shapes (perceptual baseline).
 
@@ -22,13 +22,13 @@ Three VLMs are evaluated on the GCA stimuli: GPT-4o, LLaVA-NeXT, and Qwen3-VL. M
 
 
 ## Repository Structure
-├── data/                  # Stimulus images - now publicly available on HuggingFace (see above)
-├── making_color_images/   # Full pipeline for stimulus generation: Google Custom Search retrieval,
-│                          # GPT-4o scoring, OpenCV segmentation, and HSV-based patch-wise coloring
-├── making_fruit_images/   # Early pilot experiments (not part of the final GCA dataset)
-├── model_evaluation/      # VLM evaluation scripts, prompt templates, and result plotting
-└── prolific_study/        # Human study web application (Flask + Supabase), survey profiles,
-                           # and analysis scripts for human behavioral results
+| Folder | Description |
+|---|---|
+| `data/` | Stimulus images - now publicly available on HuggingFace (see above) |
+| `making_color_images/` | Full pipeline for stimulus generation: Google Custom Search retrieval, GPT-4o scoring, OpenCV segmentation, and HSV-based patch-wise coloring |
+| `making_fruit_images/` | Early pilot experiments (not part of the final GCA dataset) |
+| `model_evaluation/` | VLM evaluation scripts, prompt templates, and result plotting |
+| `prolific_study/` | Human study web application (Flask + Supabase), survey profiles, and analysis scripts for human behavioral results |
 
 
 ## Thesis
